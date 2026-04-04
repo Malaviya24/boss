@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import MarketStatusBar from './MarketStatusBar.jsx';
 
 function getFlashClass(fields, target) {
@@ -13,28 +13,6 @@ export default function MarketExplorer({
   lastScrapeAt,
   candidateApis,
 }) {
-  const [search, setSearch] = useState('');
-  const [timeFilter, setTimeFilter] = useState('all');
-  const [changedOnly, setChangedOnly] = useState(false);
-
-  const timeOptions = useMemo(() => {
-    return [...new Set(markets.map((market) => market.time).filter(Boolean))];
-  }, [markets]);
-
-  const filteredMarkets = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    return markets.filter((market) => {
-      const matchesSearch = !normalizedSearch
-        ? true
-        : market.name.toLowerCase().includes(normalizedSearch);
-      const matchesTime = timeFilter === 'all' ? true : market.time === timeFilter;
-      const matchesChanged = changedOnly ? Boolean(recentChanges[market.key]) : true;
-
-      return matchesSearch && matchesTime && matchesChanged;
-    });
-  }, [changedOnly, markets, recentChanges, search, timeFilter]);
-
   const staleCount = useMemo(
     () => markets.filter((market) => market.stale).length,
     [markets],
@@ -45,7 +23,7 @@ export default function MarketExplorer({
       <div className="market-explorer-head">
         <h2 className="market-explorer-title">LIVE MARKET EXPLORER</h2>
         <p className="market-explorer-copy">
-          Real-time number, jodi, and panel tracking with search and time filters.
+          Real-time number, jodi, and panel tracking for all markets on the landing page.
         </p>
       </div>
 
@@ -58,38 +36,8 @@ export default function MarketExplorer({
         candidateApis={candidateApis}
       />
 
-      <div className="market-controls">
-        <input
-          className="market-search"
-          type="search"
-          placeholder="Search market name"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <select
-          className="market-select"
-          value={timeFilter}
-          onChange={(event) => setTimeFilter(event.target.value)}
-        >
-          <option value="all">All times</option>
-          {timeOptions.map((time) => (
-            <option key={time} value={time}>
-              {time}
-            </option>
-          ))}
-        </select>
-        <label className="market-checkbox">
-          <input
-            type="checkbox"
-            checked={changedOnly}
-            onChange={(event) => setChangedOnly(event.target.checked)}
-          />
-          Changed recently
-        </label>
-      </div>
-
       <div className="market-grid">
-        {filteredMarkets.map((market) => {
+        {markets.map((market) => {
           const changedFields = recentChanges[market.key]?.fields ?? [];
 
           return (
@@ -144,10 +92,6 @@ export default function MarketExplorer({
           );
         })}
       </div>
-
-      {filteredMarkets.length === 0 ? (
-        <p className="market-empty">No markets matched the current filters.</p>
-      ) : null}
     </section>
   );
 }
