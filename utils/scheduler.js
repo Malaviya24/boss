@@ -29,6 +29,9 @@ export function startScrapeScheduler({
       logger.info('scrape_cycle_complete', {
         totalRecords: marketResult.allRecords.length,
         changedRecords: marketResult.changedRecords.length,
+        changedNumbers: marketResult.changedByField.number.length,
+        changedJodi: marketResult.changedByField.jodi.length,
+        changedPanel: marketResult.changedByField.panel.length,
         homepageChanged: homepageResult.changed,
         updatedAt: marketResult.updatedAt,
       });
@@ -37,12 +40,18 @@ export function startScrapeScheduler({
         onMarketsChange({
           all: marketResult.allRecords,
           latest: marketResult.changedRecords,
+          byField: marketResult.changedByField,
           updatedAt: scrapedAt,
+          lastScrapeAt: marketResult.lastScrapeAt,
         });
       }
 
-      if (homepageResult.changed && onHomepageChange) {
-        onHomepageChange(homepageResult.snapshot);
+      if ((homepageResult.changed || marketResult.changedRecords.length > 0) && onHomepageChange) {
+        onHomepageChange({
+          ...homepageResult.snapshot,
+          markets: marketResult.allRecords,
+          lastMarketUpdateAt: marketResult.updatedAt,
+        });
       }
     } catch (error) {
       logger.error('scrape_cycle_failed', {

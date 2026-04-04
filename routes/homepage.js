@@ -10,8 +10,11 @@ export function createHomepageRouter(store, { targetUrl }) {
     response.json({
       template: getHomepageTemplate(targetUrl),
       htmlBySectionId: snapshot.htmlBySectionId,
+      markets: store.getAllRecords(),
+      candidateApis: snapshot.candidateApis,
       updatedAt: snapshot.updatedAt,
       lastScrapeAt: snapshot.lastScrapeAt,
+      lastMarketUpdateAt: store.getLastUpdateAt(),
     });
   });
 

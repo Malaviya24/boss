@@ -13,7 +13,6 @@ const TEXT_ATTRIBUTES = ['alt', 'title', 'aria-label', 'placeholder', 'content']
 const DYNAMIC_SECTION_DEFINITIONS = [
   { prefix: 'lucky-numbers', selector: '.f-pti', multiple: false },
   { prefix: 'live-results', selector: '.liv-rslt', multiple: false },
-  { prefix: 'market-group', selector: '.tkt-val', multiple: true },
   { prefix: 'data-table', selector: '.my-table', multiple: true },
   { prefix: 'aaj-pass', selector: '.aaj-pass', multiple: false },
   { prefix: 'weekly-sections', selector: '.sun-col', multiple: false },
@@ -182,6 +181,10 @@ function splitHtmlBySections(html, sectionOrder) {
   return fragments;
 }
 
+function extractSectionOrder(html) {
+  return Array.from(html.matchAll(/<!--SECTION:([^>]+?)-->/g), (match) => match[1]);
+}
+
 export function getCloneCss() {
   const $ = cheerio.load(readSourceHtml(), {
     decodeEntities: false,
@@ -207,14 +210,20 @@ export function getHomepageTemplate(baseUrl) {
 
   sanitizeDom($body, baseUrl);
 
+  const marketGroups = $body.find('.tkt-val');
+  if (marketGroups.length > 0) {
+    marketGroups.first().replaceWith('<!--SECTION:market-explorer-->');
+    marketGroups.slice(1).remove();
+  }
+
   const sections = collectDynamicSections($body);
-  const sectionOrder = sections.map((section) => section.id);
 
   for (const section of sections) {
     $(section.element).replaceWith(`<!--SECTION:${section.id}-->`);
   }
 
   const bodyHtml = $body.html() ?? '';
+  const sectionOrder = extractSectionOrder(bodyHtml);
   const fragments = splitHtmlBySections(bodyHtml, sectionOrder).map((fragment) =>
     sanitizeFragmentHtml(fragment, baseUrl),
   );

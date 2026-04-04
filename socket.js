@@ -26,20 +26,32 @@ export function initializeSocketServer(server, { origin, logger }) {
   return io;
 }
 
-export function emitUpdateAll(payload) {
+function emit(eventName, payload) {
   if (!io) {
     return;
   }
 
-  io.emit('update-all', payload);
+  io.emit(eventName, payload);
+}
+
+export function emitUpdateAll(payload) {
+  emit('update-all', payload);
+}
+
+export function emitUpdateNumber(payload) {
+  emit('update-number', payload);
+}
+
+export function emitUpdateJodi(payload) {
+  emit('update-jodi', payload);
+}
+
+export function emitUpdatePanel(payload) {
+  emit('update-panel', payload);
 }
 
 export function emitHomepageUpdate(payload) {
-  if (!io) {
-    return;
-  }
-
-  io.emit('homepage-update', payload);
+  emit('homepage-update', payload);
 }
 
 export function closeSocketServer() {

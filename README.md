@@ -1,36 +1,54 @@
-# DPBOSS Live Clone Homepage
+# DPBOSS Real-Time Clone
 
-Express + React application that scrapes `https://dpboss.boston/` every 5 seconds, keeps market history, and feeds the live data into a DPBOSS-style cloned homepage.
-
-## Architecture
-
-- Backend + scraper + Socket.io: deploy on Render
-- Frontend UI: deploy `client/` on Vercel
-- Secure frontend default: Vercel server-side proxy functions hide the Render backend URL from normal browser API requests
-- Realtime on Vercel: default is polling every 5 seconds so no direct backend socket URL is exposed in the browser
+Express + React application that scrapes `https://dpboss.boston/`, tracks live market number, jodi, and panel values, and injects those results into a DPBOSS-style cloned homepage.
 
 ## Features
 
-- Puppeteer scraper with Axios + Cheerio fallback
-- Existing market APIs:
+- Puppeteer-first scraping with Cheerio fallback
+- Homepage market discovery every 5 seconds
+- Linked Jodi and Panel page scraping with bounded background refresh
+- Canonical market records with `number`, `jodi`, `panel`, links, stale flags, and history
+- APIs:
   - `GET /api/all`
   - `GET /api/latest`
   - `GET /api/history`
-- Homepage snapshot API:
+  - `GET /api/market`
   - `GET /api/homepage`
-- Optional Socket.io event:
+- Socket events:
+  - `update-number`
+  - `update-jodi`
+  - `update-panel`
+  - `update-all`
   - `homepage-update`
-- Vercel API proxy functions in `client/api/`
-- Security headers on both backend and Vercel frontend
+- Vercel proxy functions in `client/api/` so normal browser API calls stay same-origin
 
-## Backend on Render
+## Local Run
 
-Use the repo root for Render.
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` for the Vite frontend.
+
+### Production-style local run
+
+```bash
+npm install --include=dev
+npm run build
+npm start
+```
+
+Open `http://localhost:4000`.
+
+## Backend Deployment on Render
+
+Use the repo root as the Render service.
 
 ### Build command
 
 ```bash
-npm install && npm run build
+npm install --include=dev && npm run build
 ```
 
 ### Start command
@@ -46,6 +64,11 @@ PORT=4000
 TARGET_URL=https://dpboss.boston/
 SCRAPE_INTERVAL_MS=5000
 SCRAPE_TIMEOUT_MS=30000
+DETAIL_SWEEP_INTERVAL_MS=300000
+DETAIL_CONCURRENCY=4
+DETAIL_MAX_PER_CYCLE=8
+STALE_AFTER_MS=1800000
+NETWORK_PROBE_ENABLED=false
 PUPPETEER_HEADLESS=new
 PUPPETEER_EXECUTABLE_PATH=
 REDIS_URL=
@@ -54,11 +77,11 @@ NODE_ENV=production
 CORS_ORIGIN=https://your-frontend.vercel.app,https://www.yourdomain.com
 ```
 
-## Frontend on Vercel
+## Frontend Deployment on Vercel
 
 Set the Vercel project root directory to `client`.
 
-### Recommended frontend env vars
+### Frontend environment variables
 
 ```env
 RENDER_BACKEND_URL=https://your-render-backend.onrender.com
@@ -69,44 +92,21 @@ VITE_SOCKET_URL=
 
 ### Notes
 
-- `RENDER_BACKEND_URL` is used only by Vercel server-side proxy functions. It is not exposed to the browser.
-- Any variable starting with `VITE_` is public in the browser.
-- Keep `VITE_REALTIME_MODE=poll` if you do not want the backend socket origin visible in devtools.
-- If you want direct Socket.io realtime, set:
+- `RENDER_BACKEND_URL` is read only by the Vercel server-side proxy functions.
+- Any `VITE_*` variable is public in the browser.
+- Keep `VITE_REALTIME_MODE=poll` if you do not want a direct backend socket URL in devtools.
+- If you want direct Socket.io realtime instead, use:
 
 ```env
 VITE_REALTIME_MODE=socket
 VITE_SOCKET_URL=https://your-render-backend.onrender.com
 ```
 
-That direct socket URL will be visible in browser network tools. This is normal and cannot be fully hidden in a browser app.
+## Security
 
-## Local setup
-
-### Full local stack
-
-```bash
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173`.
-
-### Production-style local backend
-
-```bash
-npm install
-npm run build
-npm start
-```
-
-Open `http://localhost:4000`.
-
-## Security notes
-
-- Backend origin is hidden from normal frontend fetch calls by Vercel proxy functions in `client/api/`
+- Same-origin Vercel proxy hides the backend origin from normal browser fetch calls
 - Backend CORS is restricted by `CORS_ORIGIN`
 - Express disables `X-Powered-By`
-- Security headers are set on backend and Vercel frontend
+- Security headers are set on both backend and frontend responses
 - API responses are marked `no-store`
-- Health endpoint no longer exposes the upstream scrape target
+- Health endpoint does not expose the upstream scrape target

@@ -1,11 +1,13 @@
-import axios from 'axios';
-import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
+import { scrapeHomepage } from './scraper/mainScraper.js';
+import { scrapeJodiValue } from './scraper/jodiScraper.js';
+import { scrapePanelValue } from './scraper/panelScraper.js';
+import { createNetworkProbe } from './scraper/networkProbe.js';
 import {
   createRecordKey,
-  normalizeNumber,
-  normalizeText,
-  normalizeTime,
+  createSlug,
+  isSameLink,
+  parseResultParts,
 } from './utils/normalize.js';
 import { sanitizeFragmentHtml } from './utils/homepage-template.js';
 import { retry } from './utils/retry.js';
@@ -13,22 +15,16 @@ import { retry } from './utils/retry.js';
 const DEFAULT_USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
-const HOMEPAGE_SECTION_DEFINITIONS = [
-  { prefix: 'lucky-numbers', selector: '.f-pti', multiple: false },
-  { prefix: 'live-results', selector: '.liv-rslt', multiple: false },
-  { prefix: 'market-group', selector: '.tkt-val', multiple: true },
-  { prefix: 'data-table', selector: '.my-table', multiple: true },
-  { prefix: 'aaj-pass', selector: '.aaj-pass', multiple: false },
-  { prefix: 'weekly-sections', selector: '.sun-col', multiple: false },
-  { prefix: 'free-game-zone', selector: '.oc-fg', multiple: false },
-  { prefix: 'bottom-table', selector: 'table.l-obj-giv', multiple: true },
-];
-
 export function createScraper({
   targetUrl,
   timeoutMs,
   headless,
   executablePath,
+  detailSweepIntervalMs,
+  detailConcurrency,
+  detailMaxPerCycle,
+  staleAfterMs,
+  networkProbeEnabled,
   logger,
 }) {
   return new MarketScraper({
@@ -36,37 +32,80 @@ export function createScraper({
     timeoutMs,
     headless,
     executablePath,
+    detailSweepIntervalMs,
+    detailConcurrency,
+    detailMaxPerCycle,
+    staleAfterMs,
+    networkProbeEnabled,
     logger,
   });
 }
 
 class MarketScraper {
-  constructor({ targetUrl, timeoutMs, headless, executablePath, logger }) {
+  constructor({
+    targetUrl,
+    timeoutMs,
+    headless,
+    executablePath,
+    detailSweepIntervalMs,
+    detailConcurrency,
+    detailMaxPerCycle,
+    staleAfterMs,
+    networkProbeEnabled,
+    logger,
+  }) {
     this.targetUrl = targetUrl;
     this.timeoutMs = timeoutMs;
     this.headless = headless;
     this.executablePath = executablePath;
+    this.detailSweepIntervalMs = detailSweepIntervalMs;
+    this.detailConcurrency = detailConcurrency;
+    this.detailMaxPerCycle = detailMaxPerCycle;
+    this.staleAfterMs = staleAfterMs;
     this.logger = logger;
     this.browser = null;
     this.page = null;
+    this.networkProbe = createNetworkProbe({ enabled: networkProbeEnabled });
+    this.homepageState = new Map();
+    this.detailCache = new Map();
+    this.loggedApis = new Set();
   }
 
   async scrape() {
     return retry(
       async () => {
-        try {
-          const snapshot = await this.scrapeWithPuppeteer();
-          if (snapshot.markets.length === 0) {
-            throw new Error('Puppeteer returned zero market records.');
-          }
+        await this.ensurePage();
+        const homepageSnapshot = await scrapeHomepage({
+          page: this.page,
+          targetUrl: this.targetUrl,
+          timeoutMs: this.timeoutMs,
+          networkProbe: this.networkProbe,
+        });
 
-          return snapshot;
-        } catch (error) {
-          this.logger.warn('scrape_puppeteer_failed', {
-            message: error.message,
-          });
-          return this.scrapeWithCheerio();
+        this.logCandidateApis(homepageSnapshot.candidateApis);
+
+        const targets = this.selectDetailTargets(homepageSnapshot.markets);
+        if (targets.length > 0) {
+          await this.refreshMarketDetails(targets);
         }
+
+        this.homepageState = new Map(
+          homepageSnapshot.markets.map((market) => [
+            createRecordKey(market.name, market.time),
+            {
+              number: market.number,
+              links: market.links,
+            },
+          ]),
+        );
+
+        return {
+          markets: homepageSnapshot.markets.map((market) => this.buildRecord(market)),
+          homepage: {
+            htmlBySectionId: this.buildHomepageSnapshot(homepageSnapshot.homepage),
+            candidateApis: homepageSnapshot.candidateApis,
+          },
+        };
       },
       {
         retries: 2,
@@ -113,180 +152,181 @@ class MarketScraper {
     });
     this.page.setDefaultNavigationTimeout(this.timeoutMs);
     this.page.setDefaultTimeout(this.timeoutMs);
+    this.page.on('request', (request) => this.networkProbe.track(request));
   }
 
-  async scrapeWithPuppeteer() {
-    await this.ensurePage();
-
-    try {
-      await this.page.goto(this.targetUrl, {
-        waitUntil: 'networkidle2',
-        timeout: this.timeoutMs,
-      });
-
-      await this.page.waitForSelector('.tkt-val', {
-        timeout: this.timeoutMs,
-      });
-
-      const rawSnapshot = await this.page.evaluate((sectionDefinitions) => {
-        const normalize = (value) =>
-          value.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
-
-        const htmlBySectionId = {};
-
-        for (const definition of sectionDefinitions) {
-          const nodes = Array.from(document.querySelectorAll(definition.selector));
-          if (definition.multiple) {
-            nodes.forEach((node, index) => {
-              htmlBySectionId[`${definition.prefix}-${index}`] = node.outerHTML;
-            });
-            continue;
-          }
-
-          if (nodes[0]) {
-            htmlBySectionId[definition.prefix] = nodes[0].outerHTML;
-          }
-        }
-
-        const markets = Array.from(document.querySelectorAll('.tkt-val > div'))
-          .map((node, sourceIndex) => {
-            const name = node.querySelector('h4')?.innerText?.trim();
-            const currentNumber = node.querySelector('span')?.innerText?.trim();
-            const time = node.querySelector('p')?.innerText
-              ? normalize(node.querySelector('p').innerText)
-              : '';
-
-            if (!name || !currentNumber || !time) {
-              return null;
-            }
-
-            return {
-              name,
-              time,
-              current_number: currentNumber,
-              source_index: sourceIndex,
-            };
-          })
-          .filter(Boolean);
-
-        return {
-          markets,
-          htmlBySectionId,
-        };
-      }, HOMEPAGE_SECTION_DEFINITIONS);
-
-      return this.buildSnapshot(rawSnapshot);
-    } catch (error) {
-      await this.resetBrowser();
-      throw error;
-    }
-  }
-
-  async scrapeWithCheerio() {
-    const response = await axios.get(this.targetUrl, {
-      timeout: this.timeoutMs,
-      headers: {
-        'User-Agent': DEFAULT_USER_AGENT,
-        'Accept-Language': 'en-US,en;q=0.9',
-      },
-    });
-
-    const $ = cheerio.load(response.data, {
-      decodeEntities: false,
-    });
-    const rawMarkets = [];
-
-    $('.tkt-val > div').each((sourceIndex, element) => {
-      const name = $(element).find('h4').first().text().trim();
-      const currentNumber = $(element).find('span').first().text().trim();
-      const time = normalizeText($(element).find('p').first().text());
-
-      if (!name || !currentNumber || !time) {
-        return;
-      }
-
-      rawMarkets.push({
-        name,
-        time,
-        current_number: currentNumber,
-        source_index: sourceIndex,
-      });
-    });
-
-    if (rawMarkets.length === 0) {
-      throw new Error('Cheerio returned zero market records.');
-    }
-
-    const htmlBySectionId = {};
-
-    for (const definition of HOMEPAGE_SECTION_DEFINITIONS) {
-      const matches = $(definition.selector);
-      if (definition.multiple) {
-        matches.each((index, element) => {
-          htmlBySectionId[`${definition.prefix}-${index}`] = $.html(element);
-        });
+  logCandidateApis(candidateApis) {
+    for (const url of candidateApis) {
+      if (this.loggedApis.has(url)) {
         continue;
       }
 
-      if (matches.first().length > 0) {
-        htmlBySectionId[definition.prefix] = $.html(matches.first());
+      this.loggedApis.add(url);
+      this.logger.info('network_probe_candidate', { url });
+    }
+  }
+
+  selectDetailTargets(markets) {
+    const immediateTargets = [];
+    const sweepTargets = [];
+    const now = Date.now();
+
+    for (const market of markets) {
+      const key = createRecordKey(market.name, market.time);
+      const previous = this.homepageState.get(key);
+      const cache = this.detailCache.get(key);
+      const homepageChanged =
+        !previous ||
+        previous.number !== market.number ||
+        !isSameLink(previous.links?.jodi, market.links?.jodi) ||
+        !isSameLink(previous.links?.panel, market.links?.panel);
+      const needsSeed = !cache || !cache.current.jodi || !cache.current.panel;
+      const dueForSweep =
+        !cache ||
+        !cache.lastCheckedAt ||
+        now - cache.lastCheckedAt >= this.detailSweepIntervalMs;
+
+      if (homepageChanged || needsSeed) {
+        immediateTargets.push(market);
+        continue;
+      }
+
+      if (dueForSweep) {
+        sweepTargets.push(market);
       }
     }
 
-    return this.buildSnapshot({
-      markets: rawMarkets,
-      htmlBySectionId,
+    sweepTargets.sort((left, right) => {
+      const leftCache = this.detailCache.get(createRecordKey(left.name, left.time));
+      const rightCache = this.detailCache.get(createRecordKey(right.name, right.time));
+      return (leftCache?.lastCheckedAt ?? 0) - (rightCache?.lastCheckedAt ?? 0);
     });
+
+    return [...immediateTargets, ...sweepTargets].slice(0, this.detailMaxPerCycle);
   }
 
-  buildSnapshot(rawSnapshot) {
+  async refreshMarketDetails(markets) {
+    const queue = [...markets];
+    const workers = Array.from(
+      { length: Math.min(this.detailConcurrency, queue.length) },
+      () => this.consumeDetailQueue(queue),
+    );
+    await Promise.all(workers);
+  }
+
+  async consumeDetailQueue(queue) {
+    while (queue.length > 0) {
+      const market = queue.shift();
+      if (!market) {
+        return;
+      }
+
+      await this.refreshSingleMarketDetail(market);
+    }
+  }
+
+  async refreshSingleMarketDetail(market) {
+    const key = createRecordKey(market.name, market.time);
+    const cached = this.detailCache.get(key) ?? {
+      current: {
+        jodi: '',
+        panel: '',
+      },
+      staleReason: null,
+      lastCheckedAt: null,
+      lastSuccessfulAt: null,
+    };
+    const homepageParts = parseResultParts(market.number);
+    const nextCache = {
+      ...cached,
+      current: {
+        jodi: cached.current.jodi || homepageParts.jodi,
+        panel: cached.current.panel || homepageParts.panel,
+      },
+      lastCheckedAt: Date.now(),
+      staleReason: null,
+    };
+
+    const [jodiResult, panelResult] = await Promise.allSettled([
+      scrapeJodiValue({
+        browser: this.browser,
+        url: market.links.jodi,
+        timeoutMs: this.timeoutMs,
+        logger: this.logger,
+      }),
+      scrapePanelValue({
+        browser: this.browser,
+        url: market.links.panel,
+        timeoutMs: this.timeoutMs,
+        logger: this.logger,
+      }),
+    ]);
+
+    if (jodiResult.status === 'fulfilled' && jodiResult.value) {
+      nextCache.current.jodi = jodiResult.value;
+    }
+
+    if (panelResult.status === 'fulfilled' && panelResult.value) {
+      nextCache.current.panel = panelResult.value;
+    }
+
+    if (
+      (jodiResult.status === 'fulfilled' && jodiResult.value) ||
+      (panelResult.status === 'fulfilled' && panelResult.value)
+    ) {
+      nextCache.lastSuccessfulAt = Date.now();
+      nextCache.staleReason = null;
+    } else {
+      const reasons = [jodiResult, panelResult]
+        .filter((result) => result.status === 'rejected')
+        .map((result) => result.reason?.message)
+        .filter(Boolean);
+      nextCache.staleReason = reasons.join('; ') || 'detail values unavailable';
+      this.logger.warn('market_detail_refresh_failed', {
+        key,
+        message: nextCache.staleReason,
+      });
+    }
+
+    this.detailCache.set(key, nextCache);
+  }
+
+  buildRecord(market) {
+    const key = createRecordKey(market.name, market.time);
+    const slug = createSlug(market.name);
+    const detail = this.detailCache.get(key);
+    const homepageParts = parseResultParts(market.number);
+    const stale =
+      !detail?.lastSuccessfulAt || Date.now() - detail.lastSuccessfulAt > this.staleAfterMs;
+
     return {
-      markets: this.buildRecords(rawSnapshot.markets),
-      homepage: this.buildHomepageSnapshot(rawSnapshot.htmlBySectionId),
+      key,
+      slug,
+      name: market.name,
+      time: market.time,
+      links: {
+        jodi: market.links.jodi,
+        panel: market.links.panel,
+      },
+      current: {
+        number: homepageParts.number || market.number,
+        jodi: detail?.current.jodi || homepageParts.jodi,
+        panel: detail?.current.panel || homepageParts.panel,
+      },
+      stale,
+      stale_reason: detail?.staleReason ?? null,
+      source_index: market.source_index,
+      group_index: market.group_index,
+      changed_fields: [],
     };
   }
 
-  buildHomepageSnapshot(rawHtmlBySectionId) {
-    const htmlBySectionId = Object.fromEntries(
-      Object.entries(rawHtmlBySectionId ?? {}).map(([sectionId, html]) => [
+  buildHomepageSnapshot(htmlBySectionId) {
+    return Object.fromEntries(
+      Object.entries(htmlBySectionId ?? {}).map(([sectionId, html]) => [
         sectionId,
         sanitizeFragmentHtml(html, this.targetUrl),
       ]),
     );
-
-    return {
-      htmlBySectionId,
-    };
-  }
-
-  buildRecords(rawRecords) {
-    const scrapedAt = new Date().toISOString();
-
-    return rawRecords.map((record) => {
-      const name = normalizeText(record.name);
-      const time = normalizeTime(record.time);
-      const currentNumber = normalizeNumber(record.current_number);
-
-      return {
-        key: createRecordKey(name, time),
-        name,
-        time,
-        current_number: currentNumber,
-        scraped_at: scrapedAt,
-        source_index: record.source_index,
-      };
-    });
-  }
-
-  async resetBrowser() {
-    if (this.page) {
-      await this.page.close().catch(() => undefined);
-      this.page = null;
-    }
-
-    if (this.browser) {
-      await this.browser.close().catch(() => undefined);
-      this.browser = null;
-    }
   }
 }

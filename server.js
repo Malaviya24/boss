@@ -13,11 +13,15 @@ import { createAllRouter } from './routes/all.js';
 import { createLatestRouter } from './routes/latest.js';
 import { createHistoryRouter } from './routes/history.js';
 import { createHomepageRouter } from './routes/homepage.js';
+import { createMarketRouter } from './routes/market.js';
 import { getCloneCss } from './utils/homepage-template.js';
 import {
   closeSocketServer,
   emitHomepageUpdate,
   emitUpdateAll,
+  emitUpdateJodi,
+  emitUpdateNumber,
+  emitUpdatePanel,
   initializeSocketServer,
 } from './socket.js';
 
@@ -29,18 +33,17 @@ const logger = createLogger('server');
 
 const port = Number.parseInt(process.env.PORT ?? '4000', 10);
 const targetUrl = process.env.TARGET_URL ?? 'https://dpboss.boston/';
-const scrapeIntervalMs = Number.parseInt(
-  process.env.SCRAPE_INTERVAL_MS ?? '5000',
+const scrapeIntervalMs = Number.parseInt(process.env.SCRAPE_INTERVAL_MS ?? '5000', 10);
+const scrapeTimeoutMs = Number.parseInt(process.env.SCRAPE_TIMEOUT_MS ?? '30000', 10);
+const maxHistoryLength = Number.parseInt(process.env.MAX_HISTORY_LENGTH ?? '50', 10);
+const detailSweepIntervalMs = Number.parseInt(
+  process.env.DETAIL_SWEEP_INTERVAL_MS ?? '300000',
   10,
 );
-const scrapeTimeoutMs = Number.parseInt(
-  process.env.SCRAPE_TIMEOUT_MS ?? '30000',
-  10,
-);
-const maxHistoryLength = Number.parseInt(
-  process.env.MAX_HISTORY_LENGTH ?? '50',
-  10,
-);
+const detailConcurrency = Number.parseInt(process.env.DETAIL_CONCURRENCY ?? '4', 10);
+const detailMaxPerCycle = Number.parseInt(process.env.DETAIL_MAX_PER_CYCLE ?? '8', 10);
+const staleAfterMs = Number.parseInt(process.env.STALE_AFTER_MS ?? '1800000', 10);
+const networkProbeEnabled = process.env.NETWORK_PROBE_ENABLED === 'true';
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((origin) => origin.trim())
@@ -54,14 +57,11 @@ function isAllowedOrigin(origin) {
   return allowedOrigins.includes(origin);
 }
 
-function applySecurityHeaders(request, response, next) {
+function applySecurityHeaders(_request, response, next) {
   response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('X-Frame-Options', 'DENY');
-  response.setHeader(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=()',
-  );
+  response.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   if (process.env.NODE_ENV === 'production') {
     response.setHeader(
@@ -88,6 +88,11 @@ async function bootstrap() {
         ? false
         : process.env.PUPPETEER_HEADLESS ?? 'new',
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    detailSweepIntervalMs,
+    detailConcurrency,
+    detailMaxPerCycle,
+    staleAfterMs,
+    networkProbeEnabled,
     logger,
   });
 
@@ -137,6 +142,7 @@ async function bootstrap() {
   app.use('/api/all', createAllRouter(store));
   app.use('/api/latest', createLatestRouter(store));
   app.use('/api/history', createHistoryRouter(store));
+  app.use('/api/market', createMarketRouter(store));
   app.use('/api/homepage', createHomepageRouter(store, { targetUrl }));
 
   const clientDistPath = path.join(__dirname, 'client', 'dist');
@@ -176,7 +182,27 @@ async function bootstrap() {
     store,
     intervalMs: scrapeIntervalMs,
     logger,
-    onMarketsChange: (payload) => emitUpdateAll(payload),
+    onMarketsChange: (payload) => {
+      emitUpdateAll(payload);
+      if (payload.byField.number.length > 0) {
+        emitUpdateNumber({
+          records: payload.byField.number,
+          updatedAt: payload.updatedAt,
+        });
+      }
+      if (payload.byField.jodi.length > 0) {
+        emitUpdateJodi({
+          records: payload.byField.jodi,
+          updatedAt: payload.updatedAt,
+        });
+      }
+      if (payload.byField.panel.length > 0) {
+        emitUpdatePanel({
+          records: payload.byField.panel,
+          updatedAt: payload.updatedAt,
+        });
+      }
+    },
     onHomepageChange: (payload) => emitHomepageUpdate(payload),
   });
 

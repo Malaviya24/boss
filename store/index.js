@@ -10,6 +10,8 @@ const REDIS_KEYS = {
   lastUpdateAt: 'dpboss:last-update-at',
 };
 
+const TRACKED_FIELDS = ['number', 'jodi', 'panel'];
+
 export async function createStateStore({ redisUrl, maxHistoryLength, logger }) {
   const store = new StateStore({
     redisUrl,
@@ -32,6 +34,7 @@ class StateStore {
     this.latestUpdates = [];
     this.homepageSnapshot = {
       htmlBySectionId: {},
+      candidateApis: [],
     };
     this.lastScrapeAt = null;
     this.lastUpdateAt = null;
@@ -84,9 +87,27 @@ class StateStore {
     return this.sortRecords(Array.from(this.history.values()));
   }
 
+  getMarketRecords({ slug, name } = {}) {
+    const normalizedSlug = (slug || '').trim().toLowerCase();
+    const normalizedName = (name || '').trim().toLowerCase();
+
+    return this.getAllRecords().filter((record) => {
+      if (normalizedSlug && record.slug !== normalizedSlug) {
+        return false;
+      }
+
+      if (normalizedName && !record.name.toLowerCase().includes(normalizedName)) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
   getHomepageSnapshot() {
     return {
       htmlBySectionId: this.homepageSnapshot.htmlBySectionId ?? {},
+      candidateApis: this.homepageSnapshot.candidateApis ?? [],
       updatedAt: this.homepageUpdatedAt,
       lastScrapeAt: this.lastScrapeAt,
     };
@@ -103,80 +124,76 @@ class StateStore {
   async applyScrape(scrapedRecords, scrapedAt) {
     const seenKeys = new Set();
     const changedRecords = [];
+    const changedByField = {
+      number: [],
+      jodi: [],
+      panel: [],
+    };
 
     for (const scrapedRecord of scrapedRecords) {
       seenKeys.add(scrapedRecord.key);
 
       const existingRecord = this.records.get(scrapedRecord.key);
       const existingHistory = this.history.get(scrapedRecord.key);
-
-      if (!existingRecord) {
-        const createdRecord = {
-          ...scrapedRecord,
-          stale: false,
-          updated_at: scrapedAt,
-          last_changed_at: scrapedAt,
-        };
-
-        const createdHistory = {
-          key: scrapedRecord.key,
-          name: scrapedRecord.name,
-          time: scrapedRecord.time,
-          current_number: scrapedRecord.current_number,
-          previous_numbers: [],
-          source_index: scrapedRecord.source_index,
-          stale: false,
-          updated_at: scrapedAt,
-          last_changed_at: scrapedAt,
-        };
-
-        this.records.set(scrapedRecord.key, createdRecord);
-        this.history.set(scrapedRecord.key, createdHistory);
-        changedRecords.push(createdRecord);
-        continue;
-      }
+      const changedFields = existingRecord
+        ? TRACKED_FIELDS.filter(
+            (field) => existingRecord.current?.[field] !== scrapedRecord.current?.[field],
+          )
+        : [...TRACKED_FIELDS];
 
       const nextRecord = {
         ...existingRecord,
         ...scrapedRecord,
-        stale: false,
         updated_at: scrapedAt,
+        last_changed_at:
+          changedFields.length > 0
+            ? scrapedAt
+            : existingRecord?.last_changed_at ?? scrapedAt,
+        changed_fields: changedFields,
       };
 
-      const nextHistory = existingHistory || {
-        key: scrapedRecord.key,
-        name: scrapedRecord.name,
-        time: scrapedRecord.time,
-        current_number: scrapedRecord.current_number,
-        previous_numbers: [],
-        source_index: scrapedRecord.source_index,
-        stale: false,
-        updated_at: scrapedAt,
-        last_changed_at: scrapedAt,
-      };
+      const nextHistory = existingHistory
+        ? {
+            ...existingHistory,
+            name: scrapedRecord.name,
+            slug: scrapedRecord.slug,
+            time: scrapedRecord.time,
+            links: scrapedRecord.links,
+            current: scrapedRecord.current,
+            stale: scrapedRecord.stale,
+            updated_at: scrapedAt,
+          }
+        : {
+            key: scrapedRecord.key,
+            slug: scrapedRecord.slug,
+            name: scrapedRecord.name,
+            time: scrapedRecord.time,
+            links: scrapedRecord.links,
+            current: scrapedRecord.current,
+            history: [],
+            stale: scrapedRecord.stale,
+            updated_at: scrapedAt,
+            last_changed_at: scrapedAt,
+            source_index: scrapedRecord.source_index,
+          };
 
-      nextHistory.name = scrapedRecord.name;
-      nextHistory.time = scrapedRecord.time;
-      nextHistory.source_index = scrapedRecord.source_index;
-      nextHistory.stale = false;
-      nextHistory.updated_at = scrapedAt;
-
-      if (existingRecord.current_number !== scrapedRecord.current_number) {
-        nextHistory.previous_numbers = [
-          ...nextHistory.previous_numbers,
-          existingRecord.current_number,
+      if (changedFields.length > 0) {
+        nextHistory.history = [
+          ...(nextHistory.history ?? []),
+          {
+            changed_at: scrapedAt,
+            fields_changed: changedFields,
+            previous: existingRecord?.current ?? null,
+            next: scrapedRecord.current,
+          },
         ].slice(-this.maxHistoryLength);
-        nextHistory.current_number = scrapedRecord.current_number;
         nextHistory.last_changed_at = scrapedAt;
-
-        nextRecord.current_number = scrapedRecord.current_number;
-        nextRecord.last_changed_at = scrapedAt;
         changedRecords.push(nextRecord);
+        for (const field of changedFields) {
+          changedByField[field].push(nextRecord);
+        }
       } else {
-        nextRecord.current_number = existingRecord.current_number;
-        nextRecord.last_changed_at = existingRecord.last_changed_at ?? scrapedAt;
-        nextHistory.current_number = existingRecord.current_number;
-        nextHistory.last_changed_at = nextHistory.last_changed_at ?? scrapedAt;
+        nextHistory.last_changed_at = existingHistory?.last_changed_at ?? scrapedAt;
       }
 
       this.records.set(scrapedRecord.key, nextRecord);
@@ -191,6 +208,7 @@ class StateStore {
       this.records.set(key, {
         ...record,
         stale: true,
+        changed_fields: [],
       });
 
       const historyRecord = this.history.get(key);
@@ -198,12 +216,13 @@ class StateStore {
         this.history.set(key, {
           ...historyRecord,
           stale: true,
+          updated_at: scrapedAt,
         });
       }
     }
 
+    this.latestUpdates = this.sortRecords(changedRecords);
     if (changedRecords.length > 0) {
-      this.latestUpdates = this.sortRecords(changedRecords);
       this.lastUpdateAt = scrapedAt;
     }
 
@@ -213,21 +232,25 @@ class StateStore {
     return {
       allRecords: this.getAllRecords(),
       changedRecords: this.sortRecords(changedRecords),
+      changedByField: {
+        number: this.sortRecords(changedByField.number),
+        jodi: this.sortRecords(changedByField.jodi),
+        panel: this.sortRecords(changedByField.panel),
+      },
       updatedAt: this.lastUpdateAt,
       lastScrapeAt: this.lastScrapeAt,
     };
   }
 
   async applyHomepageSnapshot(homepageSnapshot, scrapedAt) {
-    const nextHtmlBySectionId = homepageSnapshot?.htmlBySectionId ?? {};
-    const didChange =
-      JSON.stringify(this.homepageSnapshot.htmlBySectionId ?? {}) !==
-      JSON.stringify(nextHtmlBySectionId);
+    const nextSnapshot = {
+      htmlBySectionId: homepageSnapshot?.htmlBySectionId ?? {},
+      candidateApis: homepageSnapshot?.candidateApis ?? [],
+    };
+    const didChange = JSON.stringify(this.homepageSnapshot) !== JSON.stringify(nextSnapshot);
 
     if (didChange) {
-      this.homepageSnapshot = {
-        htmlBySectionId: nextHtmlBySectionId,
-      };
+      this.homepageSnapshot = nextSnapshot;
       this.homepageUpdatedAt = scrapedAt;
     }
 
@@ -282,7 +305,7 @@ class StateStore {
       JSON.parse(history ?? '[]').map((record) => [record.key, record]),
     );
     this.homepageSnapshot = JSON.parse(
-      homepageSnapshot ?? '{"htmlBySectionId":{}}',
+      homepageSnapshot ?? '{"htmlBySectionId":{},"candidateApis":[]}',
     );
     this.homepageUpdatedAt = homepageUpdatedAt || null;
     this.lastScrapeAt = lastScrapeAt || null;
