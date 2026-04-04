@@ -23,31 +23,6 @@ function getBackendOrigin() {
   return value.replace(/\/$/, '');
 }
 
-function buildTargetUrl(request) {
-  const backendOrigin = getBackendOrigin();
-  const slug = Array.isArray(request.query.path)
-    ? request.query.path.join('/')
-    : request.query.path || '';
-  const targetUrl = new URL(`/api/${slug}`, `${backendOrigin}/`);
-
-  for (const [key, value] of Object.entries(request.query)) {
-    if (key === 'path') {
-      continue;
-    }
-
-    if (Array.isArray(value)) {
-      for (const item of value) {
-        targetUrl.searchParams.append(key, item);
-      }
-      continue;
-    }
-
-    targetUrl.searchParams.set(key, value);
-  }
-
-  return targetUrl;
-}
-
 function copySafeHeaders(upstreamResponse, response) {
   upstreamResponse.headers.forEach((value, key) => {
     if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
@@ -60,7 +35,7 @@ function copySafeHeaders(upstreamResponse, response) {
   response.setHeader('Cache-Control', 'no-store');
 }
 
-export default async function handler(request, response) {
+export async function proxyApiRequest(request, response, apiPath) {
   if (!['GET', 'HEAD'].includes(request.method)) {
     response.setHeader('Allow', 'GET, HEAD');
     response.status(405).json({ error: 'Method not allowed' });
@@ -68,7 +43,21 @@ export default async function handler(request, response) {
   }
 
   try {
-    const targetUrl = buildTargetUrl(request);
+    const targetUrl = new URL(apiPath, `${getBackendOrigin()}/`);
+
+    for (const [key, value] of Object.entries(request.query ?? {})) {
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          targetUrl.searchParams.append(key, item);
+        }
+        continue;
+      }
+
+      if (typeof value === 'string') {
+        targetUrl.searchParams.set(key, value);
+      }
+    }
+
     const upstreamResponse = await fetch(targetUrl, {
       method: request.method,
       headers: {
@@ -84,8 +73,9 @@ export default async function handler(request, response) {
       response.setHeader('Content-Type', contentType);
     }
 
-    const buffer = Buffer.from(await upstreamResponse.arrayBuffer());
-    response.status(upstreamResponse.status).send(buffer);
+    response
+      .status(upstreamResponse.status)
+      .send(Buffer.from(await upstreamResponse.arrayBuffer()));
   } catch (error) {
     response.status(502).json({
       error: 'Upstream request failed',
