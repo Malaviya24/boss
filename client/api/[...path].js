@@ -1,4 +1,4 @@
-const HOP_BY_HOP_HEADERS = new Set([
+const UNSAFE_RESPONSE_HEADERS = new Set([
   'connection',
   'keep-alive',
   'proxy-authenticate',
@@ -8,6 +8,7 @@ const HOP_BY_HOP_HEADERS = new Set([
   'transfer-encoding',
   'upgrade',
   'content-length',
+  'content-encoding',
   'host',
   'x-powered-by',
   'server',
@@ -49,7 +50,7 @@ function buildTargetUrl(request) {
 
 function copySafeHeaders(upstreamResponse, response) {
   upstreamResponse.headers.forEach((value, key) => {
-    if (HOP_BY_HOP_HEADERS.has(key.toLowerCase())) {
+    if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
       return;
     }
 
@@ -72,16 +73,23 @@ export default async function handler(request, response) {
       method: request.method,
       headers: {
         accept: request.headers.accept || '*/*',
+        'accept-encoding': 'identity',
       },
     });
 
     copySafeHeaders(upstreamResponse, response);
 
+    const contentType = upstreamResponse.headers.get('content-type');
+    if (contentType) {
+      response.setHeader('Content-Type', contentType);
+    }
+
     const buffer = Buffer.from(await upstreamResponse.arrayBuffer());
     response.status(upstreamResponse.status).send(buffer);
-  } catch {
+  } catch (error) {
     response.status(502).json({
       error: 'Upstream request failed',
+      message: error.message,
     });
   }
 }
