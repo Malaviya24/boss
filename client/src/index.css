@@ -1,0 +1,31 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color-scheme: light;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.clone-app {
+  min-height: 100vh;
+}
+
+.html-fragment {
+  display: contents;
+}
+
+.clone-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Helvetica, sans-serif;
+  color: #001699;
+  background-color: #ffcc99;
+}
