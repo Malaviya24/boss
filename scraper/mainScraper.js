@@ -3,6 +3,7 @@ import { normalizeNumber, normalizeText, normalizeTime } from '../utils/normaliz
 const HOMEPAGE_SECTION_DEFINITIONS = [
   { prefix: 'lucky-numbers', selector: '.f-pti', multiple: false },
   { prefix: 'live-results', selector: '.liv-rslt', multiple: false },
+  { prefix: 'market-group', selector: '.tkt-val', multiple: true },
   { prefix: 'data-table', selector: '.my-table', multiple: true },
   { prefix: 'aaj-pass', selector: '.aaj-pass', multiple: false },
   { prefix: 'weekly-sections', selector: '.sun-col', multiple: false },
