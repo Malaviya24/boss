@@ -38,18 +38,20 @@ RUN apt-get update && apt-get install -y \
   libxtst6 \
   xdg-utils && rm -rf /var/lib/apt/lists/*
 
-ENV NODE_ENV=production
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 COPY package.json package-lock.json* ./
 COPY client/package.json ./client/package.json
 
-RUN npm install
+RUN npm install --include=dev
 
 COPY . .
 
 RUN npm run build
+RUN npm prune --omit=dev
+
+ENV NODE_ENV=production
 
 EXPOSE 4000
 
