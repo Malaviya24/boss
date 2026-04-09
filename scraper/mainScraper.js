@@ -1,3 +1,5 @@
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 import { normalizeNumber, normalizeText, normalizeTime } from '../utils/normalize.js';
 
 const HOMEPAGE_SECTION_DEFINITIONS = [
@@ -11,56 +13,70 @@ const HOMEPAGE_SECTION_DEFINITIONS = [
   { prefix: 'bottom-table', selector: 'table.l-obj-giv', multiple: true },
 ];
 
-export async function scrapeHomepage({ page, targetUrl, timeoutMs, networkProbe }) {
+const USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+function normalizeValue(value) {
+  return (value || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function toAbsoluteUrl(value, baseUrl) {
+  if (!value) {
+    return '';
+  }
+
+  try {
+    return new URL(value, baseUrl).toString();
+  } catch {
+    return value;
+  }
+}
+
+export async function scrapeHomepage({ targetUrl, timeoutMs, networkProbe }) {
   networkProbe?.reset();
 
-  await page.goto(targetUrl, {
-    waitUntil: 'networkidle2',
+  const response = await axios.get(targetUrl, {
     timeout: timeoutMs,
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+    },
   });
 
-  await page.waitForSelector('.tkt-val', {
-    timeout: timeoutMs,
-  });
+  const $ = cheerio.load(response.data, { decodeEntities: false });
+  const htmlBySectionId = {};
 
-  const rawSnapshot = await page.evaluate((sectionDefinitions, baseUrl) => {
-    const normalize = (value) =>
-      (value || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
-    const toAbsoluteUrl = (value) => {
-      if (!value) {
-        return '';
-      }
-
-      try {
-        return new URL(value, baseUrl).toString();
-      } catch {
-        return value;
-      }
-    };
-
-    const htmlBySectionId = {};
-    for (const definition of sectionDefinitions) {
-      const nodes = Array.from(document.querySelectorAll(definition.selector));
-      if (definition.multiple) {
-        nodes.forEach((node, index) => {
-          htmlBySectionId[`${definition.prefix}-${index}`] = node.outerHTML;
-        });
-        continue;
-      }
-
-      if (nodes[0]) {
-        htmlBySectionId[definition.prefix] = nodes[0].outerHTML;
-      }
+  for (const definition of HOMEPAGE_SECTION_DEFINITIONS) {
+    const nodes = $(definition.selector).toArray();
+    if (definition.multiple) {
+      nodes.forEach((node, index) => {
+        htmlBySectionId[`${definition.prefix}-${index}`] = $.html(node);
+      });
+      continue;
     }
 
-    let sourceIndex = 0;
-    const markets = Array.from(document.querySelectorAll('.tkt-val')).flatMap(
-      (groupNode, groupIndex) =>
-        Array.from(groupNode.querySelectorAll(':scope > div')).map((marketNode) => {
-          const links = Array.from(marketNode.querySelectorAll('a[href]')).map((anchor) => ({
-            href: toAbsoluteUrl(anchor.getAttribute('href')),
-            text: normalize(anchor.innerText),
-          }));
+    if (nodes[0]) {
+      htmlBySectionId[definition.prefix] = $.html(nodes[0]);
+    }
+  }
+
+  let sourceIndex = 0;
+  const markets = $('.tkt-val')
+    .toArray()
+    .flatMap((groupNode, groupIndex) =>
+      $(groupNode)
+        .children('div')
+        .toArray()
+        .map((marketNode) => {
+          const links = $(marketNode)
+            .find('a[href]')
+            .toArray()
+            .map((anchor) => ({
+              href: toAbsoluteUrl($(anchor).attr('href'), targetUrl),
+              text: normalizeValue($(anchor).text()),
+            }));
           const jodiLink = links.find(
             (link) => /jodi-chart-record/i.test(link.href) || /jodi/i.test(link.text),
           );
@@ -69,9 +85,9 @@ export async function scrapeHomepage({ page, targetUrl, timeoutMs, networkProbe 
           );
 
           const item = {
-            name: normalize(marketNode.querySelector('h4')?.innerText),
-            time: normalize(marketNode.querySelector('p')?.innerText),
-            number: normalize(marketNode.querySelector('span')?.innerText),
+            name: normalizeValue($(marketNode).find('h4').first().text()),
+            time: normalizeValue($(marketNode).find('p').first().text()),
+            number: normalizeValue($(marketNode).find('span').first().text()),
             source_index: sourceIndex,
             group_index: groupIndex,
             links: {
@@ -85,15 +101,9 @@ export async function scrapeHomepage({ page, targetUrl, timeoutMs, networkProbe 
         }),
     );
 
-    return {
-      htmlBySectionId,
-      markets,
-    };
-  }, HOMEPAGE_SECTION_DEFINITIONS, targetUrl);
-
   return {
-    homepage: rawSnapshot.htmlBySectionId,
-    markets: rawSnapshot.markets
+    homepage: htmlBySectionId,
+    markets: markets
       .filter((market) => market.name && market.time && market.number)
       .map((market) => ({
         ...market,

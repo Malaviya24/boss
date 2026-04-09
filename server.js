@@ -33,17 +33,10 @@ const logger = createLogger('server');
 
 const port = Number.parseInt(process.env.PORT ?? '4000', 10);
 const targetUrl = process.env.TARGET_URL ?? 'https://dpboss.boston/';
-const scrapeIntervalMs = Number.parseInt(process.env.SCRAPE_INTERVAL_MS ?? '5000', 10);
+const scrapeIntervalMs = Number.parseInt(process.env.SCRAPE_INTERVAL_MS ?? '6000', 10);
 const scrapeTimeoutMs = Number.parseInt(process.env.SCRAPE_TIMEOUT_MS ?? '30000', 10);
 const maxHistoryLength = Number.parseInt(process.env.MAX_HISTORY_LENGTH ?? '50', 10);
-const detailSweepIntervalMs = Number.parseInt(
-  process.env.DETAIL_SWEEP_INTERVAL_MS ?? '300000',
-  10,
-);
-const detailConcurrency = Number.parseInt(process.env.DETAIL_CONCURRENCY ?? '4', 10);
-const detailMaxPerCycle = Number.parseInt(process.env.DETAIL_MAX_PER_CYCLE ?? '8', 10);
 const staleAfterMs = Number.parseInt(process.env.STALE_AFTER_MS ?? '1800000', 10);
-const networkProbeEnabled = process.env.NETWORK_PROBE_ENABLED === 'true';
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((origin) => origin.trim())
@@ -83,16 +76,7 @@ async function bootstrap() {
   const scraper = createScraper({
     targetUrl,
     timeoutMs: scrapeTimeoutMs,
-    headless:
-      process.env.PUPPETEER_HEADLESS === 'false'
-        ? false
-        : process.env.PUPPETEER_HEADLESS ?? 'new',
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-    detailSweepIntervalMs,
-    detailConcurrency,
-    detailMaxPerCycle,
     staleAfterMs,
-    networkProbeEnabled,
     logger,
   });
 
