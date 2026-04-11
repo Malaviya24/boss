@@ -25,6 +25,30 @@ function getBackendOrigin() {
   return value.replace(/\/$/, '');
 }
 
+function getProxyTimeoutMs() {
+  const parsed = Number.parseInt(String(process.env.PROXY_TIMEOUT_MS ?? ''), 10);
+  if (Number.isFinite(parsed) && parsed >= 1000) {
+    return parsed;
+  }
+
+  return 15_000;
+}
+
+async function fetchWithTimeout(url, options = {}) {
+  const timeoutMs = getProxyTimeoutMs();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function copySafeHeaders(upstreamResponse, response, { forceNoStore = true } = {}) {
   upstreamResponse.headers.forEach((value, key) => {
     if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
@@ -73,7 +97,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       }
     }
 
-    const upstreamResponse = await fetch(targetUrl, {
+    const upstreamResponse = await fetchWithTimeout(targetUrl, {
       method: request.method,
       headers: {
         accept: request.headers.accept || '*/*',
@@ -96,8 +120,9 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
 
     Readable.fromWeb(upstreamResponse.body).pipe(response);
   } catch (error) {
+    const isAbort = String(error?.name ?? '').toLowerCase() === 'aborterror';
     response.status(502).json({
-      error: 'Upstream request failed',
+      error: isAbort ? 'Upstream request timeout' : 'Upstream request failed',
       message: error.message,
     });
   }

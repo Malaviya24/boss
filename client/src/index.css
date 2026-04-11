@@ -23,11 +23,28 @@ body {
 .clone-loading {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  gap: 12px;
   align-items: center;
   justify-content: center;
   font-family: Helvetica, sans-serif;
   color: #001699;
   background-color: #ffcc99;
+}
+
+.clone-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 22, 153, 0.2);
+  border-top-color: #001699;
+  animation: cloneSpin 0.9s linear infinite;
+}
+
+@keyframes cloneSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .market-explorer-shell {

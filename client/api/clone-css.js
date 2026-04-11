@@ -23,14 +23,32 @@ function getBackendOrigin() {
   return value.replace(/\/$/, '');
 }
 
+function getCloneCssTimeoutMs() {
+  const parsed = Number.parseInt(String(process.env.PROXY_TIMEOUT_MS ?? ''), 10);
+  if (Number.isFinite(parsed) && parsed >= 1000) {
+    return parsed;
+  }
+
+  return 8000;
+}
+
 export default async function handler(_request, response) {
   try {
-    const upstreamResponse = await fetch(`${getBackendOrigin()}/api/clone-css`, {
-      headers: {
-        accept: 'text/css,*/*;q=0.1',
-        'accept-encoding': 'identity',
-      },
-    });
+    const controller = new AbortController();
+    const timeoutMs = getCloneCssTimeoutMs();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    let upstreamResponse;
+    try {
+      upstreamResponse = await fetch(`${getBackendOrigin()}/api/clone-css`, {
+        headers: {
+          accept: 'text/css,*/*;q=0.1',
+          'accept-encoding': 'identity',
+        },
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
 
     if (!upstreamResponse.ok) {
       throw new Error(`Clone CSS upstream returned ${upstreamResponse.status}`);
@@ -52,6 +70,10 @@ export default async function handler(_request, response) {
       .status(200)
       .setHeader('Content-Type', 'text/css; charset=utf-8')
       .setHeader('Cache-Control', 'no-store')
-      .send(`/* clone css unavailable: ${error.message} */`);
+      .send(
+        `/* clone css unavailable: ${error.message} */
+body{margin:0;background:#ffcc99;color:#001699;font-family:Helvetica,Arial,sans-serif}
+#root{min-height:100vh}`,
+      );
   }
 }

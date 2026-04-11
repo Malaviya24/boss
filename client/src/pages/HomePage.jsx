@@ -304,15 +304,7 @@ export default function HomePage() {
   if (!template) {
     return (
       <div className="clone-loading">
-        <img
-          src="/img/spinner.png"
-          alt="Loading"
-          width="48"
-          height="48"
-          loading="eager"
-          decoding="async"
-          style={{ marginBottom: 12 }}
-        />
+        <div className="clone-spinner" aria-hidden="true" />
         <div>{connectionStatus === 'error' ? 'Unable to load homepage.' : 'Loading DPBOSS...'}</div>
       </div>
     );

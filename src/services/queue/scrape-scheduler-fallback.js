@@ -17,6 +17,22 @@ function buildTargets(targetUrls) {
   }));
 }
 
+function isTransientNetworkError(error) {
+  const message = String(error?.message ?? '').toLowerCase();
+  const code = String(error?.code ?? '').toLowerCase();
+  const status = Number(error?.response?.status ?? 0);
+
+  if (message.includes('timeout') || message.includes('aborted')) {
+    return true;
+  }
+
+  if (['econnaborted', 'etimedout', 'ecconnreset', 'econnreset', 'enotfound'].includes(code)) {
+    return true;
+  }
+
+  return status >= 502 && status <= 599;
+}
+
 export function createInMemoryScrapeService({ env, logger, scraperService, store, onMarketsChange, onHomepageChange }) {
   const targets = buildTargets(env.scrapeTargets);
   const namespaceTargets = targets.length > 1;
@@ -133,13 +149,22 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
       return { ok: true, skipped: false };
     } catch (error) {
       consecutiveFailures += 1;
-      logger.error('scrape_cycle_failed', {
+      const failurePayload = {
         message: error.message,
-        stack: error.stack,
+        code: error?.code,
         durationMs: Date.now() - cycleStartedAt,
         targetCount: targets.length,
         consecutiveFailures,
-      });
+      };
+
+      if (isTransientNetworkError(error)) {
+        logger.warn('scrape_cycle_transient_failure', failurePayload);
+      } else {
+        logger.error('scrape_cycle_failed', {
+          ...failurePayload,
+          stack: error.stack,
+        });
+      }
       return { ok: false, skipped: false };
     } finally {
       isRunning = false;
