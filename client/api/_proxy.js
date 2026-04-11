@@ -1,3 +1,5 @@
+import { Readable } from 'node:stream';
+
 const UNSAFE_RESPONSE_HEADERS = new Set([
   'connection',
   'keep-alive',
@@ -86,9 +88,14 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       response.setHeader('Content-Type', contentType);
     }
 
-    response
-      .status(upstreamResponse.status)
-      .send(Buffer.from(await upstreamResponse.arrayBuffer()));
+    response.status(upstreamResponse.status);
+
+    if (!upstreamResponse.body) {
+      response.send(Buffer.from(await upstreamResponse.arrayBuffer()));
+      return;
+    }
+
+    Readable.fromWeb(upstreamResponse.body).pipe(response);
   } catch (error) {
     response.status(502).json({
       error: 'Upstream request failed',

@@ -345,6 +345,44 @@ function getSharedAssetPath(webzipRoot, type, assetPath) {
 export function createMarketPagesRouter({ webzipRoot, logger }) {
   const router = Router();
   const registry = buildRegistry(webzipRoot, logger);
+  const knownSlugsByType = {
+    jodi: new Set(registry.jodi?.keys() ?? []),
+    panel: new Set(registry.panel?.keys() ?? []),
+  };
+  const compiledPageCache = new Map();
+
+  function getCompiledMarketPage(type, slug, marketFolder) {
+    const indexPath = path.join(marketFolder, 'index.html');
+    if (!fs.existsSync(indexPath)) {
+      return null;
+    }
+
+    const stats = fs.statSync(indexPath);
+    const cacheKey = `${type}:${slug}`;
+    const cached = compiledPageCache.get(cacheKey);
+    if (cached && cached.mtimeMs === stats.mtimeMs) {
+      return cached.html;
+    }
+
+    const rawHtml = fs.readFileSync(indexPath, 'utf8');
+    const normalizedHtml = normalizeMalformedEmbeddedImageUrls(rawHtml);
+    const strippedHtml = stripNonEssentialScripts(normalizedHtml);
+    const rewrittenHtml = rewriteMarketPhpLinks(strippedHtml, {
+      defaultType: type,
+      knownSlugsByType,
+    });
+    const withNoScriptFallback = addNoScriptScrollFallback(rewrittenHtml);
+    const canonicalPagePath = `${CANONICAL_MARKET_BASE}/${type}/${slug}`;
+    const hashSafeHtml = rewriteInPageHashLinks(withNoScriptFallback, canonicalPagePath);
+    const pageHtml = injectBaseTag(hashSafeHtml, `${canonicalPagePath}/static/`);
+
+    compiledPageCache.set(cacheKey, {
+      html: pageHtml,
+      mtimeMs: stats.mtimeMs,
+    });
+
+    return pageHtml;
+  }
 
   router.get('/:type(jodi|panel)/:slug', validateParams(marketPageParamsSchema), (request, response) => {
     const type = request.validatedParams.type;
@@ -359,8 +397,8 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
       return;
     }
 
-    const indexPath = path.join(marketFolder, 'index.html');
-    if (!fs.existsSync(indexPath)) {
+    const pageHtml = getCompiledMarketPage(type, slug, marketFolder);
+    if (!pageHtml) {
       response
         .status(404)
         .type('html')
@@ -368,22 +406,7 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
       return;
     }
 
-    const rawHtml = fs.readFileSync(indexPath, 'utf8');
-    const normalizedHtml = normalizeMalformedEmbeddedImageUrls(rawHtml);
-    const strippedHtml = stripNonEssentialScripts(normalizedHtml);
-    const rewrittenHtml = rewriteMarketPhpLinks(strippedHtml, {
-      defaultType: type,
-      knownSlugsByType: {
-        jodi: new Set(registry.jodi?.keys() ?? []),
-        panel: new Set(registry.panel?.keys() ?? []),
-      },
-    });
-    const withNoScriptFallback = addNoScriptScrollFallback(rewrittenHtml);
-    const canonicalPagePath = `${CANONICAL_MARKET_BASE}/${type}/${slug}`;
-    const hashSafeHtml = rewriteInPageHashLinks(withNoScriptFallback, canonicalPagePath);
-    const pageHtml = injectBaseTag(hashSafeHtml, `${canonicalPagePath}/static/`);
-
-    response.setHeader('Cache-Control', 'public, max-age=300');
+    response.setHeader('Cache-Control', 'public, max-age=600, s-maxage=900, stale-while-revalidate=3600');
     response.type('html').send(pageHtml);
   });
 
@@ -415,7 +438,7 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
         return;
       }
 
-      response.setHeader('Cache-Control', 'public, max-age=3600');
+      response.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800');
       response.sendFile(filePath);
     },
   );
