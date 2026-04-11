@@ -218,10 +218,15 @@ export async function bootstrapApp() {
 
   const queueService = createInMemoryScrapeService(commonScrapeHooks);
 
-  await queueService.start();
-
   await new Promise((resolve) => {
-    server.listen(env.port, resolve);
+    server.listen(env.port, '0.0.0.0', resolve);
+  });
+
+  queueService.start().catch((error) => {
+    logger.error('scrape_scheduler_start_failed', {
+      message: error.message,
+      stack: error.stack,
+    });
   });
 
   logger.info('server_listening', {

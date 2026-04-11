@@ -148,15 +148,20 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
   }
 
   async function start() {
+    if (intervalId) {
+      return;
+    }
+
     logger.info('scrape_interval_scheduler_started', {
       targetCount: targets.length,
       intervalMs: env.scrapeIntervalMs,
     });
 
-    await runCycle();
     intervalId = setInterval(() => {
       void runCycle();
     }, env.scrapeIntervalMs);
+
+    void runCycle();
   }
 
   async function close() {
