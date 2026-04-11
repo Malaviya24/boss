@@ -1,6 +1,6 @@
 # DPBOSS Real-Time Clone
 
-Production-ready Express + React application that clones homepage market blocks, serves local `webzip` market pages, and streams market updates through Socket.io and SSE.
+Production-ready Express + React application that clones homepage market blocks, renders Jodi/Panel market pages with native React templates backed by local `webzip` data, and streams market updates through Socket.io and SSE.
 
 ## Tech Stack
 
@@ -37,6 +37,7 @@ Legacy (backward compatible):
 - `GET /api/history`
 - `GET /api/market`
 - `GET /api/homepage`
+- `GET /api/market-template/:type/:slug`
 
 Versioned:
 - `GET /api/v1/all`
@@ -44,6 +45,7 @@ Versioned:
 - `GET /api/v1/history`
 - `GET /api/v1/market`
 - `GET /api/v1/homepage`
+- `GET /api/v1/market-template/:type/:slug`
 - `GET /api/v1/stream` (SSE)
 
 Market pages:
@@ -72,6 +74,8 @@ Important:
 - Runtime store is in-memory only (no Redis required).
 - `SCRAPE_TARGETS` supports multiple websites (comma-separated).
 - `CSRF_TOKEN` protects non-GET routes.
+- Market pages are local-first (`webzip`) with on-demand live table fallback per requested slug only.
+- Tune fallback with `MARKET_*` env keys (`MARKET_LIVE_FALLBACK_ENABLED`, `MARKET_TABLE_CACHE_TTL_MS`, `MARKET_TABLE_FETCH_TIMEOUT_MS`, `MARKET_TABLE_FETCH_CONCURRENCY`).
 
 ## Deployment
 
@@ -100,7 +104,7 @@ This keeps `index.html` in each market folder and deduplicates shared assets und
 
 ## Notes
 
-- `/market/*` is local-file backed and depends on `webzip/` presence.
-- In split deploys (Vercel + Render), `/market/*` is routed through Vercel API proxy to backend market pages.
+- `/market/*` renders through React route templates and depends on `webzip/` data APIs from backend.
+- In split deploys (Vercel + Render), `/market/*` stays on frontend routes while market data/static assets are fetched via Vercel API proxy to backend.
 - Homepage HTML is sanitized before rendering in React (`dangerouslySetInnerHTML` path).
 - APIs serve cached state from store; requests do not trigger fresh scrape execution.

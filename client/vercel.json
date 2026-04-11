@@ -14,12 +14,24 @@
       "destination": "/api/asset?path=newfev/$1"
     },
     {
-      "source": "/market/(.*)",
-      "destination": "/api/market-page?path=$1"
+      "source": "/market/:type/:slug/static/:asset*",
+      "destination": "/api/market-page/:type/:slug/static/:asset*"
     },
     {
-      "source": "/api/market-page/(.*)",
-      "destination": "/api/market-page?path=$1"
+      "source": "/market/:type/:slug.php",
+      "destination": "/"
+    },
+    {
+      "source": "/market/:type/:slug",
+      "destination": "/"
+    },
+    {
+      "source": "/market",
+      "destination": "/"
+    },
+    {
+      "source": "/market/(.*)",
+      "destination": "/"
     }
   ],
   "headers": [

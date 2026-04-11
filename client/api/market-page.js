@@ -3,8 +3,14 @@ import { proxyRequest } from './_proxy.js';
 function normalizePathSegment(value) {
   return String(value ?? '')
     .replace(/^\/+/, '')
-    .replace(/\.{2,}/g, '')
-    .trim();
+    .split('/')
+    .map((segment) =>
+      String(segment)
+        .trim()
+        .replace(/[^a-z0-9._-]/gi, ''),
+    )
+    .filter(Boolean)
+    .join('/');
 }
 
 export default async function handler(request, response) {
@@ -18,7 +24,7 @@ export default async function handler(request, response) {
     return;
   }
 
-  return proxyRequest(request, response, `/market/${normalizedPath}`, {
+  return proxyRequest(request, response, `/api/market-page/${normalizedPath}`, {
     forceNoStore: false,
     omitQueryKeys: ['path'],
   });

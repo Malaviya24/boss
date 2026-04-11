@@ -18,6 +18,7 @@ import { createV1ApiRouter } from './routes/v1/api-routes.js';
 import { createMarketPagesRouter } from './routes/market-pages.js';
 import { createCloneCssRouter } from './routes/clone-css-route.js';
 import { createHealthRouter } from './routes/health-route.js';
+import { createMarketTemplateService } from './services/market-template-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -121,8 +122,16 @@ export async function bootstrapApp() {
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
   });
+  const marketTemplateService = createMarketTemplateService({
+    webzipRoot: path.join(projectRoot, 'webzip'),
+    logger,
+    targetUrl: env.primaryTarget,
+    liveFallbackEnabled: env.marketLiveFallbackEnabled,
+    tableCacheTtlMs: env.marketTableCacheTtlMs,
+    tableFetchTimeoutMs: env.marketTableFetchTimeoutMs,
+    tableFetchConcurrency: env.marketTableFetchConcurrency,
+  });
 
-  app.use('/market', marketPagesRouter);
   app.use('/api/market-page', marketPagesRouter);
 
   app.use(
@@ -132,10 +141,18 @@ export async function bootstrapApp() {
       store,
       targetUrl: env.primaryTarget,
       realtimeService,
+      marketTemplateService,
     }),
   );
 
-  app.use('/api', createLegacyApiRouter({ store, targetUrl: env.primaryTarget }));
+  app.use(
+    '/api',
+    createLegacyApiRouter({
+      store,
+      targetUrl: env.primaryTarget,
+      marketTemplateService,
+    }),
+  );
 
   mountFrontendStatic(app);
 

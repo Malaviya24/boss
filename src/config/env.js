@@ -51,5 +51,9 @@ export function loadEnv() {
     logLevel: process.env.LOG_LEVEL ?? 'info',
     enableSseHeartbeat: toBoolean(process.env.SSE_HEARTBEAT_ENABLED, true),
     sseHeartbeatMs: toInt(process.env.SSE_HEARTBEAT_MS, 15000),
+    marketLiveFallbackEnabled: toBoolean(process.env.MARKET_LIVE_FALLBACK_ENABLED, true),
+    marketTableCacheTtlMs: toInt(process.env.MARKET_TABLE_CACHE_TTL_MS, 45000),
+    marketTableFetchTimeoutMs: toInt(process.env.MARKET_TABLE_FETCH_TIMEOUT_MS, 8000),
+    marketTableFetchConcurrency: toInt(process.env.MARKET_TABLE_FETCH_CONCURRENCY, 2),
   };
 }

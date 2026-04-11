@@ -1,8 +1,12 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { getHttpAgents } from '../../config/http-agents.js';
-import { toLocalMarketPath } from '../../utils/market-links.js';
-import { normalizeNumber, normalizeText, normalizeTime } from '../../utils/normalize.js';
+import {
+  createSlug,
+  normalizeNumber,
+  normalizeText,
+  normalizeTime,
+} from '../../utils/normalize.js';
 
 const HOMEPAGE_SECTION_DEFINITIONS = [
   { prefix: 'lucky-numbers', selector: '.f-pti', multiple: false },
@@ -32,6 +36,39 @@ function toAbsoluteUrl(value, baseUrl) {
   } catch {
     return value;
   }
+}
+
+function parseLiveResultNumbers($) {
+  const bySlug = new Map();
+  const liveContainer = $('.liv-rslt .lv-mc').first();
+  if (!liveContainer.length) {
+    return bySlug;
+  }
+
+  liveContainer.find('span.h8').each((_, nameNode) => {
+    const name = normalizeValue($(nameNode).text());
+    if (!name) {
+      return;
+    }
+
+    const valueNode = $(nameNode).nextAll('span.h9').first();
+    const number = normalizeValue(valueNode.text());
+    if (!number || /loading/i.test(number)) {
+      return;
+    }
+
+    const slug = createSlug(name);
+    if (!slug) {
+      return;
+    }
+
+    bySlug.set(slug, {
+      name,
+      number,
+    });
+  });
+
+  return bySlug;
 }
 
 export async function scrapeHomepage({ targetUrl, timeoutMs, networkProbe }) {
@@ -96,8 +133,8 @@ export async function scrapeHomepage({ targetUrl, timeoutMs, networkProbe }) {
             source_index: sourceIndex,
             group_index: groupIndex,
             links: {
-              jodi: toLocalMarketPath(jodiLink?.href) || '',
-              panel: toLocalMarketPath(panelLink?.href) || '',
+              jodi: jodiLink?.href || '',
+              panel: panelLink?.href || '',
             },
           };
 
@@ -106,9 +143,46 @@ export async function scrapeHomepage({ targetUrl, timeoutMs, networkProbe }) {
         }),
     );
 
+  const liveNumbersBySlug = parseLiveResultNumbers($);
+  const seenMarketSlugs = new Set();
+  const mergedMarkets = markets.map((market) => {
+    const slug = createSlug(market.name);
+    if (slug) {
+      seenMarketSlugs.add(slug);
+      const liveResult = liveNumbersBySlug.get(slug);
+      if (liveResult?.number) {
+        return {
+          ...market,
+          number: liveResult.number,
+        };
+      }
+    }
+
+    return market;
+  });
+
+  for (const [slug, liveResult] of liveNumbersBySlug.entries()) {
+    if (seenMarketSlugs.has(slug)) {
+      continue;
+    }
+
+    mergedMarkets.push({
+      name: liveResult.name,
+      time: 'Live Result',
+      number: liveResult.number,
+      source_index: sourceIndex,
+      group_index: -1,
+      links: {
+        jodi: '',
+        panel: '',
+      },
+    });
+    sourceIndex += 1;
+  }
+
   return {
     homepage: htmlBySectionId,
-    markets: markets
+    markets: mergedMarkets
       .filter((market) => market.name && market.time && market.number)
       .map((market) => ({
         ...market,

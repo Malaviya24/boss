@@ -9,3 +9,15 @@ export const marketPageParamsSchema = z.object({
   type: z.enum(['jodi', 'panel']),
   slug: z.string().trim().min(1).max(200),
 });
+
+export const marketTemplateQuerySchema = z.object({
+  offset: z.coerce.number().int().min(0).max(20000).optional(),
+  limit: z.coerce.number().int().min(20).max(400).optional(),
+});
+
+export const marketTemplateRequestQuerySchema = z.object({
+  type: z.enum(['jodi', 'panel']),
+  slug: z.string().trim().min(1).max(200),
+  offset: z.coerce.number().int().min(0).max(20000).optional(),
+  limit: z.coerce.number().int().min(20).max(400).optional(),
+});

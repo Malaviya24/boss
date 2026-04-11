@@ -15,10 +15,6 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
-      '/market': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
       '/images': {
         target: 'http://localhost:4000',
         changeOrigin: true,

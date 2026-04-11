@@ -19,6 +19,22 @@ const ROTATING_PHRASES = [
   'Fix jodi',
 ];
 
+function parseMarketPath(value = '') {
+  const match = String(value)
+    .trim()
+    .toLowerCase()
+    .match(/^\/market\/(jodi|panel)\/([a-z0-9-]+)(?:\.php)?\/?$/i);
+
+  if (!match) {
+    return null;
+  }
+
+  return {
+    type: match[1] === 'panel' ? 'panel' : 'jodi',
+    slug: String(match[2]),
+  };
+}
+
 function areSectionMapsEqual(currentValue, nextValue) {
   const current = currentValue ?? {};
   const next = nextValue ?? {};
@@ -254,11 +270,21 @@ export default function HomePage() {
     }
 
     prefetchedMarketLinksRef.current.add(url);
-    fetch(url, {
-      method: 'GET',
-      credentials: 'same-origin',
-      priority: 'low',
-    }).catch(() => undefined);
+    const parsed = parseMarketPath(url);
+    if (!parsed) {
+      return;
+    }
+
+    import('../services/market/market-api.js')
+      .then(({ fetchMarketTemplate }) =>
+        fetchMarketTemplate({
+          type: parsed.type,
+          slug: parsed.slug,
+          offset: 0,
+          limit: 180,
+        }),
+      )
+      .catch(() => undefined);
   }, []);
 
   const handlePointerPrefetch = useCallback((event) => {

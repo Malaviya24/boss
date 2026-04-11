@@ -1,0 +1,248 @@
+.market-page {
+  min-height: 100vh;
+  background: #fcca99;
+  color: #00094d;
+  padding: 6px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.market-page .market-card {
+  border: 2px solid #ff0016;
+  border-radius: 10px;
+  background: linear-gradient(187deg, #fc9 50%, #ffc387 50%);
+  box-shadow: 0 0 20px 0 rgb(0 0 0 / 25%);
+  margin-bottom: 8px;
+}
+
+.market-page .market-logo-wrap {
+  text-align: center;
+  padding: 6px 10px 2px;
+}
+
+.market-page .market-logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.market-page .market-title {
+  margin: 0;
+  padding: 6px;
+  text-align: center;
+  color: #fff8f8;
+  text-shadow: 1px 1px 2px #000;
+  background: #ff00a2;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.market-page .market-summary {
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.market-page .market-summary h2 {
+  font-size: 14px;
+  margin: 0 0 2px;
+}
+
+.market-page .market-result {
+  text-align: center;
+  padding: 8px;
+  border-top: 1px solid #9f6f36;
+}
+
+.market-page .market-result-name {
+  font-size: 30px;
+  font-style: italic;
+  color: #001699;
+  line-height: 1.1;
+}
+
+.market-page .market-result-value {
+  font-size: 34px;
+  color: #880e4f;
+  text-shadow: 1px 1px 2px #ffe2c6;
+  margin: 2px 0 0;
+}
+
+.market-page .market-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.market-page .market-btn,
+.market-not-found .market-btn,
+.market-error .market-btn {
+  border: 1px solid #e6e6e6;
+  background: #522f92;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.market-page .market-links {
+  border: 2px solid #003c6c;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.market-page .market-links a {
+  display: block;
+  padding: 7px;
+  color: #003c6c;
+  text-decoration: none;
+  border-bottom: 1px solid #024c88;
+  background: #ffe3be;
+}
+
+.market-page .market-links a:last-child {
+  border-bottom: 0;
+}
+
+.market-page .market-hero-wrap {
+  margin: 6px auto 8px;
+}
+
+.market-page .market-hero-block {
+  margin-bottom: 8px;
+}
+
+.market-page .market-hero-block:last-child {
+  margin-bottom: 0;
+}
+
+.market-page .market-hero-fallback {
+  text-align: center;
+}
+
+.market-page .market-fallback-bottom-btn {
+  display: inline-block;
+  border: 1px solid #7aa4c8;
+  background: #89beea;
+  color: #001699;
+  font-weight: 700;
+  padding: 12px 36px;
+  margin-top: 8px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 35%);
+  cursor: pointer;
+}
+
+.market-page .market-table-wrap {
+  overflow-x: auto;
+}
+
+.market-page .market-table-raw-wrap {
+  padding: 0;
+}
+
+.market-page .market-table-raw {
+  margin: 0 auto 10px;
+  overflow-x: auto;
+}
+
+.market-page .market-table-raw:last-child {
+  margin-bottom: 0;
+}
+
+.market-page .market-table-raw table {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.market-page .market-footer-wrap {
+  padding: 0;
+  margin: 8px auto 0;
+}
+
+.market-page .market-footer-block {
+  margin: 0 0 8px;
+}
+
+.market-page .market-footer-block:last-child {
+  margin-bottom: 0;
+}
+
+.market-page .market-table-title {
+  margin: 0;
+  padding: 8px;
+  background: #3f51b5;
+  color: #fff;
+  text-align: center;
+  font-size: 17px;
+}
+
+.market-page .market-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fc9;
+}
+
+.market-page .market-table th,
+.market-page .market-table td {
+  border: 1px solid #3f51b5;
+  padding: 4px 6px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.market-page .market-table th {
+  background: #ffc107;
+}
+
+.market-page .market-table td.is-highlight {
+  color: #c80000;
+}
+
+.market-page .market-load-more {
+  display: block;
+  margin: 10px auto;
+}
+
+.market-loading,
+.market-error,
+.market-not-found {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #2a1f00;
+}
+
+.market-skeleton {
+  width: min(900px, 96%);
+  height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1c18f 25%, #ffd5ac 45%, #f1c18f 65%);
+  background-size: 300% 100%;
+  animation: market-skeleton 1.2s infinite;
+}
+
+@keyframes market-skeleton {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .market-page .market-title {
+    font-size: 17px;
+  }
+
+  .market-page .market-result-name {
+    font-size: 23px;
+  }
+
+  .market-page .market-result-value {
+    font-size: 26px;
+  }
+}
