@@ -55,7 +55,7 @@ function detectTargetType(typeToken, defaultType) {
   return defaultType;
 }
 
-function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType }) {
+function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType, linkBase }) {
   const $ = cheerio.load(html, { decodeEntities: false });
 
   $('[href]').each((_, element) => {
@@ -106,7 +106,7 @@ function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType }) {
       return;
     }
 
-    element.attribs.href = `/market/${targetType}/${slug}`;
+    element.attribs.href = `${linkBase}/${targetType}/${slug}`;
   });
 
   return $.html();
@@ -279,8 +279,9 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
         jodi: new Set(registry.jodi?.keys() ?? []),
         panel: new Set(registry.panel?.keys() ?? []),
       },
+      linkBase: request.baseUrl || '/market',
     });
-    const pagePath = `/market/${type}/${slug}`;
+    const pagePath = `${request.baseUrl || '/market'}/${type}/${slug}`;
     const hashSafeHtml = rewriteInPageHashLinks(rewrittenHtml, pagePath);
     const pageHtml = injectBaseTag(hashSafeHtml, `${pagePath}/static/`);
 

@@ -120,13 +120,13 @@ export async function bootstrapApp() {
 
   mountImageStatic(app);
 
-  app.use(
-    '/market',
-    createMarketPagesRouter({
-      webzipRoot: path.join(projectRoot, 'webzip'),
-      logger,
-    }),
-  );
+  const marketPagesRouter = createMarketPagesRouter({
+    webzipRoot: path.join(projectRoot, 'webzip'),
+    logger,
+  });
+
+  app.use('/market', marketPagesRouter);
+  app.use('/api/market-page', marketPagesRouter);
 
   app.use(
     '/api/v1',

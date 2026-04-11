@@ -1,7 +1,7 @@
 const MARKET_LINK_PATTERN =
   /(?:^|\/)(jodi-chart-record|panel-chart-record)\/([a-z0-9-]+)\.php$/i;
 const LOCAL_MARKET_LINK_PATTERN =
-  /(?:^|\/)market\/(jodi|panel)\/([a-z0-9-]+)(?:\.php)?$/i;
+  /(?:^|\/)(?:market|api\/market-page)\/(jodi|panel)\/([a-z0-9-]+)(?:\.php)?$/i;
 
 function getPathname(value = '') {
   if (!value) {
@@ -30,7 +30,7 @@ export function buildLocalMarketPath(type, slug) {
     return '';
   }
 
-  return `/market/${normalizedType}/${normalizedSlug}`;
+  return `/api/market-page/${normalizedType}/${normalizedSlug}`;
 }
 
 export function extractMarketLink(value = '') {

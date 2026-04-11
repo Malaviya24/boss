@@ -173,23 +173,32 @@ export function createScrapeQueueService({ env, logger, scraperService, store, o
   }
 
   async function enqueueJobs() {
-    const cycleId = Math.floor(Date.now() / env.scrapeIntervalMs);
-
     await Promise.all(
-      targets.map((target) =>
-        queue.add(
-          'scrape-target',
-          {
-            targetKey: target.key,
-            targetUrl: target.url,
-            cycleId,
-          },
-          {
-            // BullMQ custom job ids cannot include ":".
-            jobId: `${target.key}--${cycleId}`,
-          },
-        ),
-      ),
+      targets.map(async (target) => {
+        try {
+          await queue.add(
+            'scrape-target',
+            {
+              targetKey: target.key,
+              targetUrl: target.url,
+            },
+            {
+              // One active job per target avoids queue backlog and stale updates.
+              jobId: target.key,
+            },
+          );
+        } catch (error) {
+          if (isDuplicateJobError(error)) {
+            logger.info('scrape_job_enqueue_skipped', {
+              target: target.url,
+              reason: 'job_already_running_or_queued',
+            });
+            return;
+          }
+
+          throw error;
+        }
+      }),
     );
   }
 
@@ -228,4 +237,9 @@ export function createScrapeQueueService({ env, logger, scraperService, store, o
     close,
     targets,
   };
+}
+
+function isDuplicateJobError(error) {
+  const message = String(error?.message ?? '').toLowerCase();
+  return message.includes('already exists') || message.includes('jobid');
 }
