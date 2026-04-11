@@ -3,6 +3,8 @@ import path from 'node:path';
 import { Router } from 'express';
 import * as cheerio from 'cheerio';
 import { normalizeMarketSlug } from '../utils/market-links.js';
+import { validateParams } from '../middlewares/validate.js';
+import { marketPageParamsSchema } from '../models/validators.js';
 
 const TYPE_CONFIG = {
   jodi: {
@@ -14,6 +16,10 @@ const TYPE_CONFIG = {
     pattern: /^\d+-panel-dpboss\.boston-panel-chart-record-(.+)\.php$/i,
   },
 };
+
+const CANONICAL_MARKET_BASE = '/market';
+const TOP_ANCHOR_ID = '__market_top_anchor';
+const BOTTOM_ANCHOR_ID = '__market_bottom_anchor';
 
 function injectBaseTag(html, baseHref) {
   const baseTag = `<base href="${baseHref}">`;
@@ -55,7 +61,7 @@ function detectTargetType(typeToken, defaultType) {
   return defaultType;
 }
 
-function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType, linkBase }) {
+function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType }) {
   const $ = cheerio.load(html, { decodeEntities: false });
 
   $('[href]').each((_, element) => {
@@ -106,7 +112,83 @@ function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType, linkBase }
       return;
     }
 
-    element.attribs.href = `${linkBase}/${targetType}/${slug}`;
+    element.attribs.href = `${CANONICAL_MARKET_BASE}/${targetType}/${slug}`;
+  });
+
+  return $.html();
+}
+
+function replaceNodeWithAnchor($, element, href, labelText) {
+  const attrs = { ...(element.attribs ?? {}) };
+  delete attrs.onclick;
+  delete attrs.onmousedown;
+  delete attrs.onmouseup;
+  delete attrs.ontouchstart;
+  delete attrs.ontouchend;
+  delete attrs.type;
+  delete attrs.value;
+  attrs.href = href;
+
+  const $anchor = $('<a></a>');
+  for (const [key, value] of Object.entries(attrs)) {
+    if (value !== undefined && value !== null && value !== '') {
+      $anchor.attr(key, value);
+    }
+  }
+
+  const isInput = String(element.tagName ?? '').toLowerCase() === 'input';
+  if (!isInput) {
+    const innerHtml = $(element).html();
+    if (innerHtml && String(innerHtml).trim()) {
+      $anchor.html(innerHtml);
+    } else {
+      $anchor.text(labelText);
+    }
+  } else {
+    $anchor.text(labelText);
+  }
+
+  $(element).replaceWith($anchor);
+}
+
+function addNoScriptScrollFallback(html) {
+  const $ = cheerio.load(html, { decodeEntities: false });
+  const $root = $('body').first().length > 0 ? $('body').first() : $.root();
+
+  if ($(`#${TOP_ANCHOR_ID}`).length === 0) {
+    $root.prepend(`<div id="${TOP_ANCHOR_ID}"></div>`);
+  }
+  if ($(`#${BOTTOM_ANCHOR_ID}`).length === 0) {
+    $root.append(`<div id="${BOTTOM_ANCHOR_ID}"></div>`);
+  }
+
+  $('a,button,input').each((_, element) => {
+    const tagName = String(element.tagName ?? '').toLowerCase();
+    const isInput = tagName === 'input';
+    const inputType = String(element.attribs?.type ?? '').toLowerCase();
+    if (isInput && inputType && !['button', 'submit'].includes(inputType)) {
+      return;
+    }
+
+    const labelText = String(
+      isInput ? element.attribs?.value ?? '' : $(element).text() ?? '',
+    )
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+
+    if (!labelText) {
+      return;
+    }
+
+    if (labelText.includes('go to bottom')) {
+      replaceNodeWithAnchor($, element, `#${BOTTOM_ANCHOR_ID}`, 'Go to Bottom');
+      return;
+    }
+
+    if (labelText.includes('go to top')) {
+      replaceNodeWithAnchor($, element, `#${TOP_ANCHOR_ID}`, 'Go to Top');
+    }
   });
 
   return $.html();
@@ -264,9 +346,9 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
   const router = Router();
   const registry = buildRegistry(webzipRoot, logger);
 
-  router.get('/:type(jodi|panel)/:slug', (request, response) => {
-    const type = request.params.type;
-    const slug = normalizeMarketSlug(request.params.slug);
+  router.get('/:type(jodi|panel)/:slug', validateParams(marketPageParamsSchema), (request, response) => {
+    const type = request.validatedParams.type;
+    const slug = normalizeMarketSlug(request.validatedParams.slug);
     const marketFolder = registry[type]?.get(slug);
 
     if (!marketFolder) {
@@ -295,44 +377,48 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
         jodi: new Set(registry.jodi?.keys() ?? []),
         panel: new Set(registry.panel?.keys() ?? []),
       },
-      linkBase: request.baseUrl || '/market',
     });
-    const pagePath = `${request.baseUrl || '/market'}/${type}/${slug}`;
-    const hashSafeHtml = rewriteInPageHashLinks(rewrittenHtml, pagePath);
-    const pageHtml = injectBaseTag(hashSafeHtml, `${pagePath}/static/`);
+    const withNoScriptFallback = addNoScriptScrollFallback(rewrittenHtml);
+    const canonicalPagePath = `${CANONICAL_MARKET_BASE}/${type}/${slug}`;
+    const hashSafeHtml = rewriteInPageHashLinks(withNoScriptFallback, canonicalPagePath);
+    const pageHtml = injectBaseTag(hashSafeHtml, `${canonicalPagePath}/static/`);
 
     response.setHeader('Cache-Control', 'public, max-age=300');
     response.type('html').send(pageHtml);
   });
 
-  router.get('/:type(jodi|panel)/:slug/static/*', (request, response) => {
-    const type = request.params.type;
-    const slug = normalizeMarketSlug(request.params.slug);
-    const assetPath = request.params[0] ?? '';
-    const marketFolder = registry[type]?.get(slug);
+  router.get(
+    '/:type(jodi|panel)/:slug/static/*',
+    validateParams(marketPageParamsSchema),
+    (request, response) => {
+      const type = request.validatedParams.type;
+      const slug = normalizeMarketSlug(request.validatedParams.slug);
+      const assetPath = request.params[0] ?? '';
+      const marketFolder = registry[type]?.get(slug);
 
-    if (!marketFolder || !assetPath) {
-      response.status(404).end();
-      return;
-    }
+      if (!marketFolder || !assetPath) {
+        response.status(404).end();
+        return;
+      }
 
-    const localFilePath = resolveSafePath(marketFolder, assetPath);
-    const sharedFilePath = getSharedAssetPath(webzipRoot, type, assetPath);
-    const filePathCandidates = [localFilePath, sharedFilePath].filter(Boolean);
+      const localFilePath = resolveSafePath(marketFolder, assetPath);
+      const sharedFilePath = getSharedAssetPath(webzipRoot, type, assetPath);
+      const filePathCandidates = [localFilePath, sharedFilePath].filter(Boolean);
 
-    const filePath = filePathCandidates.find(
-      (candidatePath) =>
-        fs.existsSync(candidatePath) && !fs.statSync(candidatePath).isDirectory(),
-    );
+      const filePath = filePathCandidates.find(
+        (candidatePath) =>
+          fs.existsSync(candidatePath) && !fs.statSync(candidatePath).isDirectory(),
+      );
 
-    if (!filePath) {
-      response.status(404).end();
-      return;
-    }
+      if (!filePath) {
+        response.status(404).end();
+        return;
+      }
 
-    response.setHeader('Cache-Control', 'public, max-age=3600');
-    response.sendFile(filePath);
-  });
+      response.setHeader('Cache-Control', 'public, max-age=3600');
+      response.sendFile(filePath);
+    },
+  );
 
   return router;
 }

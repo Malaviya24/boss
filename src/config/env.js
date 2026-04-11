@@ -42,7 +42,6 @@ export function loadEnv() {
     scrapeRetryDelayMs: toInt(process.env.SCRAPE_RETRY_DELAY_MS, 1000),
     maxHistoryLength: toInt(process.env.MAX_HISTORY_LENGTH, 50),
     staleAfterMs: toInt(process.env.STALE_AFTER_MS, 1800000),
-    redisUrl: process.env.REDIS_URL ?? '',
     apiRateLimitWindowMs: toInt(process.env.RATE_LIMIT_WINDOW_MS, 60_000),
     apiRateLimitMax: toInt(process.env.RATE_LIMIT_MAX, 240),
     strictRateLimitMax: toInt(process.env.RATE_LIMIT_STRICT_MAX, 60),

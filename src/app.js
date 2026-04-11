@@ -18,7 +18,6 @@ import { createV1ApiRouter } from './routes/v1/api-routes.js';
 import { createMarketPagesRouter } from './routes/market-pages.js';
 import { createCloneCssRouter } from './routes/clone-css-route.js';
 import { createHealthRouter } from './routes/health-route.js';
-import { sanitizeFragmentHtml } from './utils/homepage-template.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,7 +75,6 @@ export async function bootstrapApp() {
   const logger = createLogger('server', { level: env.logLevel });
 
   const store = await createStateStore({
-    redisUrl: env.redisUrl,
     maxHistoryLength: env.maxHistoryLength,
     logger,
   });
@@ -195,16 +193,8 @@ export async function bootstrapApp() {
       }
     },
     onHomepageChange: (payload) => {
-      const sanitizedHtmlBySectionId = Object.fromEntries(
-        Object.entries(payload.htmlBySectionId ?? {}).map(([sectionId, html]) => [
-          sectionId,
-          sanitizeFragmentHtml(html, env.primaryTarget),
-        ]),
-      );
-
       realtimeService.emit('homepage-update', {
         ...payload,
-        htmlBySectionId: sanitizedHtmlBySectionId,
       });
     },
   };

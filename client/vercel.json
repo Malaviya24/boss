@@ -3,11 +3,7 @@
   "rewrites": [
     {
       "source": "/market/(.*)",
-      "destination": "/api/market-page?path=$1"
-    },
-    {
-      "source": "/api/market-page/(.*)",
-      "destination": "/api/market-page?path=$1"
+      "destination": "/api/market-page/$1"
     }
   ],
   "headers": [

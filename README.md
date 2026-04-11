@@ -4,7 +4,7 @@ Production-ready Express + React application that clones homepage market blocks,
 
 ## Tech Stack
 
-- Backend: Node.js, Express, interval HTML scraper, optional Redis state cache, Socket.io
+- Backend: Node.js, Express, interval HTML scraper, in-memory state cache, Socket.io
 - Frontend: React + Vite
 - Security: Helmet, rate limiting, request validation, HTML sanitization
 - Logging: Winston + rotating log files in `logs/`
@@ -49,7 +49,7 @@ Versioned:
 Market pages:
 - `GET /market/jodi/:slug`
 - `GET /market/panel/:slug`
-- compatibility path via frontend proxy: `/api/market-page/:type/:slug`
+- compatibility path via frontend proxy: `/api/market-page/:type/:slug` and static asset subpaths
 
 ## Scripts
 
@@ -69,7 +69,7 @@ Copy `.env.example` and set production values.
 
 Important:
 - Scraper runs on interval mode by default in all environments.
-- `REDIS_URL` is optional and used only for state persistence.
+- Runtime store is in-memory only (no Redis required).
 - `SCRAPE_TARGETS` supports multiple websites (comma-separated).
 - `CSRF_TOKEN` protects non-GET routes.
 
@@ -101,5 +101,6 @@ This keeps `index.html` in each market folder and deduplicates shared assets und
 ## Notes
 
 - `/market/*` is local-file backed and depends on `webzip/` presence.
+- In split deploys (Vercel + Render), `/market/*` is routed through Vercel API proxy to backend market pages.
 - Homepage HTML is sanitized before rendering in React (`dangerouslySetInnerHTML` path).
 - APIs serve cached state from store; requests do not trigger fresh scrape execution.

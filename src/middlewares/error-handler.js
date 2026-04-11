@@ -8,23 +8,33 @@ export function notFoundHandler(_request, response) {
 
 export function errorHandler(error, request, response, _next) {
   const requestId = request.requestId;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   if (error instanceof ZodError) {
+    const details = isProduction
+      ? {
+          requestId,
+          issueCount: error.issues.length,
+        }
+      : {
+          requestId,
+          issues: error.issues,
+        };
+
     response.status(400).json(
-      errorResponse('Validation failed', 'VALIDATION_ERROR', {
-        requestId,
-        issues: error.issues,
-      }),
+      errorResponse('Validation failed', 'VALIDATION_ERROR', details),
     );
     return;
   }
 
   if (error instanceof AppError) {
+    const details = {
+      requestId,
+      ...(isProduction ? {} : { details: error.details }),
+    };
+
     response.status(error.statusCode).json(
-      errorResponse(error.message, error.code, {
-        requestId,
-        details: error.details,
-      }),
+      errorResponse(error.message, error.code, details),
     );
     return;
   }

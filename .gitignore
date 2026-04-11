@@ -12,3 +12,4 @@ yarn-error.log*
 pnpm-debug.log*
 logs/*.log
 logs/*.gz
+logs/.*-audit.json

@@ -24,6 +24,7 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
   const latestSnapshots = new Map();
   let intervalId = null;
   let isRunning = false;
+  let skippedCycles = 0;
 
   function mergeMarkets() {
     const merged = [];
@@ -88,17 +89,31 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
         lastMarketUpdateAt: marketResult.updatedAt,
       });
     }
+
+    return {
+      recordsCount: marketResult.allRecords.length,
+      changedCount: marketResult.changedRecords.length,
+      homepageChanged: homepageResult.changed,
+      scrapedAt,
+    };
   }
 
   async function runCycle() {
+    const cycleStartedAt = Date.now();
     if (isRunning) {
+      skippedCycles += 1;
       logger.warn('scrape_cycle_skipped', {
         reason: 'previous_cycle_in_progress',
+        skippedCycles,
       });
       return;
     }
 
     isRunning = true;
+    logger.info('scrape_cycle_started', {
+      targetCount: targets.length,
+    });
+
     try {
       await Promise.all(
         targets.map(async (target) => {
@@ -109,11 +124,23 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
         }),
       );
 
-      await applyMergedSnapshot();
+      const cycleResult = await applyMergedSnapshot();
+      logger.info('scrape_cycle_completed', {
+        durationMs: Date.now() - cycleStartedAt,
+        targetCount: targets.length,
+        recordsCount: cycleResult.recordsCount,
+        changedCount: cycleResult.changedCount,
+        homepageChanged: cycleResult.homepageChanged,
+        skippedCycles,
+        scrapedAt: cycleResult.scrapedAt,
+      });
     } catch (error) {
       logger.error('scrape_cycle_failed', {
         message: error.message,
         stack: error.stack,
+        durationMs: Date.now() - cycleStartedAt,
+        targetCount: targets.length,
+        skippedCycles,
       });
     } finally {
       isRunning = false;

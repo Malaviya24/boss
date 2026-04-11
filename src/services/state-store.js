@@ -1,20 +1,7 @@
-import Redis from 'ioredis';
-
-const REDIS_KEYS = {
-  records: 'dpboss:records',
-  latestUpdates: 'dpboss:latest-updates',
-  history: 'dpboss:history',
-  homepageSnapshot: 'dpboss:homepage-snapshot',
-  homepageUpdatedAt: 'dpboss:homepage-updated-at',
-  lastScrapeAt: 'dpboss:last-scrape-at',
-  lastUpdateAt: 'dpboss:last-update-at',
-};
-
 const TRACKED_FIELDS = ['number', 'jodi', 'panel'];
 
-export async function createStateStore({ redisUrl, maxHistoryLength, logger }) {
+export async function createStateStore({ maxHistoryLength, logger }) {
   const store = new StateStore({
-    redisUrl,
     maxHistoryLength,
     logger,
   });
@@ -24,11 +11,9 @@ export async function createStateStore({ redisUrl, maxHistoryLength, logger }) {
 }
 
 class StateStore {
-  constructor({ redisUrl, maxHistoryLength, logger }) {
+  constructor({ maxHistoryLength, logger }) {
     this.logger = logger;
     this.maxHistoryLength = maxHistoryLength;
-    this.redisUrl = redisUrl;
-    this.redis = null;
     this.records = new Map();
     this.history = new Map();
     this.latestUpdates = [];
@@ -42,37 +27,11 @@ class StateStore {
   }
 
   async init() {
-    if (!this.redisUrl) {
-      this.logger.info('store_initialized', { mode: 'memory' });
-      return;
-    }
-
-    try {
-      this.redis = new Redis(this.redisUrl, {
-        lazyConnect: true,
-        maxRetriesPerRequest: 1,
-      });
-      await this.redis.connect();
-      await this.loadFromRedis();
-      this.logger.info('store_initialized', { mode: 'redis' });
-    } catch (error) {
-      this.logger.warn('store_redis_fallback', {
-        message: error.message,
-      });
-      if (this.redis) {
-        await this.redis.quit().catch(() => undefined);
-        this.redis = null;
-      }
-    }
+    this.logger?.info?.('store_initialized', { mode: 'memory' });
   }
 
   async close() {
-    if (!this.redis) {
-      return;
-    }
-
-    await this.redis.quit().catch(() => undefined);
-    this.redis = null;
+    // In-memory store has no external resources to close.
   }
 
   getAllRecords() {
@@ -227,7 +186,6 @@ class StateStore {
     }
 
     this.lastScrapeAt = scrapedAt;
-    await this.persist();
 
     return {
       allRecords: this.getAllRecords(),
@@ -255,7 +213,6 @@ class StateStore {
     }
 
     this.lastScrapeAt = scrapedAt;
-    await this.persist();
 
     return {
       changed: didChange,
@@ -277,65 +234,5 @@ class StateStore {
 
       return left.name.localeCompare(right.name);
     });
-  }
-
-  async loadFromRedis() {
-    if (!this.redis) {
-      return;
-    }
-
-    const [
-      records,
-      latestUpdates,
-      history,
-      homepageSnapshot,
-      homepageUpdatedAt,
-      lastScrapeAt,
-      lastUpdateAt,
-    ] = await this.redis.mget(
-      REDIS_KEYS.records,
-      REDIS_KEYS.latestUpdates,
-      REDIS_KEYS.history,
-      REDIS_KEYS.homepageSnapshot,
-      REDIS_KEYS.homepageUpdatedAt,
-      REDIS_KEYS.lastScrapeAt,
-      REDIS_KEYS.lastUpdateAt,
-    );
-
-    this.records = new Map(
-      JSON.parse(records ?? '[]').map((record) => [record.key, record]),
-    );
-    this.latestUpdates = JSON.parse(latestUpdates ?? '[]');
-    this.history = new Map(
-      JSON.parse(history ?? '[]').map((record) => [record.key, record]),
-    );
-    this.homepageSnapshot = JSON.parse(
-      homepageSnapshot ?? '{"htmlBySectionId":{},"candidateApis":[]}',
-    );
-    this.homepageUpdatedAt = homepageUpdatedAt || null;
-    this.lastScrapeAt = lastScrapeAt || null;
-    this.lastUpdateAt = lastUpdateAt || null;
-  }
-
-  async persist() {
-    if (!this.redis) {
-      return;
-    }
-
-    try {
-      await this.redis.mset({
-        [REDIS_KEYS.records]: JSON.stringify(this.getAllRecords()),
-        [REDIS_KEYS.latestUpdates]: JSON.stringify(this.getLatestUpdates()),
-        [REDIS_KEYS.history]: JSON.stringify(this.getHistory()),
-        [REDIS_KEYS.homepageSnapshot]: JSON.stringify(this.homepageSnapshot),
-        [REDIS_KEYS.homepageUpdatedAt]: this.homepageUpdatedAt ?? '',
-        [REDIS_KEYS.lastScrapeAt]: this.lastScrapeAt ?? '',
-        [REDIS_KEYS.lastUpdateAt]: this.lastUpdateAt ?? '',
-      });
-    } catch (error) {
-      this.logger.error('redis_write_failed', {
-        message: error.message,
-      });
-    }
   }
 }

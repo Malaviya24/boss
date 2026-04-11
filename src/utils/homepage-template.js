@@ -22,8 +22,24 @@ const DYNAMIC_SECTION_DEFINITIONS = [
   { prefix: 'bottom-table', selector: 'table.l-obj-giv', multiple: true },
 ];
 
-function readSourceHtml() {
-  return fs.readFileSync(SOURCE_HTML_PATH, 'utf8');
+let sourceHtmlCache = null;
+let cloneCssCache = null;
+const homepageTemplateCache = new Map();
+
+function readSourceHtmlSnapshot() {
+  const stats = fs.statSync(SOURCE_HTML_PATH);
+  const mtimeMs = stats.mtimeMs;
+
+  if (sourceHtmlCache && sourceHtmlCache.mtimeMs === mtimeMs) {
+    return sourceHtmlCache;
+  }
+
+  sourceHtmlCache = {
+    mtimeMs,
+    html: fs.readFileSync(SOURCE_HTML_PATH, 'utf8'),
+  };
+
+  return sourceHtmlCache;
 }
 
 function sanitizeUrl(
@@ -299,11 +315,21 @@ function splitHtmlBySections(html, sectionOrder) {
 }
 
 export function getCloneCss() {
-  const $ = cheerio.load(readSourceHtml(), {
+  const sourceSnapshot = readSourceHtmlSnapshot();
+  if (cloneCssCache && cloneCssCache.mtimeMs === sourceSnapshot.mtimeMs) {
+    return cloneCssCache.value;
+  }
+
+  const $ = cheerio.load(sourceSnapshot.html, {
     decodeEntities: false,
   });
 
-  return repairLegacyCss($('style').first().html() ?? '');
+  const css = repairLegacyCss($('style').first().html() ?? '');
+  cloneCssCache = {
+    mtimeMs: sourceSnapshot.mtimeMs,
+    value: css,
+  };
+  return css;
 }
 
 export function sanitizeFragmentHtml(html, baseUrl) {
@@ -316,7 +342,14 @@ export function sanitizeFragmentHtml(html, baseUrl) {
 }
 
 export function getHomepageTemplate(baseUrl) {
-  const $ = cheerio.load(readSourceHtml(), {
+  const cacheKey = String(baseUrl ?? '').trim();
+  const sourceSnapshot = readSourceHtmlSnapshot();
+  const cachedTemplate = homepageTemplateCache.get(cacheKey);
+  if (cachedTemplate && cachedTemplate.mtimeMs === sourceSnapshot.mtimeMs) {
+    return cachedTemplate.value;
+  }
+
+  const $ = cheerio.load(sourceSnapshot.html, {
     decodeEntities: false,
   });
   const $body = $('body');
@@ -338,10 +371,17 @@ export function getHomepageTemplate(baseUrl) {
     sanitizeFragmentHtml(fragment, baseUrl),
   );
 
-  return {
+  const template = {
     fragments,
     sectionOrder,
     fallbackHtmlBySectionId,
   };
+
+  homepageTemplateCache.set(cacheKey, {
+    mtimeMs: sourceSnapshot.mtimeMs,
+    value: template,
+  });
+
+  return template;
 }
 
