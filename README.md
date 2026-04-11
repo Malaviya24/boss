@@ -4,7 +4,7 @@ Production-ready Express + React application that clones homepage market blocks,
 
 ## Tech Stack
 
-- Backend: Node.js, Express, BullMQ, Redis, Socket.io
+- Backend: Node.js, Express, interval HTML scraper, optional Redis state cache, Socket.io
 - Frontend: React + Vite
 - Security: Helmet, rate limiting, request validation, HTML sanitization
 - Logging: Winston + rotating log files in `logs/`
@@ -49,6 +49,7 @@ Versioned:
 Market pages:
 - `GET /market/jodi/:slug`
 - `GET /market/panel/:slug`
+- compatibility path via frontend proxy: `/api/market-page/:type/:slug`
 
 ## Scripts
 
@@ -67,8 +68,8 @@ npm run prod:prepare
 Copy `.env.example` and set production values.
 
 Important:
-- `REDIS_URL` is required for BullMQ in production.
-- If `REDIS_URL` is missing in development, app falls back to in-memory scheduler mode.
+- Scraper runs on interval mode by default in all environments.
+- `REDIS_URL` is optional and used only for state persistence.
 - `SCRAPE_TARGETS` supports multiple websites (comma-separated).
 - `CSRF_TOKEN` protects non-GET routes.
 

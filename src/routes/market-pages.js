@@ -127,6 +127,21 @@ function rewriteInPageHashLinks(html, pagePath) {
   return $.html();
 }
 
+function stripNonEssentialScripts(html) {
+  const $ = cheerio.load(html, { decodeEntities: false });
+
+  $('script').each((_, script) => {
+    const type = String(script.attribs?.type ?? '').trim().toLowerCase();
+    if (type === 'application/ld+json') {
+      return;
+    }
+
+    $(script).remove();
+  });
+
+  return $.html();
+}
+
 function createMissingPageHtml({ type, slug }) {
   const escapedType = String(type || '').replace(/[^a-z]/gi, '');
   const escapedSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '');
@@ -273,7 +288,8 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
 
     const rawHtml = fs.readFileSync(indexPath, 'utf8');
     const normalizedHtml = normalizeMalformedEmbeddedImageUrls(rawHtml);
-    const rewrittenHtml = rewriteMarketPhpLinks(normalizedHtml, {
+    const strippedHtml = stripNonEssentialScripts(normalizedHtml);
+    const rewrittenHtml = rewriteMarketPhpLinks(strippedHtml, {
       defaultType: type,
       knownSlugsByType: {
         jodi: new Set(registry.jodi?.keys() ?? []),

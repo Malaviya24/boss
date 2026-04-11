@@ -121,8 +121,7 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
   }
 
   async function start() {
-    logger.warn('scrape_queue_fallback_enabled', {
-      reason: 'missing_redis_url',
+    logger.info('scrape_interval_scheduler_started', {
       targetCount: targets.length,
       intervalMs: env.scrapeIntervalMs,
     });

@@ -150,9 +150,11 @@ function shouldHideSideButtons($, marketNode) {
   }
 
   const rowText = String($(marketNode).text() ?? '').replace(/\s+/g, ' ').toLowerCase();
-  const hasAddGameText = rowText.includes('add your game') || rowText.includes('market add email');
-  const hasSupportEmail = rowText.includes('support@dpboss.net');
-  if (hasAddGameText && hasSupportEmail) {
+  const hasAddGameText =
+    rowText.includes('add your game') ||
+    rowText.includes('market add email') ||
+    rowText.includes('market add email dpboss');
+  if (hasAddGameText) {
     return true;
   }
 

@@ -41,6 +41,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
   const {
     methods = ['GET', 'HEAD'],
     forceNoStore = true,
+    omitQueryKeys = [],
   } = options;
 
   if (!methods.includes(request.method)) {
@@ -51,8 +52,13 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
 
   try {
     const targetUrl = new URL(targetPath, `${getBackendOrigin()}/`);
+    const omitSet = new Set(omitQueryKeys.map((key) => String(key)));
 
     for (const [key, value] of Object.entries(request.query ?? {})) {
+      if (omitSet.has(String(key))) {
+        continue;
+      }
+
       if (Array.isArray(value)) {
         for (const item of value) {
           targetUrl.searchParams.append(key, item);

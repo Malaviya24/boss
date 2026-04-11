@@ -30,7 +30,7 @@ export function buildLocalMarketPath(type, slug) {
     return '';
   }
 
-  return `/api/market-page/${normalizedType}/${normalizedSlug}`;
+  return `/market/${normalizedType}/${normalizedSlug}`;
 }
 
 export function extractMarketLink(value = '') {

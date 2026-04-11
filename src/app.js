@@ -7,7 +7,6 @@ import { loadEnv } from './config/env.js';
 import { createLogger } from './utils/logger.js';
 import { createStateStore } from './services/state-store.js';
 import { createScraperService } from './services/scraper/scraper-service.js';
-import { createScrapeQueueService } from './services/queue/scrape-queue-service.js';
 import { createInMemoryScrapeService } from './services/queue/scrape-scheduler-fallback.js';
 import { createRealtimeService } from './services/realtime/realtime-service.js';
 import { buildSecurityMiddleware } from './middlewares/security.js';
@@ -210,14 +209,7 @@ export async function bootstrapApp() {
     },
   };
 
-  let queueService;
-  if (env.redisUrl) {
-    queueService = createScrapeQueueService(commonScrapeHooks);
-  } else if (env.isProduction) {
-    throw new Error('REDIS_URL is required for BullMQ scraping in production');
-  } else {
-    queueService = createInMemoryScrapeService(commonScrapeHooks);
-  }
+  const queueService = createInMemoryScrapeService(commonScrapeHooks);
 
   await queueService.start();
 

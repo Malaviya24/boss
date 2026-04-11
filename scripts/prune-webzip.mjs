@@ -15,9 +15,6 @@ const TYPE_CONFIG = {
 };
 
 const SHARED_ASSET_PATHS = [
-  'js/v0.js',
-  'js/v0/amp-ad-0.1.js',
-  'js/v0/amp-form-0.1.js',
   'images/logo.png',
   'images/fav/favicon.ico',
 ];
