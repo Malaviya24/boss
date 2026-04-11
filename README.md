@@ -1,112 +1,104 @@
 # DPBOSS Real-Time Clone
 
-Express + React application that scrapes `https://dpboss.boston/`, tracks live market number, jodi, and panel values, and injects those results into a DPBOSS-style cloned homepage.
+Production-ready Express + React application that clones homepage market blocks, serves local `webzip` market pages, and streams market updates through Socket.io and SSE.
 
-## Features
+## Tech Stack
 
-- Puppeteer-first scraping with Cheerio fallback
-- Homepage market discovery every 5 seconds
-- Linked Jodi and Panel page scraping with bounded background refresh
-- Canonical market records with `number`, `jodi`, `panel`, links, stale flags, and history
-- APIs:
-  - `GET /api/all`
-  - `GET /api/latest`
-  - `GET /api/history`
-  - `GET /api/market`
-  - `GET /api/homepage`
-- Socket events:
-  - `update-number`
-  - `update-jodi`
-  - `update-panel`
-  - `update-all`
-  - `homepage-update`
-- Vercel proxy functions in `client/api/` so normal browser API calls stay same-origin
+- Backend: Node.js, Express, BullMQ, Redis, Socket.io
+- Frontend: React + Vite
+- Security: Helmet, rate limiting, request validation, HTML sanitization
+- Logging: Winston + rotating log files in `logs/`
 
-## Local Run
+## Backend Structure
+
+```text
+src/
+  config/
+  controllers/
+  middlewares/
+  models/
+  routes/
+    legacy/
+    v1/
+  services/
+    queue/
+    realtime/
+    scraper/
+  utils/
+logs/
+server.js
+```
+
+## API Endpoints
+
+Legacy (backward compatible):
+- `GET /api/all`
+- `GET /api/latest`
+- `GET /api/history`
+- `GET /api/market`
+- `GET /api/homepage`
+
+Versioned:
+- `GET /api/v1/all`
+- `GET /api/v1/latest`
+- `GET /api/v1/history`
+- `GET /api/v1/market`
+- `GET /api/v1/homepage`
+- `GET /api/v1/stream` (SSE)
+
+Market pages:
+- `GET /market/jodi/:slug`
+- `GET /market/panel/:slug`
+
+## Scripts
 
 ```bash
 npm install
 npm run dev
-```
-
-Open `http://localhost:5173` for the Vite frontend.
-
-### Production-style local run
-
-```bash
-npm install --include=dev
 npm run build
 npm start
+npm run check
+npm run webzip:prune
+npm run prod:prepare
 ```
 
-Open `http://localhost:4000`.
+## Environment
 
-## Backend Deployment on Render
+Copy `.env.example` and set production values.
 
-Use the repo root as the Render service.
+Important:
+- `REDIS_URL` is required for BullMQ in production.
+- If `REDIS_URL` is missing in development, app falls back to in-memory scheduler mode.
+- `SCRAPE_TARGETS` supports multiple websites (comma-separated).
+- `CSRF_TOKEN` protects non-GET routes.
 
-### Build command
+## Deployment
+
+### Docker
 
 ```bash
-npm install --include=dev && npm run build
+docker build -t dpboss .
+docker run -p 4000:4000 --env-file .env dpboss
 ```
 
-### Start command
+### PM2
 
 ```bash
-npm start
+npm run start:pm2
 ```
 
-### Backend environment variables
+## Webzip Footprint
 
-```env
-PORT=4000
-TARGET_URL=https://dpboss.boston/
-SCRAPE_INTERVAL_MS=5000
-SCRAPE_TIMEOUT_MS=30000
-DETAIL_SWEEP_INTERVAL_MS=300000
-DETAIL_CONCURRENCY=4
-DETAIL_MAX_PER_CYCLE=8
-STALE_AFTER_MS=1800000
-NETWORK_PROBE_ENABLED=false
-PUPPETEER_HEADLESS=new
-PUPPETEER_EXECUTABLE_PATH=
-REDIS_URL=
-MAX_HISTORY_LENGTH=50
-NODE_ENV=production
-CORS_ORIGIN=https://your-frontend.vercel.app,https://www.yourdomain.com
+Use:
+
+```bash
+npm run webzip:prune
 ```
 
-## Frontend Deployment on Vercel
+This keeps `index.html` in each market folder and deduplicates shared assets under `webzip/shared/`.
 
-Set the Vercel project root directory to `client`.
+## Notes
 
-### Frontend environment variables
-
-```env
-RENDER_BACKEND_URL=https://your-render-backend.onrender.com
-VITE_REALTIME_MODE=poll
-VITE_POLL_INTERVAL_MS=5000
-VITE_SOCKET_URL=
-```
-
-### Notes
-
-- `RENDER_BACKEND_URL` is read only by the Vercel server-side proxy functions.
-- Any `VITE_*` variable is public in the browser.
-- Keep `VITE_REALTIME_MODE=poll` if you do not want a direct backend socket URL in devtools.
-- If you want direct Socket.io realtime instead, use:
-
-```env
-VITE_REALTIME_MODE=socket
-VITE_SOCKET_URL=https://your-render-backend.onrender.com
-```
-
-## Security
-
-- Same-origin Vercel proxy hides the backend origin from normal browser fetch calls
-- Backend CORS is restricted by `CORS_ORIGIN`
-- Express disables `X-Powered-By`
-- Security headers are set on both backend and frontend responses
-- API responses are marked `no-store`
-- Health endpoint does not expose the upstream scrape target
+- `/market/*` is local-file backed and depends on `webzip/` presence.
+- Homepage HTML is sanitized before rendering in React (`dangerouslySetInnerHTML` path).
+- APIs serve cached state from store; requests do not trigger fresh scrape execution.

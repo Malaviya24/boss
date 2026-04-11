@@ -15,6 +15,22 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      '/market': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+      '/images': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+      '/img': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+      '/newfev': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
     },
   },
 });

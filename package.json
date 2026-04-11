@@ -11,17 +11,29 @@
     "dev:server": "nodemon server.js",
     "dev:client": "npm run dev --workspace client",
     "build": "npm run build --workspace client",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:pm2": "pm2-runtime start ecosystem.config.cjs",
+    "prod:prepare": "npm run webzip:prune && npm run build",
+    "check": "node --check server.js && npm run security:sanitize-check",
+    "security:sanitize-check": "node scripts/security-sanitize-check.mjs",
+    "webzip:prune": "node scripts/prune-webzip.mjs"
   },
   "dependencies": {
-    "axios": "^1.9.0",
+    "axios": "^1.15.0",
+    "bullmq": "^5.56.3",
     "cheerio": "^1.0.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
     "ioredis": "^5.6.1",
-    "puppeteer": "^24.7.2",
-    "socket.io": "^4.8.1"
+    "pm2": "^6.0.8",
+    "socket.io": "^4.8.1",
+    "winston": "^3.18.3",
+    "winston-daily-rotate-file": "^5.0.0",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
