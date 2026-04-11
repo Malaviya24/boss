@@ -77,7 +77,6 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       method: request.method,
       headers: {
         accept: request.headers.accept || '*/*',
-        'accept-encoding': 'identity',
       },
     });
 

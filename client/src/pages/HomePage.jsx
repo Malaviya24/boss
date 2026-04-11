@@ -1,9 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSocket } from '../hooks/useSocket.js';
-import { fetchHomepage } from '../services/api.js';
+import { fetchHomepage, invalidateHomepageCache } from '../services/api.js';
 
 const realtimeMode = import.meta.env.VITE_REALTIME_MODE ?? 'poll';
-const pollIntervalMs = Number.parseInt(import.meta.env.VITE_POLL_INTERVAL_MS ?? '5000', 10);
+const configuredPollInterval = Number.parseInt(
+  import.meta.env.VITE_POLL_INTERVAL_MS ?? '5000',
+  10,
+);
+const pollIntervalMs = Number.isFinite(configuredPollInterval)
+  ? Math.max(configuredPollInterval, 2000)
+  : 5000;
 const ROTATING_PHRASES = [
   'Fix Ank',
   'Kalyan Fix',
@@ -13,10 +19,117 @@ const ROTATING_PHRASES = [
   'Fix jodi',
 ];
 
+function areSectionMapsEqual(currentValue, nextValue) {
+  const current = currentValue ?? {};
+  const next = nextValue ?? {};
+  const currentKeys = Object.keys(current);
+  const nextKeys = Object.keys(next);
+
+  if (currentKeys.length !== nextKeys.length) {
+    return false;
+  }
+
+  for (const key of currentKeys) {
+    if (current[key] !== next[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getTemplateSignature(template) {
+  if (!template) {
+    return '';
+  }
+
+  const fragmentSize = Array.isArray(template.fragments)
+    ? template.fragments.reduce((total, fragment) => total + String(fragment ?? '').length, 0)
+    : 0;
+  const sectionOrder = Array.isArray(template.sectionOrder) ? template.sectionOrder.join('|') : '';
+
+  return `${sectionOrder}::${fragmentSize}`;
+}
+
+function isAbortError(error) {
+  return error?.name === 'AbortError';
+}
+
 export default function HomePage() {
   const [template, setTemplate] = useState(null);
   const [htmlBySectionId, setHtmlBySectionId] = useState({});
   const [connectionStatus, setConnectionStatus] = useState('connecting');
+
+  const isMountedRef = useRef(true);
+  const isRequestInFlightRef = useRef(false);
+  const pollingTimerRef = useRef(null);
+  const requestAbortRef = useRef(null);
+  const prefetchedMarketLinksRef = useRef(new Set());
+  const templateSignatureRef = useRef('');
+  const sectionsRef = useRef({});
+  const snapshotKeyRef = useRef('');
+
+  const applyHomepagePayload = useCallback((payload) => {
+    if (!payload) {
+      return;
+    }
+
+    const nextTemplate = payload.template ?? null;
+    const nextSections = payload.htmlBySectionId ?? {};
+    const nextSnapshotKey = `${payload.updatedAt ?? ''}|${payload.lastScrapeAt ?? ''}|${
+      payload.lastMarketUpdateAt ?? ''
+    }`;
+
+    if (nextSnapshotKey) {
+      snapshotKeyRef.current = nextSnapshotKey;
+    }
+
+    const nextTemplateSignature = getTemplateSignature(nextTemplate);
+    if (nextTemplate && (!templateSignatureRef.current || nextTemplateSignature !== templateSignatureRef.current)) {
+      templateSignatureRef.current = nextTemplateSignature;
+      setTemplate(nextTemplate);
+    }
+
+    if (!areSectionMapsEqual(sectionsRef.current, nextSections)) {
+      sectionsRef.current = nextSections;
+      setHtmlBySectionId(nextSections);
+    }
+  }, []);
+
+  const loadHomepage = useCallback(
+    async ({ preserveConnection = false, force = false } = {}) => {
+      if (isRequestInFlightRef.current) {
+        return;
+      }
+
+      isRequestInFlightRef.current = true;
+      const abortController = new AbortController();
+      requestAbortRef.current = abortController;
+
+      try {
+        const payload = await fetchHomepage({
+          force,
+          signal: abortController.signal,
+        });
+        if (!isMountedRef.current) {
+          return;
+        }
+
+        applyHomepagePayload(payload);
+
+        if (!preserveConnection) {
+          setConnectionStatus(realtimeMode === 'socket' ? 'connected' : 'polling');
+        }
+      } catch (error) {
+        if (!isAbortError(error) && isMountedRef.current) {
+          setConnectionStatus('error');
+        }
+      } finally {
+        isRequestInFlightRef.current = false;
+      }
+    },
+    [applyHomepagePayload],
+  );
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -32,7 +145,7 @@ export default function HomePage() {
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [template]);
+  }, []);
 
   useEffect(() => {
     const savedScrollPosition = window.localStorage.getItem('scrollPosition');
@@ -42,49 +155,52 @@ export default function HomePage() {
     }
   }, []);
 
-  async function loadHomepage({ preserveConnection = false } = {}) {
-    const payload = await fetchHomepage();
-    setTemplate(payload.template);
-    setHtmlBySectionId(payload.htmlBySectionId ?? {});
-
-    if (!preserveConnection) {
-      setConnectionStatus(realtimeMode === 'socket' ? 'connected' : 'polling');
-    }
-  }
-
   useEffect(() => {
-    let isMounted = true;
-    let intervalId;
-
-    loadHomepage().catch(() => {
-      if (isMounted) {
-        setConnectionStatus('error');
-      }
-    });
+    isMountedRef.current = true;
+    void loadHomepage();
 
     if (realtimeMode !== 'socket') {
-      intervalId = window.setInterval(() => {
-        loadHomepage({ preserveConnection: true }).catch(() => {
-          if (isMounted) {
-            setConnectionStatus('error');
+      const schedulePolling = () => {
+        pollingTimerRef.current = window.setTimeout(async () => {
+          await loadHomepage({ preserveConnection: true });
+          if (isMountedRef.current) {
+            schedulePolling();
           }
-        });
-      }, pollIntervalMs);
+        }, pollIntervalMs);
+      };
+      schedulePolling();
     }
 
     return () => {
-      isMounted = false;
-      if (intervalId) {
-        window.clearInterval(intervalId);
+      isMountedRef.current = false;
+      if (pollingTimerRef.current) {
+        window.clearTimeout(pollingTimerRef.current);
+        pollingTimerRef.current = null;
+      }
+      if (requestAbortRef.current) {
+        requestAbortRef.current.abort();
       }
     };
-  }, []);
+  }, [loadHomepage]);
 
   useSocket({
     enabled: realtimeMode === 'socket',
     onStatus: setConnectionStatus,
     onHomepageUpdate: (payload) => {
-      if (payload.htmlBySectionId) {
+      if (!payload?.htmlBySectionId) {
+        return;
+      }
+
+      const nextSnapshotKey = `${payload.updatedAt ?? ''}|${payload.lastScrapeAt ?? ''}|${
+        payload.lastMarketUpdateAt ?? ''
+      }`;
+      if (nextSnapshotKey && nextSnapshotKey !== snapshotKeyRef.current) {
+        snapshotKeyRef.current = nextSnapshotKey;
+        invalidateHomepageCache();
+      }
+
+      if (!areSectionMapsEqual(sectionsRef.current, payload.htmlBySectionId)) {
+        sectionsRef.current = payload.htmlBySectionId;
         setHtmlBySectionId(payload.htmlBySectionId);
       }
     },
@@ -117,7 +233,7 @@ export default function HomePage() {
     return nodes;
   }, [htmlBySectionId, template]);
 
-  function handleClickCapture(event) {
+  const handleClickCapture = useCallback((event) => {
     const refreshButton = event.target.closest('[data-refresh-button="true"]');
     if (!refreshButton) {
       return;
@@ -130,23 +246,64 @@ export default function HomePage() {
     }
 
     window.location.reload();
-  }
+  }, []);
+
+  const prefetchMarketLink = useCallback((url) => {
+    if (!url || prefetchedMarketLinksRef.current.has(url)) {
+      return;
+    }
+
+    prefetchedMarketLinksRef.current.add(url);
+    fetch(url, {
+      method: 'GET',
+      credentials: 'same-origin',
+      priority: 'low',
+    }).catch(() => undefined);
+  }, []);
+
+  const handlePointerPrefetch = useCallback((event) => {
+    const anchor = event.target.closest('a[href]');
+    if (!anchor) {
+      return;
+    }
+
+    const href = anchor.getAttribute('href') ?? '';
+    if (!href.startsWith('/market/')) {
+      return;
+    }
+
+    prefetchMarketLink(href);
+  }, [prefetchMarketLink]);
 
   if (!template) {
     return (
       <div className="clone-loading">
-        {connectionStatus === 'error' ? 'Unable to load homepage.' : 'Loading DPBOSS...'}
+        <img
+          src="/img/spinner.png"
+          alt="Loading"
+          width="48"
+          height="48"
+          loading="eager"
+          decoding="async"
+          style={{ marginBottom: 12 }}
+        />
+        <div>{connectionStatus === 'error' ? 'Unable to load homepage.' : 'Loading DPBOSS...'}</div>
       </div>
     );
   }
 
   return (
-    <div className="clone-app" onClickCapture={handleClickCapture}>
+    <div
+      className="clone-app"
+      onClickCapture={handleClickCapture}
+      onMouseOverCapture={handlePointerPrefetch}
+      onTouchStartCapture={handlePointerPrefetch}
+    >
       {content}
     </div>
   );
 }
 
-function HtmlFragment({ html }) {
+const HtmlFragment = memo(function HtmlFragment({ html }) {
   return <div className="html-fragment" dangerouslySetInnerHTML={{ __html: html }} />;
-}
+});

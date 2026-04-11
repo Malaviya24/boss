@@ -351,6 +351,48 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
   };
   const compiledPageCache = new Map();
 
+  function buildWarmupQueue() {
+    const prioritySlugs = [
+      'kalyan-morning',
+      'milan-morning',
+      'sridevi',
+      'main-bazar-morning',
+      'madhuri',
+      'kalyan',
+      'milan-day',
+      'main-bazar',
+      'karnataka-day',
+    ];
+
+    const queue = [];
+    const seen = new Set();
+    const pushEntry = (type, slug) => {
+      const key = `${type}:${slug}`;
+      if (seen.has(key)) {
+        return;
+      }
+      seen.add(key);
+      queue.push({ type, slug });
+    };
+
+    for (const slug of prioritySlugs) {
+      if (registry.panel?.has(slug)) {
+        pushEntry('panel', slug);
+      }
+      if (registry.jodi?.has(slug)) {
+        pushEntry('jodi', slug);
+      }
+    }
+
+    for (const [type, map] of Object.entries(registry)) {
+      for (const slug of map.keys()) {
+        pushEntry(type, slug);
+      }
+    }
+
+    return queue;
+  }
+
   function getCompiledMarketPage(type, slug, marketFolder) {
     const indexPath = path.join(marketFolder, 'index.html');
     if (!fs.existsSync(indexPath)) {
@@ -382,6 +424,58 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
     });
 
     return pageHtml;
+  }
+
+  function scheduleMarketPageWarmup() {
+    const queue = buildWarmupQueue();
+    if (queue.length === 0) {
+      return;
+    }
+
+    const startedAt = Date.now();
+    let index = 0;
+    const batchSize = 4;
+
+    const runBatch = () => {
+      const batchStart = Date.now();
+      let processed = 0;
+
+      while (index < queue.length && processed < batchSize) {
+        const entry = queue[index];
+        index += 1;
+        processed += 1;
+
+        const marketFolder = registry[entry.type]?.get(entry.slug);
+        if (!marketFolder) {
+          continue;
+        }
+
+        try {
+          getCompiledMarketPage(entry.type, entry.slug, marketFolder);
+        } catch (error) {
+          logger?.warn?.('market_page_warmup_failed', {
+            type: entry.type,
+            slug: entry.slug,
+            message: error.message,
+          });
+        }
+      }
+
+      if (index < queue.length) {
+        const spentMs = Date.now() - batchStart;
+        const deferMs = spentMs > 16 ? 1 : 0;
+        setTimeout(runBatch, deferMs);
+        return;
+      }
+
+      logger?.info?.('market_page_warmup_complete', {
+        totalPages: queue.length,
+        cacheSize: compiledPageCache.size,
+        durationMs: Date.now() - startedAt,
+      });
+    };
+
+    setTimeout(runBatch, 0);
   }
 
   router.get('/:type(jodi|panel)/:slug', validateParams(marketPageParamsSchema), (request, response) => {
@@ -442,6 +536,8 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
       response.sendFile(filePath);
     },
   );
+
+  scheduleMarketPageWarmup();
 
   return router;
 }
