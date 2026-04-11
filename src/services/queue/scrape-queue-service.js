@@ -185,7 +185,8 @@ export function createScrapeQueueService({ env, logger, scraperService, store, o
             cycleId,
           },
           {
-            jobId: `${target.key}:${cycleId}`,
+            // BullMQ custom job ids cannot include ":".
+            jobId: `${target.key}--${cycleId}`,
           },
         ),
       ),
