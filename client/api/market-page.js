@@ -1,6 +1,6 @@
-import { proxyRequest } from '../_proxy.js';
+import { proxyRequest } from './_proxy.js';
 
-function cleanPathSegment(value) {
+function normalizePathSegment(value) {
   return String(value ?? '')
     .replace(/^\/+/, '')
     .replace(/\.{2,}/g, '')
@@ -8,10 +8,10 @@ function cleanPathSegment(value) {
 }
 
 export default async function handler(request, response) {
-  const queryPath = Array.isArray(request.query?.path)
+  const rawPath = Array.isArray(request.query?.path)
     ? request.query.path[0]
     : request.query?.path;
-  const normalizedPath = cleanPathSegment(queryPath);
+  const normalizedPath = normalizePathSegment(rawPath);
 
   if (!normalizedPath) {
     response.status(400).json({ error: 'Missing market path' });

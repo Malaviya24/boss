@@ -2,8 +2,24 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
+      "source": "/images/(.*)",
+      "destination": "/api/asset?path=images/$1"
+    },
+    {
+      "source": "/img/(.*)",
+      "destination": "/api/asset?path=img/$1"
+    },
+    {
+      "source": "/newfev/(.*)",
+      "destination": "/api/asset?path=newfev/$1"
+    },
+    {
       "source": "/market/(.*)",
-      "destination": "/api/market-page/$1"
+      "destination": "/api/market-page?path=$1"
+    },
+    {
+      "source": "/api/market-page/(.*)",
+      "destination": "/api/market-page?path=$1"
     }
   ],
   "headers": [
