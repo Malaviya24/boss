@@ -22,9 +22,10 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
   const namespaceTargets = targets.length > 1;
 
   const latestSnapshots = new Map();
-  let intervalId = null;
+  let timerId = null;
+  let isClosed = false;
   let isRunning = false;
-  let skippedCycles = 0;
+  let consecutiveFailures = 0;
 
   function mergeMarkets() {
     const merged = [];
@@ -101,12 +102,7 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
   async function runCycle() {
     const cycleStartedAt = Date.now();
     if (isRunning) {
-      skippedCycles += 1;
-      logger.warn('scrape_cycle_skipped', {
-        reason: 'previous_cycle_in_progress',
-        skippedCycles,
-      });
-      return;
+      return { ok: false, skipped: true };
     }
 
     isRunning = true;
@@ -131,24 +127,64 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
         recordsCount: cycleResult.recordsCount,
         changedCount: cycleResult.changedCount,
         homepageChanged: cycleResult.homepageChanged,
-        skippedCycles,
         scrapedAt: cycleResult.scrapedAt,
       });
+      consecutiveFailures = 0;
+      return { ok: true, skipped: false };
     } catch (error) {
+      consecutiveFailures += 1;
       logger.error('scrape_cycle_failed', {
         message: error.message,
         stack: error.stack,
         durationMs: Date.now() - cycleStartedAt,
         targetCount: targets.length,
-        skippedCycles,
+        consecutiveFailures,
       });
+      return { ok: false, skipped: false };
     } finally {
       isRunning = false;
     }
   }
 
+  function scheduleNext(delayMs) {
+    if (isClosed) {
+      return;
+    }
+
+    timerId = setTimeout(() => {
+      void runLoop();
+    }, Math.max(0, delayMs));
+  }
+
+  function getFailureDelayMs() {
+    const multiplier = Math.min(8, 2 ** Math.min(consecutiveFailures, 3));
+    return Math.min(60_000, env.scrapeIntervalMs * multiplier);
+  }
+
+  async function runLoop() {
+    if (isClosed) {
+      return;
+    }
+
+    const loopStartedAt = Date.now();
+    const cycle = await runCycle();
+    if (isClosed) {
+      return;
+    }
+
+    if (cycle?.skipped) {
+      scheduleNext(250);
+      return;
+    }
+
+    const elapsedMs = Date.now() - loopStartedAt;
+    const baseDelay = cycle?.ok ? env.scrapeIntervalMs : getFailureDelayMs();
+    const nextDelayMs = Math.max(0, baseDelay - elapsedMs);
+    scheduleNext(nextDelayMs);
+  }
+
   async function start() {
-    if (intervalId) {
+    if (timerId || isClosed) {
       return;
     }
 
@@ -157,17 +193,14 @@ export function createInMemoryScrapeService({ env, logger, scraperService, store
       intervalMs: env.scrapeIntervalMs,
     });
 
-    intervalId = setInterval(() => {
-      void runCycle();
-    }, env.scrapeIntervalMs);
-
-    void runCycle();
+    void runLoop();
   }
 
   async function close() {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
+    isClosed = true;
+    if (timerId) {
+      clearTimeout(timerId);
+      timerId = null;
     }
   }
 

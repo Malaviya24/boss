@@ -154,6 +154,10 @@ export async function bootstrapApp() {
     }),
   );
 
+  app.head('/', (_request, response) => {
+    response.status(200).end();
+  });
+
   mountFrontendStatic(app);
 
   app.use((error, _request, response, next) => {
