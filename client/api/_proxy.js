@@ -23,7 +23,7 @@ function getBackendOrigin() {
   return value.replace(/\/$/, '');
 }
 
-function copySafeHeaders(upstreamResponse, response) {
+function copySafeHeaders(upstreamResponse, response, { forceNoStore = true } = {}) {
   upstreamResponse.headers.forEach((value, key) => {
     if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
       return;
@@ -32,18 +32,25 @@ function copySafeHeaders(upstreamResponse, response) {
     response.setHeader(key, value);
   });
 
-  response.setHeader('Cache-Control', 'no-store');
+  if (forceNoStore) {
+    response.setHeader('Cache-Control', 'no-store');
+  }
 }
 
-export async function proxyApiRequest(request, response, apiPath) {
-  if (!['GET', 'HEAD'].includes(request.method)) {
-    response.setHeader('Allow', 'GET, HEAD');
+export async function proxyRequest(request, response, targetPath, options = {}) {
+  const {
+    methods = ['GET', 'HEAD'],
+    forceNoStore = true,
+  } = options;
+
+  if (!methods.includes(request.method)) {
+    response.setHeader('Allow', methods.join(', '));
     response.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
   try {
-    const targetUrl = new URL(apiPath, `${getBackendOrigin()}/`);
+    const targetUrl = new URL(targetPath, `${getBackendOrigin()}/`);
 
     for (const [key, value] of Object.entries(request.query ?? {})) {
       if (Array.isArray(value)) {
@@ -66,7 +73,7 @@ export async function proxyApiRequest(request, response, apiPath) {
       },
     });
 
-    copySafeHeaders(upstreamResponse, response);
+    copySafeHeaders(upstreamResponse, response, { forceNoStore });
 
     const contentType = upstreamResponse.headers.get('content-type');
     if (contentType) {
@@ -82,4 +89,13 @@ export async function proxyApiRequest(request, response, apiPath) {
       message: error.message,
     });
   }
+}
+
+export async function proxyApiRequest(request, response, apiPath) {
+  if (!['GET', 'HEAD'].includes(request.method)) {
+    response.setHeader('Allow', 'GET, HEAD');
+    response.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
+  return proxyRequest(request, response, apiPath, { forceNoStore: true });
 }

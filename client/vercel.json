@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/market/(.*)",
+      "destination": "/api/market-page/$1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
