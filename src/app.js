@@ -125,11 +125,7 @@ export async function bootstrapApp() {
   const marketTemplateService = createMarketTemplateService({
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
-    targetUrl: env.primaryTarget,
-    liveFallbackEnabled: env.marketLiveFallbackEnabled,
-    tableCacheTtlMs: env.marketTableCacheTtlMs,
-    tableFetchTimeoutMs: env.marketTableFetchTimeoutMs,
-    tableFetchConcurrency: env.marketTableFetchConcurrency,
+    liveFallbackEnabled: false,
   });
 
   app.use('/api/market-page', marketPagesRouter);

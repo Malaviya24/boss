@@ -74,8 +74,7 @@ Important:
 - Runtime store is in-memory only (no Redis required).
 - `SCRAPE_TARGETS` supports multiple websites (comma-separated).
 - `CSRF_TOKEN` protects non-GET routes.
-- Market pages are local-first (`webzip`) with on-demand live table fallback per requested slug only.
-- Tune fallback with `MARKET_*` env keys (`MARKET_LIVE_FALLBACK_ENABLED`, `MARKET_TABLE_CACHE_TTL_MS`, `MARKET_TABLE_FETCH_TIMEOUT_MS`, `MARKET_TABLE_FETCH_CONCURRENCY`).
+- Market pages are local-file backed from `webzip` in this phase.
 
 ## Deployment
 

@@ -688,7 +688,7 @@ export function createMarketTemplateService({
   webzipRoot,
   logger,
   targetUrl = 'https://dpboss.boston/',
-  liveFallbackEnabled = true,
+  liveFallbackEnabled = false,
   tableCacheTtlMs = DEFAULT_TABLE_CACHE_TTL_MS,
   tableFetchTimeoutMs = DEFAULT_TABLE_FETCH_TIMEOUT_MS,
   tableFetchConcurrency = DEFAULT_TABLE_FETCH_CONCURRENCY,
