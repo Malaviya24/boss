@@ -14,6 +14,9 @@ const UNSAFE_RESPONSE_HEADERS = new Set([
   'server',
 ]);
 
+const MAX_STALE_CACHE_ENTRIES = 40;
+const staleResponseCache = new Map();
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -135,17 +138,65 @@ async function fetchWithHardTimeout(url, options = {}, retryCount = 0) {
   }
 }
 
-function copySafeHeaders(upstreamResponse, response, { forceNoStore = true } = {}) {
+function readStaleCache(cacheKey = '', ttlMs = 0) {
+  if (!cacheKey || !Number.isFinite(ttlMs) || ttlMs <= 0) {
+    return null;
+  }
+
+  const entry = staleResponseCache.get(cacheKey);
+  if (!entry) {
+    return null;
+  }
+
+  const ageMs = Date.now() - entry.cachedAt;
+  if (ageMs > ttlMs) {
+    staleResponseCache.delete(cacheKey);
+    return null;
+  }
+
+  return entry;
+}
+
+function writeStaleCache(cacheKey = '', statusCode, headers, bodyBuffer) {
+  if (!cacheKey || !Buffer.isBuffer(bodyBuffer)) {
+    return;
+  }
+
+  if (staleResponseCache.size >= MAX_STALE_CACHE_ENTRIES) {
+    const oldestKey = staleResponseCache.keys().next().value;
+    if (oldestKey) {
+      staleResponseCache.delete(oldestKey);
+    }
+  }
+
+  staleResponseCache.set(cacheKey, {
+    cachedAt: Date.now(),
+    statusCode,
+    headers,
+    bodyBuffer,
+  });
+}
+
+function captureSafeHeaders(upstreamResponse, { forceNoStore = true } = {}) {
+  const safeHeaders = {};
+
   upstreamResponse.headers.forEach((value, key) => {
     if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
       return;
     }
-
-    response.setHeader(key, value);
+    safeHeaders[key] = value;
   });
 
   if (forceNoStore) {
-    response.setHeader('Cache-Control', 'no-store');
+    safeHeaders['cache-control'] = 'no-store';
+  }
+
+  return safeHeaders;
+}
+
+function applyCapturedHeaders(response, headers = {}) {
+  for (const [key, value] of Object.entries(headers)) {
+    response.setHeader(key, value);
   }
 }
 
@@ -154,6 +205,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
     methods = ['GET', 'HEAD'],
     forceNoStore = true,
     omitQueryKeys = [],
+    staleCacheMs = 0,
   } = options;
 
   if (!methods.includes(request.method)) {
@@ -161,6 +213,8 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
     response.status(405).json({ error: 'Method not allowed' });
     return;
   }
+
+  let cacheKey = '';
 
   try {
     const backendOrigin = getBackendOrigin(request);
@@ -184,6 +238,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       }
     }
 
+    cacheKey = `${request.method}:${targetUrl.toString()}`;
     const upstreamResponse = await fetchWithHardTimeout(targetUrl, {
       method: request.method,
       headers: {
@@ -192,17 +247,31 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       },
     }, getProxyRetryCount());
 
-    copySafeHeaders(upstreamResponse, response, { forceNoStore });
+    const bodyBuffer = Buffer.from(await upstreamResponse.arrayBuffer());
+    const safeHeaders = captureSafeHeaders(upstreamResponse, { forceNoStore });
 
-    const contentType = upstreamResponse.headers.get('content-type');
-    if (contentType) {
-      response.setHeader('Content-Type', contentType);
+    applyCapturedHeaders(response, safeHeaders);
+    response.status(upstreamResponse.status);
+    response.send(bodyBuffer);
+
+    if (
+      request.method === 'GET' &&
+      Number.isFinite(staleCacheMs) &&
+      staleCacheMs > 0 &&
+      upstreamResponse.ok
+    ) {
+      writeStaleCache(cacheKey, upstreamResponse.status, safeHeaders, bodyBuffer);
+    }
+  } catch (error) {
+    const staleEntry = readStaleCache(cacheKey, staleCacheMs);
+    if (staleEntry) {
+      applyCapturedHeaders(response, staleEntry.headers);
+      response.setHeader('X-Proxy-Fallback', 'stale-cache');
+      response.status(staleEntry.statusCode || 200);
+      response.send(staleEntry.bodyBuffer);
+      return;
     }
 
-    response.status(upstreamResponse.status);
-
-    response.send(Buffer.from(await upstreamResponse.arrayBuffer()));
-  } catch (error) {
     const isAbort = String(error?.name ?? '').toLowerCase() === 'aborterror';
     response.status(502).json({
       error: isAbort ? 'Upstream request timeout' : 'Upstream request failed',
@@ -217,5 +286,8 @@ export async function proxyApiRequest(request, response, apiPath) {
     response.status(405).json({ error: 'Method not allowed' });
     return;
   }
-  return proxyRequest(request, response, apiPath, { forceNoStore: true });
+  return proxyRequest(request, response, apiPath, {
+    forceNoStore: true,
+    staleCacheMs: 180000,
+  });
 }
