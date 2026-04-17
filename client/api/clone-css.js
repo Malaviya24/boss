@@ -15,12 +15,14 @@ const UNSAFE_RESPONSE_HEADERS = new Set([
 ]);
 
 function getBackendOrigin() {
-  const value = process.env.RENDER_BACKEND_URL?.trim();
-  if (!value) {
+  const raw = process.env.RENDER_BACKEND_URL?.trim();
+  if (!raw) {
     throw new Error('RENDER_BACKEND_URL is not configured');
   }
 
-  return value.replace(/\/$/, '');
+  const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  const parsed = new URL(withProtocol);
+  return `${parsed.protocol}//${parsed.host}`;
 }
 
 function getCloneCssTimeoutMs() {
@@ -29,7 +31,7 @@ function getCloneCssTimeoutMs() {
     return parsed;
   }
 
-  return 8000;
+  return 20000;
 }
 
 export default async function handler(_request, response) {
