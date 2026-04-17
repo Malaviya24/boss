@@ -2,6 +2,21 @@ const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '1
 const CSRF_TOKEN = String(import.meta.env.VITE_CSRF_TOKEN ?? '').trim();
 const ADMIN_TOKEN_KEY = 'dpboss_admin_token';
 
+function ensureErrorMessage(value, fallback) {
+  if (typeof value === 'string' && value.trim()) {
+    return value;
+  }
+  if (value && typeof value === 'object') {
+    if (typeof value.message === 'string' && value.message.trim()) {
+      return value.message;
+    }
+    if (typeof value.error === 'string' && value.error.trim()) {
+      return value.error;
+    }
+  }
+  return fallback;
+}
+
 function withTimeout(promise, timeoutMs) {
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
     return promise;
@@ -54,7 +69,9 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
-    const message = payload?.message || payload?.error || `${path} failed with ${response.status}`;
+    const message = ensureErrorMessage(payload?.message, '') ||
+      ensureErrorMessage(payload?.error, '') ||
+      `${path} failed with ${response.status}`;
     const requestError = new Error(message);
     requestError.status = response.status;
     requestError.code = payload?.code || '';

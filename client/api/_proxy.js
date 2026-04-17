@@ -200,6 +200,53 @@ function applyCapturedHeaders(response, headers = {}) {
   }
 }
 
+function buildForwardHeaders(request, { includeBody = false } = {}) {
+  const headers = {
+    accept: request.headers.accept || '*/*',
+    'accept-encoding': 'identity',
+  };
+
+  if (request.headers.authorization) {
+    headers.authorization = request.headers.authorization;
+  }
+  if (request.headers['x-csrf-token']) {
+    headers['x-csrf-token'] = request.headers['x-csrf-token'];
+  }
+  if (request.headers.cookie) {
+    headers.cookie = request.headers.cookie;
+  }
+  if (request.headers['user-agent']) {
+    headers['user-agent'] = request.headers['user-agent'];
+  }
+
+  if (includeBody && request.headers['content-type']) {
+    headers['content-type'] = request.headers['content-type'];
+  }
+
+  return headers;
+}
+
+function isBodyAllowed(method = '') {
+  const upper = String(method).toUpperCase();
+  return !['GET', 'HEAD'].includes(upper);
+}
+
+function normalizeBody(body) {
+  if (body === undefined || body === null) {
+    return undefined;
+  }
+
+  if (Buffer.isBuffer(body) || typeof body === 'string') {
+    return body;
+  }
+
+  if (typeof body === 'object') {
+    return JSON.stringify(body);
+  }
+
+  return String(body);
+}
+
 export async function proxyRequest(request, response, targetPath, options = {}) {
   const {
     methods = ['GET', 'HEAD'],
@@ -239,12 +286,12 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
     }
 
     cacheKey = `${request.method}:${targetUrl.toString()}`;
+    const includeBody = isBodyAllowed(request.method);
+    const requestBody = includeBody ? normalizeBody(request.body) : undefined;
     const upstreamResponse = await fetchWithHardTimeout(targetUrl, {
       method: request.method,
-      headers: {
-        accept: request.headers.accept || '*/*',
-        'accept-encoding': 'identity',
-      },
+      headers: buildForwardHeaders(request, { includeBody }),
+      body: requestBody,
     }, getProxyRetryCount());
 
     const bodyBuffer = Buffer.from(await upstreamResponse.arrayBuffer());
