@@ -16,14 +16,34 @@ function normalizeSegments(input) {
   return segments;
 }
 
+function segmentsFromUrl(url = '') {
+  try {
+    const pathname = new URL(String(url || ''), 'http://localhost').pathname;
+    const prefix = '/api/v1/content/';
+    if (!pathname.startsWith(prefix)) {
+      return [];
+    }
+
+    const rawTail = pathname.slice(prefix.length);
+    if (!rawTail) {
+      return [];
+    }
+
+    return normalizeSegments(rawTail.split('/').map((part) => decodeURIComponent(part)));
+  } catch {
+    return [];
+  }
+}
+
 export default async function handler(request, response) {
   const segments = normalizeSegments(request.query?.path);
-  if (segments.length === 0) {
+  const resolvedSegments = segments.length > 0 ? segments : segmentsFromUrl(request.url);
+  if (resolvedSegments.length === 0) {
     response.status(400).json({ error: 'Invalid content path' });
     return;
   }
 
-  return proxyRequest(request, response, `/api/v1/content/${segments.join('/')}`, {
+  return proxyRequest(request, response, `/api/v1/content/${resolvedSegments.join('/')}`, {
     forceNoStore: false,
     omitQueryKeys: ['path'],
   });
