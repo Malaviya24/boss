@@ -13,14 +13,14 @@ import {
   marketTemplateRequestQuerySchema,
 } from '../../models/validators.js';
 
-export function createLegacyApiRouter({ store, targetUrl, marketTemplateService }) {
+export function createLegacyApiRouter({ store, targetUrl, marketTemplateService, matkaService }) {
   const router = Router();
 
-  router.get('/all', createLegacyAllController(store));
+  router.get('/all', createLegacyAllController(store, matkaService));
   router.get('/latest', createLegacyLatestController(store));
   router.get('/history', createLegacyHistoryController(store));
-  router.get('/market', validateQuery(marketQuerySchema), createLegacyMarketController(store));
-  router.get('/homepage', createLegacyHomepageController(store, targetUrl));
+  router.get('/market', validateQuery(marketQuerySchema), createLegacyMarketController(store, matkaService));
+  router.get('/homepage', createLegacyHomepageController(store, targetUrl, matkaService));
   router.get(
     '/market-template',
     validateQuery(marketTemplateRequestQuerySchema),

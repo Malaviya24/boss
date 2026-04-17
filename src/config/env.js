@@ -16,6 +16,18 @@ function toList(value, fallback = []) {
   return raw.length > 0 ? raw : fallback;
 }
 
+function normalizeOrigin(origin = '') {
+  const value = String(origin ?? '').trim();
+  if (!value || value === '*') {
+    return value;
+  }
+  return value.endsWith('/') ? value.slice(0, -1) : value;
+}
+
+function toOriginList(value, fallback = []) {
+  return [...new Set(toList(value, fallback).map((origin) => normalizeOrigin(origin)).filter(Boolean))];
+}
+
 function toBoolean(value, fallback = false) {
   if (value === undefined || value === null || value === '') {
     return fallback;
@@ -33,7 +45,7 @@ export function loadEnv() {
     nodeEnv: process.env.NODE_ENV ?? 'development',
     isProduction: (process.env.NODE_ENV ?? 'development') === 'production',
     port: toInt(process.env.PORT, 4000),
-    corsOrigins: toList(process.env.CORS_ORIGIN, ['http://localhost:5173']),
+    corsOrigins: toOriginList(process.env.CORS_ORIGIN, ['http://localhost:5173']),
     primaryTarget,
     scrapeTargets,
     scrapeIntervalMs: toInt(process.env.SCRAPE_INTERVAL_MS, 6000),
@@ -51,5 +63,13 @@ export function loadEnv() {
     logLevel: process.env.LOG_LEVEL ?? 'info',
     enableSseHeartbeat: toBoolean(process.env.SSE_HEARTBEAT_ENABLED, true),
     sseHeartbeatMs: toInt(process.env.SSE_HEARTBEAT_MS, 15000),
+    mongoUri: process.env.MONGODB_URI ?? '',
+    jwtSecret: process.env.JWT_SECRET ?? '',
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '1d',
+    adminUsername: process.env.ADMIN_USERNAME ?? '',
+    adminPasswordHash: process.env.ADMIN_PASSWORD_HASH ?? '',
+    matkaTimezone: process.env.MATKA_TIMEZONE ?? 'Asia/Kolkata',
+    matkaRevealLoadingMs: toInt(process.env.MATKA_REVEAL_LOADING_MS, 5000),
+    matkaPreRevealLoadingMs: toInt(process.env.MATKA_PRE_REVEAL_LOADING_MS, 60_000),
   };
 }

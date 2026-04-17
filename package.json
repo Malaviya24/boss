@@ -10,7 +10,8 @@
     "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "nodemon server.js",
     "dev:client": "npm run dev --workspace client",
-    "build": "npm run build --workspace client",
+    "content:extract": "node scripts/extract-content.mjs",
+    "build": "npm run content:extract && npm run build --workspace client",
     "start": "node server.js",
     "start:pm2": "pm2-runtime start ecosystem.config.cjs",
     "prod:prepare": "npm run webzip:prune && npm run build",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "axios": "^1.15.0",
+    "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
@@ -27,7 +29,8 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
-    "pm2": "^6.0.8",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
     "socket.io": "^4.8.1",
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0",
@@ -35,6 +38,10 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "pm2": "^6.0.8"
+  },
+  "overrides": {
+    "follow-redirects": "^1.16.0"
   }
 }

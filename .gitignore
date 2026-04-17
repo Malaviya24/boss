@@ -13,3 +13,4 @@ pnpm-debug.log*
 logs/*.log
 logs/*.gz
 logs/.*-audit.json
+generated/content/

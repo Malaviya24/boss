@@ -32,9 +32,30 @@
     {
       "source": "/market/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/live",
+      "destination": "/"
+    },
+    {
+      "source": "/admin-x-secure-portal",
+      "destination": "/"
+    },
+    {
+      "source": "/admin-x-secure-portal/(.*)",
+      "destination": "/"
     }
   ],
   "headers": [
+    {
+      "source": "/admin-x-secure-portal(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

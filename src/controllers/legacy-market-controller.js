@@ -1,10 +1,36 @@
-export function createLegacyMarketController(store) {
-  return (request, response) => {
-    response.json(
-      store.getMarketRecords({
-        slug: request.validatedQuery?.slug,
-        name: request.validatedQuery?.name,
-      }),
-    );
+import { mergeScraperAndMatkaRecords } from '../services/matka/matka-merge-service.js';
+
+export function createLegacyMarketController(store, matkaService) {
+  return async (request, response, next) => {
+    try {
+      const records = store.getAllRecords();
+      let matkaCards = [];
+      if (matkaService) {
+        try {
+          matkaCards = await matkaService.listLiveMarkets();
+        } catch {
+          matkaCards = [];
+        }
+      }
+      const mergedRecords = mergeScraperAndMatkaRecords(records, matkaCards);
+      const normalizedSlug = (request.validatedQuery?.slug || '').trim().toLowerCase();
+      const normalizedName = (request.validatedQuery?.name || '').trim().toLowerCase();
+
+      const filteredRecords = mergedRecords.filter((record) => {
+        if (normalizedSlug && record.slug !== normalizedSlug) {
+          return false;
+        }
+
+        if (normalizedName && !String(record.name ?? '').toLowerCase().includes(normalizedName)) {
+          return false;
+        }
+
+        return true;
+      });
+
+      response.json(filteredRecords);
+    } catch (error) {
+      next(error);
+    }
   };
 }

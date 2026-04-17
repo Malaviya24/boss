@@ -32,6 +32,28 @@ body {
   background-color: #ffcc99;
 }
 
+.market-error,
+.market-not-found {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #2a1f00;
+  background: #ffcc99;
+}
+
+.market-not-found .market-btn,
+.market-error .market-btn {
+  border: 1px solid #e6e6e6;
+  background: #522f92;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .clone-spinner {
   width: 42px;
   height: 42px;
@@ -328,5 +350,367 @@ body {
 
   .market-explorer-title {
     font-size: 22px;
+  }
+}
+
+.matka-page-shell {
+  min-height: 100vh;
+  padding: 16px;
+  background: #ffcc99;
+  color: #1d1330;
+  font-family: Helvetica, sans-serif;
+}
+
+.matka-header h1 {
+  margin: 0;
+  color: #001a7a;
+}
+
+.matka-header p {
+  margin: 4px 0 14px;
+  color: #5d0050;
+}
+
+.matka-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.matka-card {
+  border: 2px solid #ff2147;
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, #fff8e8 0%, #ffe1bf 100%);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.18);
+}
+
+.matka-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.matka-card-head h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #001a7a;
+}
+
+.matka-card-head button,
+.matka-admin-shell button {
+  border: 1px solid #fff;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #5b35b2 0%, #371f7d 100%);
+  color: #fff;
+  padding: 7px 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.matka-time {
+  margin: 8px 0;
+  color: #5a0048;
+  font-weight: 700;
+}
+
+.matka-phase {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.phase-before_open {
+  color: #5a0048;
+}
+
+.phase-open_loading,
+.phase-close_loading {
+  color: #a22000;
+}
+
+.phase-open_revealed,
+.phase-closed {
+  color: #001a7a;
+}
+
+.matka-result-wrap {
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.62);
+  border-radius: 10px;
+  border: 1px solid #d7c4a0;
+}
+
+.matka-loader {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 22, 153, 0.18);
+  border-top-color: #001699;
+  animation: cloneSpin 0.8s linear infinite;
+}
+
+.matka-result-value {
+  margin: 8px 0 0;
+  color: #0a188d;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.matka-countdown {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #5a0048;
+  font-weight: 700;
+}
+
+.matka-admin-shell {
+  min-height: 100vh;
+  background: #ffcc99;
+  padding: 16px 10px 24px;
+  font-family: Helvetica, sans-serif;
+  color: #1f1836;
+}
+
+.matka-admin-auth-card {
+  max-width: 420px;
+  margin: 28px auto 0;
+  border: 2px solid #ff2147;
+  border-radius: 14px;
+  background: #fff4dd;
+  padding: 16px;
+}
+
+.matka-admin-form,
+.matka-admin-form-inline {
+  display: grid;
+  gap: 10px;
+}
+
+.matka-admin-form input,
+.matka-admin-form-inline input,
+.market-edit-grid input,
+.market-panel-grid input {
+  border: 2px solid #ff2d55;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff9ef;
+  color: #1d277a;
+  font-weight: 700;
+}
+
+.matka-admin-error {
+  color: #b2002d;
+  font-weight: 700;
+}
+
+.matka-admin-topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 2px solid #ff2147;
+  border-radius: 12px;
+  background: #ffe9c9;
+  padding: 12px;
+}
+
+.matka-admin-topbar h1 {
+  margin: 0;
+}
+
+.matka-admin-topbar div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.matka-admin-feedback {
+  margin: 8px 0 0;
+  color: #001a7a;
+  font-weight: 700;
+}
+
+.matka-admin-create,
+.matka-admin-markets,
+.matka-admin-audit {
+  margin-top: 16px;
+  border: 2px solid #ff2147;
+  border-radius: 12px;
+  background: #ffe9c9;
+  padding: 12px;
+}
+
+.matka-admin-market-row {
+  border: 1px solid #e8b683;
+  border-radius: 10px;
+  background: #fff4e0;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.market-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.market-row-top h3 {
+  margin: 0;
+}
+
+.market-flag {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: #fff;
+}
+
+.market-flag.on {
+  background: #227a2f;
+}
+
+.market-flag.off {
+  background: #9c2030;
+}
+
+.market-edit-grid,
+.market-panel-grid,
+.market-row-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.market-result-preview {
+  margin: 8px 0 0;
+  color: #001a7a;
+  font-weight: 700;
+}
+
+.matka-field-block {
+  display: grid;
+  gap: 4px;
+}
+
+.matka-field-block > span,
+.matka-time-label {
+  font-size: 12px;
+  color: #5a0048;
+  font-weight: 700;
+}
+
+.matka-time-field {
+  display: grid;
+  gap: 4px;
+}
+
+.matka-time-row {
+  display: grid;
+  grid-template-columns: minmax(64px, 1fr) auto minmax(64px, 1fr) minmax(108px, auto);
+  gap: 6px;
+  align-items: center;
+}
+
+.matka-time-row select {
+  border: 2px solid #ff2d55;
+  border-radius: 10px;
+  padding: 8px 6px;
+  background: #fff9ef;
+  color: #1d277a;
+  font-weight: 700;
+  min-width: 0;
+}
+
+.matka-time-separator {
+  color: #1d277a;
+  font-weight: 700;
+  text-align: center;
+}
+
+.matka-meridiem-toggle {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid #ff2d55;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff9ef;
+}
+
+.matka-meridiem-toggle button {
+  border: 0;
+  border-radius: 0;
+  padding: 8px 0;
+  background: transparent;
+  color: #1d277a;
+}
+
+.matka-meridiem-toggle button.active {
+  background: linear-gradient(180deg, #5b35b2 0%, #371f7d 100%);
+  color: #fff;
+}
+
+.matka-admin-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #5d0050;
+  font-weight: 700;
+}
+
+.audit-log-list {
+  display: grid;
+  gap: 6px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.audit-log-item {
+  border: 1px solid #ddc096;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fff8ea;
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .matka-admin-shell {
+    padding: 12px 8px 20px;
+  }
+
+  .matka-admin-topbar div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .matka-admin-topbar div span {
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .matka-admin-form-inline {
+    grid-template-columns: 1fr;
+  }
+
+  .market-edit-grid,
+  .market-panel-grid,
+  .market-row-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .matka-time-row {
+    grid-template-columns: minmax(64px, 1fr) auto minmax(64px, 1fr);
+  }
+
+  .matka-meridiem-toggle {
+    grid-column: 1 / -1;
   }
 }

@@ -2,13 +2,29 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import crypto from 'node:crypto';
 
 function isAllowedOrigin(origin, allowedOrigins) {
   if (!origin) {
     return true;
   }
 
-  return allowedOrigins.includes(origin);
+  const normalizedOrigin = String(origin).trim().replace(/\/$/, '');
+  if (!normalizedOrigin) {
+    return true;
+  }
+
+  return allowedOrigins.includes('*') || allowedOrigins.includes(normalizedOrigin);
+}
+
+function safeTokenMatch(expected = '', actual = '') {
+  const left = Buffer.from(String(expected));
+  const right = Buffer.from(String(actual));
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(left, right);
 }
 
 export function buildSecurityMiddleware(env, logger) {
@@ -22,6 +38,13 @@ export function buildSecurityMiddleware(env, logger) {
   const strictLimiter = rateLimit({
     windowMs: env.apiRateLimitWindowMs,
     max: env.strictRateLimitMax,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  const adminLoginLimiter = rateLimit({
+    windowMs: env.apiRateLimitWindowMs,
+    max: Math.max(5, Math.min(20, env.strictRateLimitMax)),
     standardHeaders: true,
     legacyHeaders: false,
   });
@@ -54,7 +77,7 @@ export function buildSecurityMiddleware(env, logger) {
     }
 
     const token = request.get('x-csrf-token');
-    if (token !== env.csrfToken) {
+    if (!safeTokenMatch(env.csrfToken, token ?? '')) {
       response.status(403).json({ error: 'Invalid CSRF token' });
       return;
     }
@@ -87,6 +110,7 @@ export function buildSecurityMiddleware(env, logger) {
     customHeaders,
     apiLimiter,
     strictLimiter,
+    adminLoginLimiter,
     csrfGuard,
   };
 }

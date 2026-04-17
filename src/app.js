@@ -4,6 +4,7 @@ import path from 'node:path';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { loadEnv } from './config/env.js';
+import { connectMongo, disconnectMongo } from './config/mongo.js';
 import { createLogger } from './utils/logger.js';
 import { createStateStore } from './services/state-store.js';
 import { createScraperService } from './services/scraper/scraper-service.js';
@@ -19,6 +20,10 @@ import { createMarketPagesRouter } from './routes/market-pages.js';
 import { createCloneCssRouter } from './routes/clone-css-route.js';
 import { createHealthRouter } from './routes/health-route.js';
 import { createMarketTemplateService } from './services/market-template-service.js';
+import { createGeneratedContentService } from './services/content/generated-content-service.js';
+import { createMatkaAuthService } from './services/matka/matka-auth-service.js';
+import { createMatkaAuditService } from './services/matka/matka-audit-service.js';
+import { createMatkaService } from './services/matka/matka-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,6 +72,10 @@ function mountFrontendStatic(app) {
       return;
     }
 
+    if (request.path.startsWith('/admin-x-secure-portal')) {
+      response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    }
+
     response.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
@@ -74,6 +83,10 @@ function mountFrontendStatic(app) {
 export async function bootstrapApp() {
   const env = loadEnv();
   const logger = createLogger('server', { level: env.logLevel });
+  const mongoState = await connectMongo({
+    uri: env.mongoUri,
+    logger,
+  });
 
   const store = await createStateStore({
     maxHistoryLength: env.maxHistoryLength,
@@ -113,6 +126,12 @@ export async function bootstrapApp() {
     next();
   });
 
+  app.get('/robots.txt', (_request, response) => {
+    response.type('text/plain').send(
+      ['User-agent: *', 'Disallow: /admin-x-secure-portal', 'Allow: /'].join('\n'),
+    );
+  });
+
   app.use(createHealthRouter(store));
   app.use(createCloneCssRouter());
 
@@ -122,10 +141,26 @@ export async function bootstrapApp() {
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
   });
+  const contentService = createGeneratedContentService({
+    projectRoot,
+    webzipRoot: path.join(projectRoot, 'webzip'),
+    logger,
+  });
+  contentService.ensureArtifacts();
   const marketTemplateService = createMarketTemplateService({
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
     liveFallbackEnabled: false,
+  });
+  const matkaAuthService = createMatkaAuthService({ env });
+  const matkaService = createMatkaService({
+    env: {
+      ...env,
+      mongoUri: mongoState.enabled ? env.mongoUri : '',
+    },
+  });
+  const matkaAuditService = createMatkaAuditService({
+    enabled: mongoState.enabled,
   });
 
   app.use('/api/market-page', marketPagesRouter);
@@ -138,6 +173,11 @@ export async function bootstrapApp() {
       targetUrl: env.primaryTarget,
       realtimeService,
       marketTemplateService,
+      contentService,
+      matkaService,
+      matkaAuthService,
+      matkaAuditService,
+      adminLoginLimiter: security.adminLoginLimiter,
     }),
   );
 
@@ -147,6 +187,7 @@ export async function bootstrapApp() {
       store,
       targetUrl: env.primaryTarget,
       marketTemplateService,
+      matkaService,
     }),
   );
 
@@ -240,6 +281,7 @@ export async function bootstrapApp() {
     logger.info('server_shutdown_started', { signal });
     await queueService.close().catch(() => undefined);
     await store.close().catch(() => undefined);
+    await disconnectMongo({ logger }).catch(() => undefined);
     realtimeService.close();
 
     await new Promise((resolve) => {
