@@ -1,5 +1,3 @@
-import { Readable } from 'node:stream';
-
 const UNSAFE_RESPONSE_HEADERS = new Set([
   'connection',
   'keep-alive',
@@ -117,6 +115,26 @@ async function fetchWithTimeout(url, options = {}, retryCount = 0) {
   throw new Error('Upstream request failed');
 }
 
+async function fetchWithHardTimeout(url, options = {}, retryCount = 0) {
+  const timeoutMs = getProxyTimeoutMs();
+  let timer = null;
+
+  try {
+    return await Promise.race([
+      fetchWithTimeout(url, options, retryCount),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          reject(new Error(`Proxy hard timeout after ${timeoutMs}ms`));
+        }, timeoutMs + 2000);
+      }),
+    ]);
+  } finally {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  }
+}
+
 function copySafeHeaders(upstreamResponse, response, { forceNoStore = true } = {}) {
   upstreamResponse.headers.forEach((value, key) => {
     if (UNSAFE_RESPONSE_HEADERS.has(key.toLowerCase())) {
@@ -166,7 +184,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
       }
     }
 
-    const upstreamResponse = await fetchWithTimeout(targetUrl, {
+    const upstreamResponse = await fetchWithHardTimeout(targetUrl, {
       method: request.method,
       headers: {
         accept: request.headers.accept || '*/*',
@@ -183,12 +201,7 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
 
     response.status(upstreamResponse.status);
 
-    if (!upstreamResponse.body) {
-      response.send(Buffer.from(await upstreamResponse.arrayBuffer()));
-      return;
-    }
-
-    Readable.fromWeb(upstreamResponse.body).pipe(response);
+    response.send(Buffer.from(await upstreamResponse.arrayBuffer()));
   } catch (error) {
     const isAbort = String(error?.name ?? '').toLowerCase() === 'aborterror';
     response.status(502).json({
