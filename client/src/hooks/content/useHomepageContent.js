@@ -24,39 +24,60 @@ export function useHomepageContent() {
   const [error, setError] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('connecting');
   const abortRef = useRef(null);
+  const inFlightRef = useRef(null);
   const timerRef = useRef(null);
   const mountedRef = useRef(true);
 
   const loadContent = useCallback(
     async ({ force = false, preserveConnection = false } = {}) => {
-      abortRef.current?.abort();
+      if (inFlightRef.current && !force) {
+        return inFlightRef.current;
+      }
+
+      if (force) {
+        abortRef.current?.abort();
+      }
+
       const controller = new AbortController();
       abortRef.current = controller;
 
-      try {
-        const payload = await getHomepageContent({
-          force,
-          signal: controller.signal,
-        });
-        if (!mountedRef.current) {
-          return;
-        }
+      const requestPromise = (async () => {
+        try {
+          const payload = await getHomepageContent({
+            force,
+            signal: controller.signal,
+          });
+          if (!mountedRef.current) {
+            return;
+          }
 
-        setContent(payload);
-        setError('');
-        setStatus('ready');
-        if (!preserveConnection) {
-          setConnectionStatus(realtimeMode === 'socket' ? 'connected' : 'polling');
-        }
-      } catch (requestError) {
-        if (!mountedRef.current || isAbortError(requestError)) {
-          return;
-        }
+          setContent(payload);
+          setError('');
+          setStatus('ready');
+          if (!preserveConnection) {
+            setConnectionStatus(realtimeMode === 'socket' ? 'connected' : 'polling');
+          }
+        } catch (requestError) {
+          if (!mountedRef.current || isAbortError(requestError)) {
+            return;
+          }
 
-        setError(requestError.message || 'Unable to load homepage content');
-        setStatus('error');
-        setConnectionStatus('error');
-      }
+          setError(requestError.message || 'Unable to load homepage content');
+          setStatus('error');
+          setConnectionStatus('error');
+        } finally {
+          if (inFlightRef.current === requestPromise) {
+            inFlightRef.current = null;
+          }
+
+          if (abortRef.current === controller) {
+            abortRef.current = null;
+          }
+        }
+      })();
+
+      inFlightRef.current = requestPromise;
+      return requestPromise;
     },
     [],
   );
@@ -85,6 +106,7 @@ export function useHomepageContent() {
         timerRef.current = null;
       }
       abortRef.current?.abort();
+      inFlightRef.current = null;
     };
   }, [loadContent]);
 
@@ -105,4 +127,3 @@ export function useHomepageContent() {
     refresh: () => loadContent({ force: true }),
   };
 }
-

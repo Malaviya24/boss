@@ -18,15 +18,21 @@ function withTimeout(promise, timeoutMs) {
     return promise;
   }
 
-  return Promise.race([
+  let timeoutId;
+  const timed = Promise.race([
     promise,
     new Promise((_, reject) => {
-      const timer = setTimeout(() => {
-        clearTimeout(timer);
+      timeoutId = setTimeout(() => {
         reject(new Error(`request timeout (${timeoutMs}ms)`));
       }, timeoutMs);
     }),
   ]);
+
+  return timed.finally(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  });
 }
 
 async function requestJson(path, { signal } = {}) {
@@ -144,4 +150,3 @@ export function getMarketLiveRecord({ slug, signal } = {}) {
     .then((records) => (Array.isArray(records) ? records[0] ?? null : null))
     .catch(() => null);
 }
-
