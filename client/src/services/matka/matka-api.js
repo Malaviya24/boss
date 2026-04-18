@@ -3,6 +3,7 @@ const CSRF_TOKEN = String(import.meta.env.VITE_CSRF_TOKEN ?? '').trim();
 const ADMIN_TOKEN_KEY = 'dpboss_admin_token';
 const CONFIGURED_MATKA_BASE_URL = String(import.meta.env.VITE_MATKA_API_BASE_URL ?? '').trim();
 const DEFAULT_VERCEL_MATKA_BASE_URL = 'https://boss-ehz0.onrender.com';
+const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 
 function ensureErrorMessage(value, fallback) {
   if (typeof value === 'string' && value.trim()) {
@@ -33,8 +34,11 @@ function resolveMatkaBaseUrl() {
     return configured;
   }
 
-  if (typeof window !== 'undefined' && /\.vercel\.app$/i.test(window.location.hostname)) {
-    return DEFAULT_VERCEL_MATKA_BASE_URL;
+  if (typeof window !== 'undefined') {
+    const hostname = String(window.location.hostname || '').toLowerCase();
+    if (!LOCAL_HOSTNAMES.has(hostname) && /\.vercel\.app$/i.test(hostname)) {
+      return DEFAULT_VERCEL_MATKA_BASE_URL;
+    }
   }
 
   return '';
@@ -73,8 +77,81 @@ function withTimeout(promise, timeoutMs) {
   });
 }
 
+function buildFetchOptions({ method, headers, body, signal, requestPath }) {
+  const hasWindow = typeof window !== 'undefined';
+  const currentOrigin = hasWindow ? window.location.origin : '';
+  const requestOrigin = hasWindow ? new URL(requestPath, currentOrigin).origin : '';
+  const sameOrigin = !hasWindow || requestOrigin === currentOrigin;
+
+  return {
+    method,
+    headers,
+    body,
+    credentials: sameOrigin ? 'same-origin' : 'omit',
+    mode: 'cors',
+    signal,
+  };
+}
+
+async function doRequest(path, { method, headers, body, signal, requestPath }) {
+  const response = await withTimeout(
+    fetch(requestPath, buildFetchOptions({ method, headers, body, signal, requestPath })),
+    API_TIMEOUT_MS,
+  );
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    const message =
+      ensureErrorMessage(payload?.message, '') ||
+      ensureErrorMessage(payload?.error, '') ||
+      `${requestPath} failed with ${response.status}`;
+
+    const requestError = new Error(message);
+    requestError.status = response.status;
+    requestError.code = payload?.code || '';
+    requestError.requestPath = requestPath;
+    requestError.path = path;
+    throw requestError;
+  }
+
+  const payload = await response.json().catch(() => ({}));
+  if (payload && typeof payload === 'object' && 'success' in payload) {
+    return payload.data;
+  }
+  return payload;
+}
+
+function shouldRetryViaRender(path, requestPath, statusCode) {
+  const isMatkaPath =
+    String(path).startsWith('/api/v1/admin/') || String(path).startsWith('/api/v1/live/');
+  if (!isMatkaPath || statusCode !== 404) {
+    return false;
+  }
+
+  const normalizedRequestPath = String(requestPath || '');
+  if (normalizedRequestPath.startsWith(DEFAULT_VERCEL_MATKA_BASE_URL)) {
+    return false;
+  }
+
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const hostname = String(window.location.hostname || '').toLowerCase();
+  if (LOCAL_HOSTNAMES.has(hostname)) {
+    return false;
+  }
+
+  return true;
+}
+
+function toRenderAbsolutePath(path) {
+  return `${DEFAULT_VERCEL_MATKA_BASE_URL}${path}`;
+}
+
 async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
   const requestPath = withBaseUrl(path);
+  const requestBody = body === undefined ? undefined : JSON.stringify(body);
   const headers = {
     Accept: 'application/json',
   };
@@ -91,33 +168,27 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
     headers['x-csrf-token'] = CSRF_TOKEN;
   }
 
-  const response = await withTimeout(
-    fetch(requestPath, {
+  try {
+    return await doRequest(path, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
-      credentials: 'same-origin',
+      body: requestBody,
       signal,
-    }),
-    API_TIMEOUT_MS,
-  );
+      requestPath,
+    });
+  } catch (error) {
+    if (!shouldRetryViaRender(path, requestPath, error?.status ?? 0)) {
+      throw error;
+    }
 
-  if (!response.ok) {
-    const payload = await response.json().catch(() => ({}));
-    const message = ensureErrorMessage(payload?.message, '') ||
-      ensureErrorMessage(payload?.error, '') ||
-      `${requestPath} failed with ${response.status}`;
-    const requestError = new Error(message);
-    requestError.status = response.status;
-    requestError.code = payload?.code || '';
-    throw requestError;
+    return doRequest(path, {
+      method,
+      headers,
+      body: requestBody,
+      signal,
+      requestPath: toRenderAbsolutePath(path),
+    });
   }
-
-  const payload = await response.json().catch(() => ({}));
-  if (payload && typeof payload === 'object' && 'success' in payload) {
-    return payload.data;
-  }
-  return payload;
 }
 
 export function getAdminToken() {
