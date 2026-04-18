@@ -1,4 +1,4 @@
-import { proxyRequest } from '../_proxy.js';
+import { proxyRequest } from '../../lib/vercel-proxy.js';
 
 function normalizeSegments(input) {
   const values = Array.isArray(input) ? input : [input];
@@ -44,10 +44,13 @@ export default async function handler(request, response) {
     return;
   }
 
+  const isAdminRoute = resolvedSegments[0] === 'admin';
+  const staleCacheMs = isAdminRoute ? 0 : 180000;
+
   return proxyRequest(request, response, `/api/v1/${resolvedSegments.join('/')}`, {
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     forceNoStore: true,
     omitQueryKeys: ['path'],
-    staleCacheMs: 180000,
+    staleCacheMs,
   });
 }

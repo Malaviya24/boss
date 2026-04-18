@@ -1,4 +1,4 @@
-import { proxyRequest } from './_proxy.js';
+import { proxyRequest } from '../lib/vercel-proxy.js';
 
 function normalizeSegment(value) {
   return String(value ?? '')

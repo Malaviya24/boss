@@ -288,11 +288,15 @@ export async function proxyRequest(request, response, targetPath, options = {}) 
     cacheKey = `${request.method}:${targetUrl.toString()}`;
     const includeBody = isBodyAllowed(request.method);
     const requestBody = includeBody ? normalizeBody(request.body) : undefined;
-    const upstreamResponse = await fetchWithHardTimeout(targetUrl, {
-      method: request.method,
-      headers: buildForwardHeaders(request, { includeBody }),
-      body: requestBody,
-    }, getProxyRetryCount());
+    const upstreamResponse = await fetchWithHardTimeout(
+      targetUrl,
+      {
+        method: request.method,
+        headers: buildForwardHeaders(request, { includeBody }),
+        body: requestBody,
+      },
+      getProxyRetryCount(),
+    );
 
     const bodyBuffer = Buffer.from(await upstreamResponse.arrayBuffer());
     const safeHeaders = captureSafeHeaders(upstreamResponse, { forceNoStore });
@@ -338,3 +342,4 @@ export async function proxyApiRequest(request, response, apiPath) {
     staleCacheMs: 180000,
   });
 }
+

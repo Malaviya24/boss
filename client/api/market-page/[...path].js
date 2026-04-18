@@ -1,4 +1,4 @@
-import { proxyRequest } from '../_proxy.js';
+import { proxyRequest } from '../../lib/vercel-proxy.js';
 
 function normalizeSegments(input) {
   const values = Array.isArray(input) ? input : [input];

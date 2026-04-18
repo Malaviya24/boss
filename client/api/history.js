@@ -1,4 +1,4 @@
-import { proxyApiRequest } from './_proxy.js';
+import { proxyApiRequest } from '../lib/vercel-proxy.js';
 
 export default async function handler(request, response) {
   return proxyApiRequest(request, response, '/api/history');
