@@ -1,6 +1,8 @@
 const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '12000', 10);
 const CSRF_TOKEN = String(import.meta.env.VITE_CSRF_TOKEN ?? '').trim();
 const ADMIN_TOKEN_KEY = 'dpboss_admin_token';
+const CONFIGURED_MATKA_BASE_URL = String(import.meta.env.VITE_MATKA_API_BASE_URL ?? '').trim();
+const DEFAULT_VERCEL_MATKA_BASE_URL = 'https://boss-ehz0.onrender.com';
 
 function ensureErrorMessage(value, fallback) {
   if (typeof value === 'string' && value.trim()) {
@@ -15,6 +17,38 @@ function ensureErrorMessage(value, fallback) {
     }
   }
   return fallback;
+}
+
+function normalizeBaseUrl(value = '') {
+  const raw = String(value ?? '').trim();
+  if (!raw) {
+    return '';
+  }
+  return raw.replace(/\/+$/, '');
+}
+
+function resolveMatkaBaseUrl() {
+  const configured = normalizeBaseUrl(CONFIGURED_MATKA_BASE_URL);
+  if (configured) {
+    return configured;
+  }
+
+  if (typeof window !== 'undefined' && /\.vercel\.app$/i.test(window.location.hostname)) {
+    return DEFAULT_VERCEL_MATKA_BASE_URL;
+  }
+
+  return '';
+}
+
+function withBaseUrl(path) {
+  const baseUrl = resolveMatkaBaseUrl();
+  if (!baseUrl) {
+    return path;
+  }
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+  return `${baseUrl}${path}`;
 }
 
 function withTimeout(promise, timeoutMs) {
@@ -40,6 +74,7 @@ function withTimeout(promise, timeoutMs) {
 }
 
 async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
+  const requestPath = withBaseUrl(path);
   const headers = {
     Accept: 'application/json',
   };
@@ -57,7 +92,7 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
   }
 
   const response = await withTimeout(
-    fetch(path, {
+    fetch(requestPath, {
       method,
       headers,
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -71,7 +106,7 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
     const payload = await response.json().catch(() => ({}));
     const message = ensureErrorMessage(payload?.message, '') ||
       ensureErrorMessage(payload?.error, '') ||
-      `${path} failed with ${response.status}`;
+      `${requestPath} failed with ${response.status}`;
     const requestError = new Error(message);
     requestError.status = response.status;
     requestError.code = payload?.code || '';
