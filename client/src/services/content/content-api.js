@@ -23,12 +23,31 @@ function normalizeBaseUrl(value = '') {
   if (!raw) {
     return '';
   }
-  return raw.replace(/\/+$/, '');
+  const normalized = raw.replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(normalized)) {
+    return '';
+  }
+  return normalized;
+}
+
+function isConfiguredBaseUnsafeForProd(configuredBase = '') {
+  if (!configuredBase || typeof window === 'undefined') {
+    return false;
+  }
+
+  try {
+    const currentHost = String(window.location.host || '').toLowerCase();
+    const configuredHost = new URL(configuredBase).host.toLowerCase();
+    const currentHostname = String(window.location.hostname || '').toLowerCase();
+    return currentHost === configuredHost && !LOCAL_HOSTNAMES.has(currentHostname);
+  } catch {
+    return true;
+  }
 }
 
 function resolveContentBaseUrl() {
   const configured = normalizeBaseUrl(CONFIGURED_CONTENT_API_BASE_URL);
-  if (configured) {
+  if (configured && !isConfiguredBaseUnsafeForProd(configured)) {
     return configured;
   }
 
