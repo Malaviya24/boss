@@ -15,6 +15,7 @@
     "start": "node server.js",
     "start:pm2": "pm2-runtime start ecosystem.config.cjs",
     "prod:prepare": "npm run webzip:prune && npm run build",
+    "prod:doctor": "node scripts/prod-doctor.mjs",
     "check": "node --check server.js && npm run security:sanitize-check",
     "security:sanitize-check": "node scripts/security-sanitize-check.mjs",
     "webzip:prune": "node scripts/prune-webzip.mjs"

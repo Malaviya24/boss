@@ -81,6 +81,7 @@ npm start
 npm run check
 npm run webzip:prune
 npm run prod:prepare
+npm run prod:doctor
 ```
 
 ## Environment
@@ -123,6 +124,7 @@ npm run start:pm2
 - Vercel project root directory must be `client`.
 - Vercel env must include `VITE_MATKA_API_BASE_URL`, `VITE_CONTENT_API_BASE_URL`, and `RENDER_BACKEND_URL`.
 - Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://dpboss-king.vercel.app`).
+- Run `npm run prod:doctor` before deploy to catch common local-vs-production config drift.
 
 ## Webzip Footprint
 
