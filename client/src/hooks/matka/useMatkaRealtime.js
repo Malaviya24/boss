@@ -1,7 +1,53 @@
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
-const socketUrl = import.meta.env.VITE_SOCKET_URL?.trim() || undefined;
+const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
+
+function normalizeUrl(value = '') {
+  const raw = String(value ?? '').trim();
+  if (!raw) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(raw)) {
+    return raw.replace(/\/+$/, '');
+  }
+
+  return '';
+}
+
+function resolveSocketUrl() {
+  const fromSocketEnv = normalizeUrl(import.meta.env.VITE_SOCKET_URL ?? '');
+  if (fromSocketEnv) {
+    return fromSocketEnv;
+  }
+
+  const fromApiEnv = normalizeUrl(import.meta.env.VITE_MATKA_API_BASE_URL ?? '');
+  if (fromApiEnv) {
+    return fromApiEnv;
+  }
+
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const hostname = String(window.location.hostname || '').toLowerCase();
+  if (LOCAL_HOSTNAMES.has(hostname)) {
+    return '';
+  }
+
+  return '';
+}
+
+function resolveTransports() {
+  const raw = String(import.meta.env.VITE_SOCKET_TRANSPORTS ?? 'polling');
+  const values = raw
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter((item) => item === 'polling' || item === 'websocket');
+
+  return values.length > 0 ? values : ['polling'];
+}
 
 export function useMatkaRealtime({ enabled, onMarketsUpdated, onMarketResultUpdated }) {
   const handlersRef = useRef({
@@ -19,9 +65,14 @@ export function useMatkaRealtime({ enabled, onMarketsUpdated, onMarketResultUpda
       return undefined;
     }
 
-    const socket = io(socketUrl ?? '/', {
+    const socketUrl = resolveSocketUrl();
+    if (!socketUrl) {
+      return undefined;
+    }
+
+    const socket = io(socketUrl, {
       autoConnect: true,
-      transports: ['websocket', 'polling'],
+      transports: resolveTransports(),
     });
 
     socket.on('matka:markets_updated', (payload) => {
