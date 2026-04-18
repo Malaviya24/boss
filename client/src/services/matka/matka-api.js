@@ -36,7 +36,7 @@ function resolveMatkaBaseUrl() {
 
   if (typeof window !== 'undefined') {
     const hostname = String(window.location.hostname || '').toLowerCase();
-    if (!LOCAL_HOSTNAMES.has(hostname) && /\.vercel\.app$/i.test(hostname)) {
+    if (!LOCAL_HOSTNAMES.has(hostname)) {
       return DEFAULT_VERCEL_MATKA_BASE_URL;
     }
   }

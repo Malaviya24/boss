@@ -99,6 +99,8 @@ Important:
   - `MATKA_REVEAL_LOADING_MS` (default `5000`)
 - Client admin requests must send the same CSRF token via `client/.env`:
   - `VITE_CSRF_TOKEN=<same as backend CSRF_TOKEN>`
+- For split deploy reliability:
+  - `VITE_MATKA_API_BASE_URL=https://<your-render-backend>.onrender.com`
 
 ## Deployment
 
@@ -114,6 +116,12 @@ docker run -p 4000:4000 --env-file .env dpboss
 ```bash
 npm run start:pm2
 ```
+
+### Vercel + Render (split)
+
+- Vercel project root directory must be `client`.
+- Vercel env must include `VITE_MATKA_API_BASE_URL` and `RENDER_BACKEND_URL`.
+- Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://dpboss-king.vercel.app`).
 
 ## Webzip Footprint
 

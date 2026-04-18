@@ -7,7 +7,7 @@ import {
 
 const realtimeMode = import.meta.env.VITE_REALTIME_MODE ?? 'poll';
 const configuredPollInterval = Number.parseInt(
-  import.meta.env.VITE_POLL_INTERVAL_MS ?? '5000',
+  import.meta.env.VITE_POLL_INTERVAL_MS ?? '6000',
   10,
 );
 const pollIntervalMs = Number.isFinite(configuredPollInterval)
@@ -27,6 +27,7 @@ export function useHomepageContent() {
   const inFlightRef = useRef(null);
   const timerRef = useRef(null);
   const mountedRef = useRef(true);
+  const hasContentRef = useRef(false);
 
   const loadContent = useCallback(
     async ({ force = false, preserveConnection = false } = {}) => {
@@ -52,6 +53,7 @@ export function useHomepageContent() {
           }
 
           setContent(payload);
+          hasContentRef.current = true;
           setError('');
           setStatus('ready');
           if (!preserveConnection) {
@@ -63,7 +65,7 @@ export function useHomepageContent() {
           }
 
           setError(requestError.message || 'Unable to load homepage content');
-          setStatus('error');
+          setStatus(hasContentRef.current ? 'ready' : 'error');
           setConnectionStatus('error');
         } finally {
           if (inFlightRef.current === requestPromise) {
@@ -101,6 +103,7 @@ export function useHomepageContent() {
 
     return () => {
       mountedRef.current = false;
+      hasContentRef.current = false;
       if (timerRef.current) {
         window.clearTimeout(timerRef.current);
         timerRef.current = null;
