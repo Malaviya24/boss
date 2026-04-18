@@ -25,7 +25,7 @@ function StyleRefs({ styleUrls = [], styleBlocks = [] }) {
 }
 
 export default function HomePage() {
-  const { content, status, error, connectionStatus } = useHomepageContent();
+  const { content, status, error, connectionStatus, refresh } = useHomepageContent();
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -83,7 +83,7 @@ export default function HomePage() {
     window.location.reload();
   };
 
-  if (status === 'loading' || !content) {
+  if (status === 'loading') {
     return (
       <div className="clone-loading">
         <div className="clone-spinner" aria-hidden="true" />
@@ -97,6 +97,20 @@ export default function HomePage() {
       <div className="clone-loading">
         <div>{error || 'Unable to load homepage content.'}</div>
         <div>{connectionStatus === 'error' ? 'Connection error.' : null}</div>
+        <button type="button" className="clone-retry-btn" onClick={() => void refresh()}>
+          Retry now
+        </button>
+      </div>
+    );
+  }
+
+  if (!content) {
+    return (
+      <div className="clone-loading">
+        <div>No live homepage data available.</div>
+        <button type="button" className="clone-retry-btn" onClick={() => void refresh()}>
+          Retry now
+        </button>
       </div>
     );
   }
@@ -108,4 +122,3 @@ export default function HomePage() {
     </div>
   );
 }
-

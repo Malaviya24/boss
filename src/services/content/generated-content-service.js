@@ -424,7 +424,7 @@ export function createGeneratedContentService({
       if (liveHtml && String(liveHtml).trim()) {
         sections[sectionId] = parseHomepageFragmentToNodes(liveHtml);
       } else {
-        sections[sectionId] = homepage.fallbackSections?.[sectionId] ?? [];
+        sections[sectionId] = [];
       }
     }
 

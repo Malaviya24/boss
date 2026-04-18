@@ -63,6 +63,16 @@ body {
   animation: cloneSpin 0.9s linear infinite;
 }
 
+.clone-retry-btn {
+  border: 1px solid #fff;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #5b35b2 0%, #371f7d 100%);
+  color: #fff;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 @keyframes cloneSpin {
   to {
     transform: rotate(360deg);

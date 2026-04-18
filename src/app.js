@@ -169,6 +169,7 @@ export async function bootstrapApp() {
     '/api/v1',
     security.strictLimiter,
     createV1ApiRouter({
+      logger,
       store,
       targetUrl: env.primaryTarget,
       realtimeService,

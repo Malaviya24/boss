@@ -19,6 +19,7 @@ import {
 } from '../../models/validators.js';
 
 export function createV1ApiRouter({
+  logger,
   store,
   targetUrl,
   realtimeService,
@@ -46,7 +47,10 @@ export function createV1ApiRouter({
     validateQuery(marketTemplateQuerySchema),
     createV1MarketTemplateController(marketTemplateService, store),
   );
-  router.get('/content/homepage', createV1ContentHomepageController(contentService, store, matkaService));
+  router.get(
+    '/content/homepage',
+    createV1ContentHomepageController(contentService, store, matkaService, logger),
+  );
   router.get(
     '/content/market/:type/:slug',
     validateParams(marketPageParamsSchema),

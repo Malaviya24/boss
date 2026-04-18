@@ -1,4 +1,4 @@
-const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '12000', 10);
+const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '30000', 10);
 const CSRF_TOKEN = String(import.meta.env.VITE_CSRF_TOKEN ?? '').trim();
 const ADMIN_TOKEN_KEY = 'dpboss_admin_token';
 const CONFIGURED_MATKA_BASE_URL = String(import.meta.env.VITE_MATKA_API_BASE_URL ?? '').trim();

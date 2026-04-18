@@ -1,11 +1,4 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { proxyRequest } from '../../../lib/vercel-proxy.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const FALLBACK_HOMEPAGE_PATH = path.join(__dirname, '_fallback', 'homepage.json');
 
 function normalizeSegments(input) {
   const values = Array.isArray(input) ? input : [input];
@@ -66,31 +59,45 @@ function getProxyTimeoutMs() {
   return 70_000;
 }
 
-let cachedFallbackHomepage = null;
-let cachedFallbackHomepageMtimeMs = 0;
-
-function loadFallbackHomepage() {
-  const stats = fs.statSync(FALLBACK_HOMEPAGE_PATH);
-  if (cachedFallbackHomepage && cachedFallbackHomepageMtimeMs === stats.mtimeMs) {
-    return cachedFallbackHomepage;
-  }
-
-  const nextValue = JSON.parse(fs.readFileSync(FALLBACK_HOMEPAGE_PATH, 'utf8'));
-  cachedFallbackHomepage = nextValue;
-  cachedFallbackHomepageMtimeMs = stats.mtimeMs;
-  return nextValue;
+function logEvent(level, message, payload = {}) {
+  const emitter = level === 'error' ? console.error : level === 'warn' ? console.warn : console.info;
+  emitter(
+    JSON.stringify({
+      scope: 'vercel-content-proxy',
+      level,
+      message,
+      ...payload,
+    }),
+  );
 }
 
-async function fetchHomepageFromBackend(request) {
+function classifyFailure(error) {
+  const name = String(error?.name ?? '').toLowerCase();
+  const message = String(error?.message ?? '').toLowerCase();
+  if (name === 'aborterror' || message.includes('timeout')) {
+    return 'upstream_timeout';
+  }
+  return 'upstream_failure';
+}
+
+async function proxyHomepage(request, response) {
   const backendOrigin = getBackendOrigin();
   if (!backendOrigin) {
-    throw new Error('RENDER_BACKEND_URL is not configured');
+    response.status(503).json({
+      success: false,
+      data: null,
+      message: 'Homepage backend is not configured',
+      code: 'BACKEND_NOT_CONFIGURED',
+    });
+    return;
   }
 
+  const startedAt = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), getProxyTimeoutMs());
+
   try {
-    const response = await fetch(`${backendOrigin}/api/v1/content/homepage`, {
+    const upstreamResponse = await fetch(`${backendOrigin}/api/v1/content/homepage`, {
       method: 'GET',
       headers: {
         accept: request.headers.accept || 'application/json',
@@ -99,11 +106,43 @@ async function fetchHomepageFromBackend(request) {
       signal: controller.signal,
     });
 
-    if (!response.ok) {
-      throw new Error(`Upstream returned ${response.status}`);
-    }
+    const payloadText = await upstreamResponse.text();
+    const contentType = upstreamResponse.headers.get('content-type') || 'application/json; charset=utf-8';
 
-    return await response.json();
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Content-Type', contentType);
+    response.status(upstreamResponse.status).send(payloadText);
+
+    if (!upstreamResponse.ok) {
+      logEvent('warn', 'homepage_upstream_non_ok', {
+        statusCode: upstreamResponse.status,
+        durationMs: Date.now() - startedAt,
+        readinessState: 'error',
+        reason: 'upstream_non_ok',
+      });
+    }
+  } catch (error) {
+    const reason = classifyFailure(error);
+    const statusCode = reason === 'upstream_timeout' ? 503 : 502;
+
+    logEvent('error', 'homepage_upstream_failed', {
+      reason,
+      statusCode,
+      durationMs: Date.now() - startedAt,
+      readinessState: 'error',
+      errorMessage: error?.message,
+    });
+
+    response.setHeader('Cache-Control', 'no-store');
+    response.status(statusCode).json({
+      success: false,
+      data: null,
+      message:
+        reason === 'upstream_timeout'
+          ? 'Homepage live API timed out'
+          : 'Homepage live API request failed',
+      code: reason === 'upstream_timeout' ? 'UPSTREAM_TIMEOUT' : 'UPSTREAM_FAILED',
+    });
   } finally {
     clearTimeout(timer);
   }
@@ -118,24 +157,7 @@ export default async function handler(request, response) {
   }
 
   if (resolvedSegments.length === 1 && resolvedSegments[0] === 'homepage') {
-    try {
-      const payload = await fetchHomepageFromBackend(request);
-      response.setHeader('Cache-Control', 'no-store');
-      response.status(200).json(payload);
-      return;
-    } catch {
-      const fallbackHomepage = loadFallbackHomepage();
-      response.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
-      response.status(200).json({
-        success: true,
-        data: fallbackHomepage,
-        message: 'Fetched homepage content (fallback)',
-        meta: {
-          fallback: true,
-        },
-      });
-      return;
-    }
+    return proxyHomepage(request, response);
   }
 
   return proxyRequest(request, response, `/api/v1/content/${resolvedSegments.join('/')}`, {

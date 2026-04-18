@@ -27,7 +27,6 @@ export function useHomepageContent() {
   const inFlightRef = useRef(null);
   const timerRef = useRef(null);
   const mountedRef = useRef(true);
-  const hasContentRef = useRef(false);
 
   const loadContent = useCallback(
     async ({ force = false, preserveConnection = false } = {}) => {
@@ -53,7 +52,6 @@ export function useHomepageContent() {
           }
 
           setContent(payload);
-          hasContentRef.current = true;
           setError('');
           setStatus('ready');
           if (!preserveConnection) {
@@ -65,7 +63,8 @@ export function useHomepageContent() {
           }
 
           setError(requestError.message || 'Unable to load homepage content');
-          setStatus(hasContentRef.current ? 'ready' : 'error');
+          setContent(null);
+          setStatus('error');
           setConnectionStatus('error');
         } finally {
           if (inFlightRef.current === requestPromise) {
@@ -103,7 +102,6 @@ export function useHomepageContent() {
 
     return () => {
       mountedRef.current = false;
-      hasContentRef.current = false;
       if (timerRef.current) {
         window.clearTimeout(timerRef.current);
         timerRef.current = null;

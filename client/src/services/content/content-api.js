@@ -2,7 +2,7 @@ const HOMEPAGE_CACHE_TTL_MS = Number.parseInt(
   import.meta.env.VITE_HOMEPAGE_CACHE_TTL_MS ?? '6000',
   10,
 );
-const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '12000', 10);
+const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '30000', 10);
 const CONFIGURED_CONTENT_API_BASE_URL = String(
   import.meta.env.VITE_CONTENT_API_BASE_URL ?? '',
 ).trim();
@@ -182,13 +182,6 @@ export function getHomepageContent({ force = false, signal } = {}) {
       homepageCache.data = data;
       homepageCache.expiresAt = Date.now() + HOMEPAGE_CACHE_TTL_MS;
       return data;
-    })
-    .catch((error) => {
-      if (homepageCache.data) {
-        homepageCache.expiresAt = Date.now() + Math.max(2000, HOMEPAGE_CACHE_TTL_MS / 2);
-        return homepageCache.data;
-      }
-      throw error;
     })
     .finally(() => {
       homepageCache.inFlight = null;
