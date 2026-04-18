@@ -162,15 +162,29 @@ async function doRequest(path, { method, headers, body, signal, requestPath }) {
   return payload;
 }
 
-function shouldRetryViaRender(path, requestPath, statusCode) {
-  const isMatkaPath =
-    String(path).startsWith('/api/v1/admin/') || String(path).startsWith('/api/v1/live/');
-  if (!isMatkaPath || statusCode !== 404) {
-    return false;
+function isRetryableRequestFailure(error) {
+  const statusCode = Number(error?.status ?? 0);
+  if ([404, 500, 502, 503, 504].includes(statusCode)) {
+    return true;
   }
 
-  const normalizedRequestPath = String(requestPath || '');
-  if (normalizedRequestPath.startsWith(DEFAULT_VERCEL_MATKA_BASE_URL)) {
+  const code = String(error?.code ?? '').toLowerCase();
+  const message = String(error?.message ?? '').toLowerCase();
+
+  return (
+    code === 'aborterror' ||
+    code === 'etimedout' ||
+    code === 'econnaborted' ||
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('fetch failed')
+  );
+}
+
+function shouldRetryWithAlternatePath(path, requestPath, error) {
+  const isMatkaPath =
+    String(path).startsWith('/api/v1/admin/') || String(path).startsWith('/api/v1/live/');
+  if (!isMatkaPath || !isRetryableRequestFailure(error)) {
     return false;
   }
 
@@ -178,12 +192,7 @@ function shouldRetryViaRender(path, requestPath, statusCode) {
     return false;
   }
 
-  const hostname = String(window.location.hostname || '').toLowerCase();
-  if (LOCAL_HOSTNAMES.has(hostname)) {
-    return false;
-  }
-
-  return true;
+  return String(requestPath || '') !== toRenderAbsolutePath(path);
 }
 
 function toRenderAbsolutePath(path) {
@@ -218,16 +227,19 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
       requestPath,
     });
   } catch (error) {
-    if (!shouldRetryViaRender(path, requestPath, error?.status ?? 0)) {
+    if (!shouldRetryWithAlternatePath(path, requestPath, error)) {
       throw error;
     }
+
+    const fallbackPath =
+      String(requestPath || '') === path ? toRenderAbsolutePath(path) : path;
 
     return doRequest(path, {
       method,
       headers,
       body: requestBody,
       signal,
-      requestPath: toRenderAbsolutePath(path),
+      requestPath: fallbackPath,
     });
   }
 }

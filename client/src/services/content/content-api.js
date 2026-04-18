@@ -76,6 +76,24 @@ function isRetryableStatus(statusCode = 0) {
   return [404, 500, 502, 503, 504].includes(Number(statusCode));
 }
 
+function isRetryableRequestFailure(error) {
+  if (isRetryableStatus(error?.status)) {
+    return true;
+  }
+
+  const message = String(error?.message ?? '').toLowerCase();
+  const code = String(error?.code ?? '').toLowerCase();
+
+  return (
+    code === 'aborterror' ||
+    code === 'etimedout' ||
+    code === 'econnaborted' ||
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('fetch failed')
+  );
+}
+
 function withTimeout(promise, timeoutMs) {
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
     return promise;
@@ -132,7 +150,7 @@ async function requestJson(path, { signal } = {}) {
   try {
     return await request(primaryPath);
   } catch (error) {
-    if (!secondaryPath || !isRetryableStatus(error?.status)) {
+    if (!secondaryPath || !isRetryableRequestFailure(error)) {
       throw error;
     }
     return request(secondaryPath);
