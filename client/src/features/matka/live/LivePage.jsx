@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getLiveMarketBySlug, getLiveMarkets } from '../../../services/matka/matka-api.js';
+import {
+  getLiveMarketBySlug,
+  getLiveMarkets,
+  getReadableErrorMessage,
+} from '../../../services/matka/matka-api.js';
 import { useMatkaRealtime } from '../../../hooks/matka/useMatkaRealtime.js';
 
 function formatCountdown(targetIso) {
@@ -75,7 +79,7 @@ export default function LivePage() {
         setMarkets(Array.isArray(nextMarkets) ? nextMarkets : []);
         setStatus('ready');
       } catch (requestError) {
-        setError(requestError.message || 'Unable to load live markets');
+        setError(getReadableErrorMessage(requestError, 'Unable to load live markets'));
         setStatus('error');
       }
     };

@@ -8,6 +8,7 @@ import {
   getAdminMarkets,
   getAdminMe,
   getAdminToken,
+  getReadableErrorMessage,
   logoutAdmin,
   patchAdminMarket,
   setAdminToken,
@@ -160,7 +161,7 @@ function AdminMarketRow({
       setFeedback('Market updated');
       await onMutateComplete();
     } catch (error) {
-      setFeedback(error.message || 'Update failed');
+      setFeedback(getReadableErrorMessage(error, 'Update failed'));
     } finally {
       setBusy(false);
     }
@@ -177,7 +178,7 @@ function AdminMarketRow({
       setFeedback('Open panel saved. It will show in live result at Open Time.');
       await onMutateComplete();
     } catch (error) {
-      setFeedback(error.message || 'Open panel update failed');
+      setFeedback(getReadableErrorMessage(error, 'Open panel update failed'));
     } finally {
       setBusy(false);
     }
@@ -194,7 +195,7 @@ function AdminMarketRow({
       setFeedback('Close panel saved. It will show in live result at Close Time.');
       await onMutateComplete();
     } catch (error) {
-      setFeedback(error.message || 'Close panel update failed');
+      setFeedback(getReadableErrorMessage(error, 'Close panel update failed'));
     } finally {
       setBusy(false);
     }
@@ -207,7 +208,7 @@ function AdminMarketRow({
       setFeedback('Market active state changed');
       await onMutateComplete();
     } catch (error) {
-      setFeedback(error.message || 'Toggle failed');
+      setFeedback(getReadableErrorMessage(error, 'Toggle failed'));
     } finally {
       setBusy(false);
     }
@@ -224,7 +225,7 @@ function AdminMarketRow({
       setFeedback('Market deleted');
       await onMutateComplete();
     } catch (error) {
-      setFeedback(error.message || 'Delete failed');
+      setFeedback(getReadableErrorMessage(error, 'Delete failed'));
     } finally {
       setBusy(false);
     }
@@ -389,7 +390,7 @@ export default function AdminDashboardPage() {
       setFeedback('Market created');
       await loadAll(token);
     } catch (error) {
-      setFeedback(error.message || 'Create market failed');
+      setFeedback(getReadableErrorMessage(error, 'Create market failed'));
     }
   };
 

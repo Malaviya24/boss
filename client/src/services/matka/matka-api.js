@@ -20,6 +20,28 @@ function ensureErrorMessage(value, fallback) {
   return fallback;
 }
 
+export function getReadableErrorMessage(error, fallback = 'Request failed') {
+  if (!error) {
+    return fallback;
+  }
+
+  if (typeof error === 'string' && error.trim()) {
+    return error;
+  }
+
+  const fromMessage = ensureErrorMessage(error?.message, '');
+  if (fromMessage) {
+    return fromMessage;
+  }
+
+  const fromError = ensureErrorMessage(error?.error, '');
+  if (fromError) {
+    return fromError;
+  }
+
+  return fallback;
+}
+
 function normalizeBaseUrl(value = '') {
   const raw = String(value ?? '').trim();
   if (!raw) {

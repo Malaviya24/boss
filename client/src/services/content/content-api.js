@@ -3,6 +3,11 @@ const HOMEPAGE_CACHE_TTL_MS = Number.parseInt(
   10,
 );
 const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '12000', 10);
+const CONFIGURED_CONTENT_API_BASE_URL = String(
+  import.meta.env.VITE_CONTENT_API_BASE_URL ?? '',
+).trim();
+const DEFAULT_RENDER_CONTENT_BASE_URL = 'https://boss-ehz0.onrender.com';
+const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 
 const homepageCache = {
   data: null,
@@ -12,6 +17,45 @@ const homepageCache = {
 
 const marketCache = new Map();
 const marketInFlight = new Map();
+
+function normalizeBaseUrl(value = '') {
+  const raw = String(value ?? '').trim();
+  if (!raw) {
+    return '';
+  }
+  return raw.replace(/\/+$/, '');
+}
+
+function resolveContentBaseUrl() {
+  const configured = normalizeBaseUrl(CONFIGURED_CONTENT_API_BASE_URL);
+  if (configured) {
+    return configured;
+  }
+
+  if (typeof window !== 'undefined') {
+    const hostname = String(window.location.hostname || '').toLowerCase();
+    if (!LOCAL_HOSTNAMES.has(hostname)) {
+      return DEFAULT_RENDER_CONTENT_BASE_URL;
+    }
+  }
+
+  return '';
+}
+
+function withBaseUrl(path) {
+  const baseUrl = resolveContentBaseUrl();
+  if (!baseUrl) {
+    return path;
+  }
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+  return `${baseUrl}${path}`;
+}
+
+function isRetryableStatus(statusCode = 0) {
+  return [404, 500, 502, 503, 504].includes(Number(statusCode));
+}
 
 function withTimeout(promise, timeoutMs) {
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
@@ -36,30 +80,44 @@ function withTimeout(promise, timeoutMs) {
 }
 
 async function requestJson(path, { signal } = {}) {
-  const response = await withTimeout(
-    fetch(path, {
-      method: 'GET',
-      credentials: 'same-origin',
-      signal,
-    }),
-    API_TIMEOUT_MS,
-  );
+  const primaryPath = withBaseUrl(path);
+  const secondaryPath = primaryPath !== path ? path : '';
 
-  if (!response.ok) {
-    const payload = await response.json().catch(() => ({}));
-    const message = payload?.message || payload?.error || `${path} failed with ${response.status}`;
-    const requestError = new Error(message);
-    requestError.status = response.status;
-    requestError.code = payload?.code || payload?.errorCode || '';
-    throw requestError;
+  const request = async (requestPath) => {
+    const response = await withTimeout(
+      fetch(requestPath, {
+        method: 'GET',
+        credentials: 'same-origin',
+        signal,
+      }),
+      API_TIMEOUT_MS,
+    );
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      const message = payload?.message || payload?.error || `${requestPath} failed with ${response.status}`;
+      const requestError = new Error(message);
+      requestError.status = response.status;
+      requestError.code = payload?.code || payload?.errorCode || '';
+      throw requestError;
+    }
+
+    const payload = await response.json();
+    if (payload && typeof payload === 'object' && 'success' in payload) {
+      return payload.data;
+    }
+
+    return payload;
+  };
+
+  try {
+    return await request(primaryPath);
+  } catch (error) {
+    if (!secondaryPath || !isRetryableStatus(error?.status)) {
+      throw error;
+    }
+    return request(secondaryPath);
   }
-
-  const payload = await response.json();
-  if (payload && typeof payload === 'object' && 'success' in payload) {
-    return payload.data;
-  }
-
-  return payload;
 }
 
 export function invalidateHomepageContentCache() {

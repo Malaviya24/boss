@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAdminMe, getAdminToken, loginAdmin, setAdminToken } from '../../../services/matka/matka-api.js';
+import {
+  getAdminMe,
+  getAdminToken,
+  getReadableErrorMessage,
+  loginAdmin,
+  setAdminToken,
+} from '../../../services/matka/matka-api.js';
 
 const DASHBOARD_PATH = '/admin-x-secure-portal/dashboard';
 
@@ -59,7 +65,7 @@ export default function AdminLoginPage() {
       setAdminToken(payload?.token ?? '');
       navigate(DASHBOARD_PATH, { replace: true });
     } catch (requestError) {
-      setError(requestError.message || 'Login failed');
+      setError(getReadableErrorMessage(requestError, 'Login failed'));
       setStatus('error');
     } finally {
       setStatus('idle');

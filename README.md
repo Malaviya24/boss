@@ -101,6 +101,7 @@ Important:
   - `VITE_CSRF_TOKEN=<same as backend CSRF_TOKEN>`
 - For split deploy reliability:
   - `VITE_MATKA_API_BASE_URL=https://<your-render-backend>.onrender.com`
+  - `VITE_CONTENT_API_BASE_URL=https://<your-render-backend>.onrender.com`
 
 ## Deployment
 
@@ -120,7 +121,7 @@ npm run start:pm2
 ### Vercel + Render (split)
 
 - Vercel project root directory must be `client`.
-- Vercel env must include `VITE_MATKA_API_BASE_URL` and `RENDER_BACKEND_URL`.
+- Vercel env must include `VITE_MATKA_API_BASE_URL`, `VITE_CONTENT_API_BASE_URL`, and `RENDER_BACKEND_URL`.
 - Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://dpboss-king.vercel.app`).
 
 ## Webzip Footprint
@@ -141,6 +142,6 @@ This keeps `index.html` in each market folder and deduplicates shared assets und
   - `/admin-x-secure-portal` (admin login)
   - `/admin-x-secure-portal/dashboard` (protected admin)
 - Build-time extractor converts `index.html` and all `webzip/jodi|panel` market pages into generated artifacts (`generated/content/`).
-- In split deploys (Vercel + Render), `/market/*` stays on frontend routes while market data/static assets are fetched via Vercel API proxy to backend.
+- In split deploys (Vercel + Render), `/market/*` stays on frontend routes while content and admin/live APIs can call Render directly via `VITE_CONTENT_API_BASE_URL` and `VITE_MATKA_API_BASE_URL`.
 - Runtime rendering is node-tree based (no `dangerouslySetInnerHTML` path in frontend runtime pages).
 - APIs serve cached state from store; requests do not trigger fresh scrape execution.
