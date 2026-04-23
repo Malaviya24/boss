@@ -11,6 +11,14 @@ export const matkaMarketSlugParamsSchema = z.object({
   slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9-]+$/i),
 });
 
+export const matkaMarketChartTypeParamsSchema = z.object({
+  marketId: z
+    .string()
+    .trim()
+    .regex(/^(?:[a-f\d]{24}|mem-market-\d+)$/i, 'Invalid market id'),
+  type: z.enum(['jodi', 'panel']),
+});
+
 export const matkaMarketCreateSchema = z.object({
   name: z.string().trim().min(2).max(120),
   openTime: z.string().trim().min(4).max(20),
@@ -29,6 +37,27 @@ export const matkaMarketPatchSchema = z.object({
 
 export const matkaPanelUpdateSchema = z.object({
   panel: z.string().trim().regex(/^\d{3}$/),
+});
+
+export const matkaChartSeedBodySchema = z.object({
+  startYear: z.coerce.number().int().min(2000).max(2100).optional(),
+  replace: z.coerce.boolean().optional(),
+});
+
+const matkaChartDayValueSchema = z.string().trim().min(1).max(32);
+
+export const matkaChartManualRowBodySchema = z.object({
+  dateRange: z.string().trim().min(5).max(80),
+  days: z.object({
+    mon: matkaChartDayValueSchema,
+    tue: matkaChartDayValueSchema,
+    wed: matkaChartDayValueSchema,
+    thu: matkaChartDayValueSchema,
+    fri: matkaChartDayValueSchema,
+    sat: matkaChartDayValueSchema,
+    sun: matkaChartDayValueSchema,
+  }),
+  rowIndex: z.coerce.number().int().min(0).max(50000).optional(),
 });
 
 export const matkaLoginBodySchema = z.object({

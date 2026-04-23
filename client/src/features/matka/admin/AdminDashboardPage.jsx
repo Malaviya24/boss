@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMatkaRealtime } from '../../../hooks/matka/useMatkaRealtime.js';
 import {
+  addManualMarketChartRow,
   createAdminMarket,
   deleteAdminMarket,
   getAdminAuditLogs,
@@ -11,6 +12,7 @@ import {
   getReadableErrorMessage,
   logoutAdmin,
   patchAdminMarket,
+  seedMarketChartData,
   setAdminToken,
   toggleAdminMarket,
   updateClosePanel,
@@ -20,8 +22,10 @@ import {
 const LOGIN_PATH = '/admin-x-secure-portal';
 const DEFAULT_OPEN_TIME = '11:15';
 const DEFAULT_CLOSE_TIME = '12:15';
+const AUTO_CHART_START_YEAR = 2023;
 const HOURS = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, '0'));
 const MINUTES = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
+const CHART_DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 function ensureNoIndexMeta() {
   const existing = document.querySelector('meta[name="robots"]');
@@ -80,6 +84,18 @@ function normalizePanelInput(value = '') {
 
 function isValidPanel(value = '') {
   return /^\d{3}$/.test(String(value ?? '').trim());
+}
+
+function createEmptyManualDays() {
+  return {
+    mon: '',
+    tue: '',
+    wed: '',
+    thu: '',
+    fri: '',
+    sat: '',
+    sun: '',
+  };
 }
 
 function TimePickerField({ label, value, onChange, idPrefix }) {
@@ -144,6 +160,9 @@ function AdminMarketRow({
   const [closeTimeParts, setCloseTimeParts] = useState(() => toTimeParts(market.closeTime));
   const [openPanel, setOpenPanel] = useState(market.todayResult?.openPanel ?? '');
   const [closePanel, setClosePanel] = useState(market.todayResult?.closePanel ?? '');
+  const [manualType, setManualType] = useState('jodi');
+  const [manualDateRange, setManualDateRange] = useState('');
+  const [manualDays, setManualDays] = useState(() => createEmptyManualDays());
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -251,6 +270,66 @@ function AdminMarketRow({
     }
   };
 
+  const onAutoSeed = async (chartType) => {
+    setBusy(true);
+    try {
+      const result = await seedMarketChartData({
+        token,
+        marketId: market.id,
+        type: chartType,
+        startYear: AUTO_CHART_START_YEAR,
+        replace: true,
+      });
+      setFeedback(
+        `${String(chartType).toUpperCase()} random history generated (${result.generatedRows} rows from ${result.startYear})`,
+      );
+      await onMutateComplete();
+    } catch (error) {
+      setFeedback(getReadableErrorMessage(error, `Auto ${chartType} data generation failed`));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onSaveManualRow = async () => {
+    const safeDateRange = String(manualDateRange ?? '').trim();
+    if (!safeDateRange) {
+      setFeedback('Manual row date range is required');
+      return;
+    }
+
+    const nextDays = {};
+    for (const dayKey of CHART_DAY_KEYS) {
+      const value = String(manualDays?.[dayKey] ?? '').trim();
+      if (!value) {
+        setFeedback(`Manual ${dayKey.toUpperCase()} value is required`);
+        return;
+      }
+      nextDays[dayKey] = value;
+    }
+
+    setBusy(true);
+    try {
+      const saved = await addManualMarketChartRow({
+        token,
+        marketId: market.id,
+        type: manualType,
+        dateRange: safeDateRange,
+        days: nextDays,
+      });
+      setFeedback(
+        `${String(saved.type).toUpperCase()} manual row saved at index ${saved.rowIndex}`,
+      );
+      setManualDateRange('');
+      setManualDays(createEmptyManualDays());
+      await onMutateComplete();
+    } catch (error) {
+      setFeedback(getReadableErrorMessage(error, 'Manual chart row save failed'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <article className="matka-admin-market-row">
       <div className="market-row-top">
@@ -307,6 +386,54 @@ function AdminMarketRow({
         <button type="button" onClick={saveClosePanel} disabled={busy}>
           Save Close
         </button>
+      </div>
+      <div className="market-row-actions">
+        <button type="button" onClick={() => onAutoSeed('jodi')} disabled={busy}>
+          Auto Jodi Data (2023+)
+        </button>
+        <button type="button" onClick={() => onAutoSeed('panel')} disabled={busy}>
+          Auto Panel Data (2023+)
+        </button>
+      </div>
+      <div className="market-chart-manual">
+        <h4>Manual Chart Row</h4>
+        <div className="market-chart-manual-head">
+          <select
+            value={manualType}
+            onChange={(event) => setManualType(event.target.value === 'panel' ? 'panel' : 'jodi')}
+          >
+            <option value="jodi">Jodi</option>
+            <option value="panel">Panel</option>
+          </select>
+          <input
+            value={manualDateRange}
+            onChange={(event) => setManualDateRange(event.target.value)}
+            placeholder="Date range (e.g. 01/01/2023 to 07/01/2023)"
+          />
+        </div>
+        <div className="market-chart-manual-grid">
+          {CHART_DAY_KEYS.map((dayKey) => (
+            <label key={`${market.id}-${manualType}-${dayKey}`} className="matka-field-block">
+              <span>{dayKey.toUpperCase()}</span>
+              <input
+                value={manualDays[dayKey]}
+                onChange={(event) =>
+                  setManualDays((current) => ({
+                    ...current,
+                    [dayKey]: event.target.value,
+                  }))
+                }
+                placeholder={manualType === 'panel' ? '123-45-678' : '12'}
+              />
+            </label>
+          ))}
+        </div>
+        <button type="button" onClick={onSaveManualRow} disabled={busy}>
+          Add Manual Row
+        </button>
+        <p className="matka-admin-note">
+          Panel format: 123-45-678 for each day. Jodi format: 2-digit value.
+        </p>
       </div>
       <p className="market-result-preview">
         Today: {market.todayResult?.displayResult || market.todayResult?.openPanel || 'Result Coming'}
@@ -394,7 +521,7 @@ export default function AdminDashboardPage() {
   const onCreateMarket = async (event) => {
     event.preventDefault();
     try {
-      await createAdminMarket({
+      const created = await createAdminMarket({
         token,
         payload: {
           name: createForm.name,
@@ -402,12 +529,43 @@ export default function AdminDashboardPage() {
           closeTime: toTime24(createForm.closeTimeParts),
         },
       });
+
+      const createdId = String(created?.id ?? '');
+      if (createdId) {
+        const autoSeedResults = await Promise.allSettled([
+          seedMarketChartData({
+            token,
+            marketId: createdId,
+            type: 'jodi',
+            startYear: AUTO_CHART_START_YEAR,
+            replace: true,
+          }),
+          seedMarketChartData({
+            token,
+            marketId: createdId,
+            type: 'panel',
+            startYear: AUTO_CHART_START_YEAR,
+            replace: true,
+          }),
+        ]);
+        const failedSeeds = autoSeedResults.filter((result) => result.status === 'rejected');
+        if (failedSeeds.length > 0) {
+          const firstError = failedSeeds[0].reason;
+          setFeedback(
+            `Market created, but auto chart seed failed: ${getReadableErrorMessage(firstError, 'Try auto buttons manually')}`,
+          );
+        } else {
+          setFeedback('Market created with random Jodi + Panel chart data (2023+)');
+        }
+      } else {
+        setFeedback('Market created');
+      }
+
       setCreateForm({
         name: '',
         openTimeParts: toTimeParts(DEFAULT_OPEN_TIME),
         closeTimeParts: toTimeParts(DEFAULT_CLOSE_TIME),
       });
-      setFeedback('Market created');
       await loadAll(token);
     } catch (error) {
       setFeedback(getReadableErrorMessage(error, 'Create market failed'));

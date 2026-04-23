@@ -382,3 +382,51 @@ export async function getAdminAuditLogs({ token, limit = 100, signal } = {}) {
     signal,
   });
 }
+
+export async function seedMarketChartData({
+  token,
+  marketId,
+  type,
+  startYear = 2023,
+  replace = true,
+} = {}) {
+  const normalizedType = String(type).toLowerCase() === 'panel' ? 'panel' : 'jodi';
+  return requestJson(
+    `/api/v1/admin/markets/${encodeURIComponent(marketId)}/chart-data/${normalizedType}/seed`,
+    {
+      method: 'POST',
+      token,
+      body: {
+        startYear,
+        replace: replace !== false,
+      },
+    },
+  );
+}
+
+export async function addManualMarketChartRow({
+  token,
+  marketId,
+  type,
+  dateRange,
+  days,
+  rowIndex,
+} = {}) {
+  const normalizedType = String(type).toLowerCase() === 'panel' ? 'panel' : 'jodi';
+  const payload = {
+    dateRange,
+    days,
+  };
+  if (Number.isFinite(rowIndex)) {
+    payload.rowIndex = rowIndex;
+  }
+
+  return requestJson(
+    `/api/v1/admin/markets/${encodeURIComponent(marketId)}/chart-data/${normalizedType}/manual-row`,
+    {
+      method: 'POST',
+      token,
+      body: payload,
+    },
+  );
+}

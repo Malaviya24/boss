@@ -2,8 +2,11 @@ import { Router } from 'express';
 import { validateBody, validateParams, validateQuery } from '../../middlewares/validate.js';
 import {
   matkaAuditQuerySchema,
+  matkaChartManualRowBodySchema,
+  matkaChartSeedBodySchema,
   matkaLoginBodySchema,
   matkaMarketCreateSchema,
+  matkaMarketChartTypeParamsSchema,
   matkaMarketIdParamsSchema,
   matkaMarketPatchSchema,
   matkaMarketSlugParamsSchema,
@@ -32,6 +35,10 @@ import {
 } from '../../controllers/v1-admin-results-controller.js';
 import { createV1AdminAuditLogsController } from '../../controllers/v1-admin-audit-controller.js';
 import {
+  createV1AdminMarketChartManualRowController,
+  createV1AdminMarketChartSeedController,
+} from '../../controllers/v1-admin-market-content-controller.js';
+import {
   createV1LiveMarketBySlugController,
   createV1LiveMarketsController,
 } from '../../controllers/v1-live-markets-controller.js';
@@ -42,6 +49,8 @@ export function createV1MatkaRoutes({
   auditService,
   realtimeService,
   adminLoginLimiter,
+  marketContentAdminService,
+  marketContentService,
 }) {
   const router = Router();
 
@@ -138,6 +147,37 @@ export function createV1MatkaRoutes({
     validateParams(matkaMarketIdParamsSchema),
     validateBody(matkaPanelUpdateSchema),
     createV1AdminClosePanelController(matkaService, auditService, realtimeService),
+  );
+
+  router.post(
+    '/admin/markets/:marketId/chart-data/:type/seed',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    validateParams(matkaMarketChartTypeParamsSchema),
+    validateBody(matkaChartSeedBodySchema),
+    createV1AdminMarketChartSeedController({
+      matkaService,
+      marketContentAdminService,
+      marketContentService,
+      auditService,
+      realtimeService,
+    }),
+  );
+
+  router.post(
+    '/admin/markets/:marketId/chart-data/:type/manual-row',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    validateParams(matkaMarketChartTypeParamsSchema),
+    validateBody(matkaChartManualRowBodySchema),
+    createV1AdminMarketChartManualRowController({
+      matkaService,
+      marketContentAdminService,
+      marketContentService,
+      auditService,
+    }),
   );
 
   router.get(

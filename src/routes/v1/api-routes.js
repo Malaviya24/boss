@@ -29,6 +29,7 @@ export function createV1ApiRouter({
   marketTemplateService,
   contentService,
   marketContentService,
+  marketContentAdminService,
   matkaService,
   matkaAuthService,
   matkaAuditService,
@@ -85,6 +86,8 @@ export function createV1ApiRouter({
       auditService: matkaAuditService,
       realtimeService,
       adminLoginLimiter,
+      marketContentAdminService,
+      marketContentService,
     }),
   );
 

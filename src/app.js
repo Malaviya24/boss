@@ -22,6 +22,7 @@ import { createHealthRouter } from './routes/health-route.js';
 import { createMarketTemplateService } from './services/market-template-service.js';
 import { createGeneratedContentService } from './services/content/generated-content-service.js';
 import { createMarketContentService } from './services/market-content/market-content-service.js';
+import { createMarketContentAdminService } from './services/market-content/market-content-admin-service.js';
 import { createMatkaAuthService } from './services/matka/matka-auth-service.js';
 import { createMatkaAuditService } from './services/matka/matka-audit-service.js';
 import { createMatkaService } from './services/matka/matka-service.js';
@@ -173,6 +174,10 @@ export async function bootstrapApp() {
     legacyContentService: contentService,
     mongoEnabled: mongoState.enabled,
   });
+  const marketContentAdminService = createMarketContentAdminService({
+    logger,
+    mongoEnabled: mongoState.enabled,
+  });
   const marketTemplateService = createMarketTemplateService({
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
@@ -212,6 +217,7 @@ export async function bootstrapApp() {
       marketTemplateService,
       contentService,
       marketContentService,
+      marketContentAdminService,
       matkaService,
       matkaAuthService,
       matkaAuditService,

@@ -1,0 +1,651 @@
+import { AppError } from '../../utils/errors.js';
+import { createSlug } from '../../utils/normalize.js';
+import { calculateSingle } from '../matka/matka-calculation-service.js';
+import { MarketContentMarketModel } from '../../models/market-content-market-model.js';
+import { MarketMetaModel } from '../../models/market-meta-model.js';
+import { MarketChartRowModel } from '../../models/market-chart-row-model.js';
+
+const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const TABLE_COLUMNS = ['Date', ...DAY_LABELS];
+const DEFAULT_START_YEAR = 2023;
+const HIGHLIGHT_JODI_VALUES = new Set([
+  '00',
+  '11',
+  '22',
+  '33',
+  '44',
+  '55',
+  '66',
+  '77',
+  '88',
+  '99',
+  '05',
+  '16',
+  '27',
+  '38',
+  '49',
+  '50',
+  '61',
+  '72',
+  '83',
+  '94',
+]);
+
+function normalizeType(value = '') {
+  return String(value).toLowerCase() === 'panel' ? 'panel' : 'jodi';
+}
+
+function normalizeText(value = '') {
+  return String(value ?? '')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function toUpperCaseName(value = '') {
+  const normalized = normalizeText(value);
+  return normalized ? normalized.toUpperCase() : '';
+}
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function toTwoDigits(value) {
+  return String(value).padStart(2, '0');
+}
+
+function toDateString(date) {
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const year = date.getUTCFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function toDateRangeLabel(startDate) {
+  const endDate = new Date(startDate.getTime());
+  endDate.setUTCDate(endDate.getUTCDate() + 6);
+  return `${toDateString(startDate)} to ${toDateString(endDate)}`;
+}
+
+function toMondayAlignedDate(date) {
+  const aligned = new Date(date.getTime());
+  const day = aligned.getUTCDay();
+  const offset = day === 0 ? -6 : 1 - day;
+  aligned.setUTCDate(aligned.getUTCDate() + offset);
+  return aligned;
+}
+
+function toSpacedDigits(value = '') {
+  return String(value)
+    .split('')
+    .filter(Boolean)
+    .join(' ');
+}
+
+function createCell({
+  column = '',
+  text = '',
+  isHighlight = false,
+} = {}) {
+  const safeText = normalizeText(text).slice(0, 32);
+  const highlight = Boolean(isHighlight);
+  return {
+    column: normalizeText(column).slice(0, 32),
+    text: safeText,
+    isHighlight: highlight,
+    className: highlight ? 'r' : '',
+    attrs: highlight ? { class: 'r' } : {},
+  };
+}
+
+function isHighlightJodi(value = '') {
+  return HIGHLIGHT_JODI_VALUES.has(String(value ?? '').trim());
+}
+
+function generateRandomJodiValue() {
+  return toTwoDigits(randomInt(0, 99));
+}
+
+function generateRandomPanelTriplet() {
+  const openPanel = String(randomInt(100, 999));
+  const closePanel = String(randomInt(100, 999));
+  const openSingle = calculateSingle(openPanel);
+  const closeSingle = calculateSingle(closePanel);
+  const middleJodi = `${openSingle}${closeSingle}`;
+
+  return {
+    left: toSpacedDigits(openPanel),
+    middle: middleJodi,
+    right: toSpacedDigits(closePanel),
+  };
+}
+
+function parsePanelTripletFromManual(value = '', dayLabel = '') {
+  const source = normalizeText(value);
+  const matched = source.match(/(\d{3})\D+(\d{2})\D+(\d{3})/);
+  if (!matched) {
+    throw new AppError(
+      `Invalid ${dayLabel} panel value. Use format like 123-45-678`,
+      {
+        statusCode: 400,
+        code: 'INVALID_MANUAL_PANEL_VALUE',
+      },
+    );
+  }
+
+  return {
+    left: toSpacedDigits(matched[1]),
+    middle: matched[2],
+    right: toSpacedDigits(matched[3]),
+  };
+}
+
+function sanitizeStartYear(value) {
+  const parsed = Number.parseInt(String(value ?? ''), 10);
+  if (Number.isFinite(parsed) && parsed >= 2000 && parsed <= 2100) {
+    return parsed;
+  }
+  return DEFAULT_START_YEAR;
+}
+
+function buildWeeklyDateRanges(startYear) {
+  const normalizedStartYear = sanitizeStartYear(startYear);
+  const today = new Date();
+  const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const startUtc = toMondayAlignedDate(new Date(Date.UTC(normalizedStartYear, 0, 1)));
+  const ranges = [];
+
+  let cursor = new Date(startUtc.getTime());
+  while (cursor.getTime() <= todayUtc.getTime()) {
+    ranges.push({
+      label: toDateRangeLabel(cursor),
+      weekStart: new Date(cursor.getTime()),
+    });
+    cursor.setUTCDate(cursor.getUTCDate() + 7);
+  }
+
+  return ranges;
+}
+
+function buildRandomRows(type, startYear) {
+  const normalizedType = normalizeType(type);
+  const weekRanges = buildWeeklyDateRanges(startYear);
+
+  return weekRanges.map((week, rowIndex) => {
+    const cells = [createCell({ column: 'Date', text: week.label })];
+
+    for (let dayIndex = 0; dayIndex < DAY_LABELS.length; dayIndex += 1) {
+      const dayLabel = DAY_LABELS[dayIndex];
+      if (normalizedType === 'panel') {
+        const triplet = generateRandomPanelTriplet();
+        cells.push(
+          createCell({ column: dayLabel, text: triplet.left }),
+          createCell({
+            column: dayLabel,
+            text: triplet.middle,
+            isHighlight: isHighlightJodi(triplet.middle),
+          }),
+          createCell({ column: dayLabel, text: triplet.right }),
+        );
+        continue;
+      }
+
+      const jodiValue = generateRandomJodiValue();
+      cells.push(
+        createCell({
+          column: dayLabel,
+          text: jodiValue,
+          isHighlight: isHighlightJodi(jodiValue),
+        }),
+      );
+    }
+
+    return {
+      rowIndex,
+      cells,
+    };
+  });
+}
+
+function buildManualRowCells({ type, dateRange, days }) {
+  const normalizedType = normalizeType(type);
+  const safeDateRange = normalizeText(dateRange);
+  if (!safeDateRange) {
+    throw new AppError('Date range is required for manual row', {
+      statusCode: 400,
+      code: 'INVALID_MANUAL_ROW_DATE',
+    });
+  }
+
+  const cells = [createCell({ column: 'Date', text: safeDateRange })];
+  for (let index = 0; index < DAY_KEYS.length; index += 1) {
+    const dayKey = DAY_KEYS[index];
+    const dayLabel = DAY_LABELS[index];
+    const rawValue = normalizeText(days?.[dayKey] ?? '');
+    if (!rawValue) {
+      throw new AppError(`Manual row ${dayLabel} value is required`, {
+        statusCode: 400,
+        code: 'INVALID_MANUAL_ROW_VALUE',
+      });
+    }
+
+    if (normalizedType === 'panel') {
+      const triplet = parsePanelTripletFromManual(rawValue, dayLabel);
+      cells.push(
+        createCell({ column: dayLabel, text: triplet.left }),
+        createCell({
+          column: dayLabel,
+          text: triplet.middle,
+          isHighlight: isHighlightJodi(triplet.middle),
+        }),
+        createCell({ column: dayLabel, text: triplet.right }),
+      );
+      continue;
+    }
+
+    cells.push(
+      createCell({
+        column: dayLabel,
+        text: rawValue,
+        isHighlight: isHighlightJodi(rawValue),
+      }),
+    );
+  }
+
+  return cells;
+}
+
+function defaultFooter() {
+  return {
+    blocks: [],
+    counterText: '',
+    brandTitle: 'DPBOSS.BOSTON',
+    rightsLines: ['All Rights Reserved', '(1998-2024)', 'Contact (Astrologer-Dpboss)'],
+    matkaPlay: {
+      label: 'Matka Play',
+      href: '/',
+    },
+  };
+}
+
+function cloneValue(value) {
+  if (value === undefined || value === null) {
+    return value;
+  }
+  return JSON.parse(JSON.stringify(value));
+}
+
+export function createMarketContentAdminService({
+  logger,
+  mongoEnabled = true,
+} = {}) {
+  function ensureMongoEnabled() {
+    if (!mongoEnabled) {
+      throw new AppError('Market content admin tools require MongoDB', {
+        statusCode: 503,
+        code: 'MARKET_CONTENT_DB_UNAVAILABLE',
+      });
+    }
+  }
+
+  async function ensureContentMarket({
+    name,
+    slug,
+    type,
+    openTime = '',
+    closeTime = '',
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedName = toUpperCaseName(name);
+    const normalizedSlug = createSlug(slug) || createSlug(normalizedName);
+
+    if (!normalizedSlug || !normalizedName) {
+      throw new AppError('Invalid market details for chart data', {
+        statusCode: 400,
+        code: 'INVALID_MARKET_INPUT',
+      });
+    }
+
+    return MarketContentMarketModel.findOneAndUpdate(
+      {
+        slug: normalizedSlug,
+        type: normalizedType,
+      },
+      {
+        $set: {
+          name: normalizedName,
+          slug: normalizedSlug,
+          type: normalizedType,
+          openTime: normalizeText(openTime),
+          closeTime: normalizeText(closeTime),
+          status: 'active',
+          isActive: true,
+          importSource: 'admin',
+          importedAt: new Date(),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      },
+    );
+  }
+
+  async function ensureContentMeta({
+    marketId,
+    type,
+    slug,
+    marketName,
+    startYear,
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedSlug = createSlug(slug);
+    const normalizedName = toUpperCaseName(marketName);
+    const existing = await MarketMetaModel.findOne({
+      marketId,
+      type: normalizedType,
+    }).lean();
+
+    if (existing) {
+      return existing;
+    }
+
+    const templateMeta = await MarketMetaModel.findOne({ type: normalizedType })
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    const chartTypeLabel = normalizedType === 'panel' ? 'PANEL CHART' : 'JODI CHART';
+    const pageTypeLabel = normalizedType === 'panel' ? 'Panel' : 'Jodi';
+    const footer = cloneValue(templateMeta?.footer) ?? defaultFooter();
+
+    const payload = {
+      marketId,
+      type: normalizedType,
+      title:
+        normalizeText(templateMeta?.title) ||
+        `${normalizedName} ${pageTypeLabel} Chart | ${normalizedName} ${pageTypeLabel} Result`,
+      description:
+        normalizeText(templateMeta?.description) ||
+        `${normalizedName} ${pageTypeLabel} chart records with historical data and latest result.`,
+      seo: cloneValue(templateMeta?.seo) ?? {},
+      styleUrls: Array.isArray(templateMeta?.styleUrls) ? templateMeta.styleUrls : [],
+      styleBlocks: Array.isArray(templateMeta?.styleBlocks) ? templateMeta.styleBlocks : [],
+      jsonLdBlocks: Array.isArray(templateMeta?.jsonLdBlocks) ? templateMeta.jsonLdBlocks : [],
+      hero: {
+        ...(cloneValue(templateMeta?.hero) ?? {}),
+        chartTitle: `${normalizedName} ${chartTypeLabel}`,
+      },
+      result: {
+        ...(cloneValue(templateMeta?.result) ?? {}),
+        marketName: normalizedName,
+        value: 'Result Coming',
+        refreshLabel: 'Refresh Result',
+        refreshHref: `/${normalizedType === 'panel' ? 'panel-chart-record' : 'jodi-chart-record'}/${normalizedSlug}.php`,
+      },
+      controls: {
+        ...(cloneValue(templateMeta?.controls) ?? {}),
+        topAnchorId: 'market-top',
+        bottomAnchorId: 'market-bottom',
+        goBottomLabel: 'Go to Bottom',
+        goTopLabel: 'Go to Top',
+      },
+      table: {
+        title: `${normalizedName} MATKA ${normalizedType === 'panel' ? 'PANEL' : 'JODI'} RECORD ${sanitizeStartYear(startYear)} - ${new Date().getFullYear()}`,
+        columns: TABLE_COLUMNS,
+        attrs: cloneValue(templateMeta?.table?.attrs) ?? {
+          class: 'panel-chart chart-table',
+          style: 'width: 100%; text-align:center;',
+        },
+        headingAttrs: cloneValue(templateMeta?.table?.headingAttrs) ?? {
+          class: 'panel-heading text-center',
+          style: 'background: #3f51b5;',
+        },
+        titleAttrs: cloneValue(templateMeta?.table?.titleAttrs) ?? {},
+      },
+      footer,
+      headings: [],
+    };
+
+    await MarketMetaModel.create(payload);
+    return payload;
+  }
+
+  function normalizeRowsForInsert(rows = [], type = 'jodi') {
+    const normalizedType = normalizeType(type);
+    return rows.map((row, rowIndex) => ({
+      type: normalizedType,
+      rowIndex: Number.isFinite(row?.rowIndex) ? row.rowIndex : rowIndex,
+      cells: Array.isArray(row?.cells)
+        ? row.cells.map((cell) => ({
+            column: normalizeText(cell?.column ?? '').slice(0, 32),
+            text: normalizeText(cell?.text ?? '').slice(0, 32),
+            isHighlight: Boolean(cell?.isHighlight),
+            className: normalizeText(cell?.className ?? '').slice(0, 80),
+            attrs: cell?.attrs && typeof cell.attrs === 'object' ? { ...cell.attrs } : {},
+          }))
+        : [],
+    }));
+  }
+
+  async function replaceChartRows({ marketId, type, rows }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedRows = normalizeRowsForInsert(rows, normalizedType);
+
+    await MarketChartRowModel.deleteMany({
+      marketId,
+      type: normalizedType,
+    });
+
+    if (normalizedRows.length === 0) {
+      return;
+    }
+
+    await MarketChartRowModel.insertMany(
+      normalizedRows.map((row) => ({
+        marketId,
+        type: normalizedType,
+        rowIndex: row.rowIndex,
+        cells: row.cells,
+      })),
+      { ordered: true },
+    );
+  }
+
+  async function upsertSingleChartRow({
+    marketId,
+    type,
+    rowIndex,
+    cells,
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedRows = normalizeRowsForInsert([{ rowIndex, cells }], normalizedType);
+    const row = normalizedRows[0];
+
+    await MarketChartRowModel.findOneAndUpdate(
+      {
+        marketId,
+        type: normalizedType,
+        rowIndex: row.rowIndex,
+      },
+      {
+        $set: {
+          cells: row.cells,
+        },
+      },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+      },
+    );
+
+    return row.rowIndex;
+  }
+
+  async function getNextRowIndex(marketId, type) {
+    const normalizedType = normalizeType(type);
+    const latest = await MarketChartRowModel.findOne({
+      marketId,
+      type: normalizedType,
+    })
+      .sort({ rowIndex: -1 })
+      .lean();
+
+    if (!latest || !Number.isFinite(latest.rowIndex)) {
+      return 0;
+    }
+    return latest.rowIndex + 1;
+  }
+
+  async function getRowCount(marketId, type) {
+    const normalizedType = normalizeType(type);
+    return MarketChartRowModel.countDocuments({
+      marketId,
+      type: normalizedType,
+    });
+  }
+
+  async function seedRandomHistory({
+    market,
+    type,
+    startYear = DEFAULT_START_YEAR,
+    replace = true,
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedReplace = replace !== false;
+    const safeStartYear = sanitizeStartYear(startYear);
+    const ensuredMarket = await ensureContentMarket({
+      name: market.name,
+      slug: market.slug,
+      type: normalizedType,
+      openTime: market.openTime,
+      closeTime: market.closeTime,
+    });
+
+    await ensureContentMeta({
+      marketId: ensuredMarket._id,
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      marketName: ensuredMarket.name,
+      startYear: safeStartYear,
+    });
+
+    const generatedRows = buildRandomRows(normalizedType, safeStartYear);
+    if (generatedRows.length === 0) {
+      throw new AppError('No rows generated. Check start year.', {
+        statusCode: 400,
+        code: 'MARKET_HISTORY_GENERATION_FAILED',
+      });
+    }
+
+    if (normalizedReplace) {
+      await replaceChartRows({
+        marketId: ensuredMarket._id,
+        type: normalizedType,
+        rows: generatedRows,
+      });
+    } else {
+      let nextRowIndex = await getNextRowIndex(ensuredMarket._id, normalizedType);
+      for (const row of generatedRows) {
+        await upsertSingleChartRow({
+          marketId: ensuredMarket._id,
+          type: normalizedType,
+          rowIndex: nextRowIndex,
+          cells: row.cells,
+        });
+        nextRowIndex += 1;
+      }
+    }
+
+    const totalRows = await getRowCount(ensuredMarket._id, normalizedType);
+    logger?.info?.('market_content_seeded_random_history', {
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      startYear: safeStartYear,
+      generatedRows: generatedRows.length,
+      replace: normalizedReplace,
+      totalRows,
+    });
+
+    return {
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      startYear: safeStartYear,
+      generatedRows: generatedRows.length,
+      totalRows,
+      replace: normalizedReplace,
+    };
+  }
+
+  async function addManualRow({
+    market,
+    type,
+    dateRange,
+    days,
+    rowIndex,
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const ensuredMarket = await ensureContentMarket({
+      name: market.name,
+      slug: market.slug,
+      type: normalizedType,
+      openTime: market.openTime,
+      closeTime: market.closeTime,
+    });
+
+    await ensureContentMeta({
+      marketId: ensuredMarket._id,
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      marketName: ensuredMarket.name,
+      startYear: DEFAULT_START_YEAR,
+    });
+
+    const cells = buildManualRowCells({
+      type: normalizedType,
+      dateRange,
+      days,
+    });
+
+    const resolvedRowIndex = Number.isFinite(rowIndex)
+      ? rowIndex
+      : await getNextRowIndex(ensuredMarket._id, normalizedType);
+
+    const savedRowIndex = await upsertSingleChartRow({
+      marketId: ensuredMarket._id,
+      type: normalizedType,
+      rowIndex: resolvedRowIndex,
+      cells,
+    });
+
+    const totalRows = await getRowCount(ensuredMarket._id, normalizedType);
+    logger?.info?.('market_content_manual_row_saved', {
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      rowIndex: savedRowIndex,
+      totalRows,
+    });
+
+    return {
+      type: normalizedType,
+      slug: ensuredMarket.slug,
+      rowIndex: savedRowIndex,
+      totalRows,
+    };
+  }
+
+  return {
+    seedRandomHistory,
+    addManualRow,
+  };
+}
+

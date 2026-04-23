@@ -503,7 +503,10 @@ body {
 .matka-admin-form input,
 .matka-admin-form-inline input,
 .market-edit-grid input,
-.market-panel-grid input {
+.market-panel-grid input,
+.market-chart-manual-head input,
+.market-chart-manual-head select,
+.market-chart-manual-grid input {
   border: 2px solid #ff2d55;
   border-radius: 10px;
   padding: 8px 10px;
@@ -603,6 +606,33 @@ body {
   margin: 8px 0 0;
   color: #001a7a;
   font-weight: 700;
+}
+
+.market-chart-manual {
+  margin-top: 8px;
+  border: 1px solid #ddc096;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff8ea;
+}
+
+.market-chart-manual h4 {
+  margin: 0 0 8px;
+  color: #001a7a;
+}
+
+.market-chart-manual-head {
+  display: grid;
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.market-chart-manual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .matka-field-block {
@@ -713,6 +743,10 @@ body {
   .market-edit-grid,
   .market-panel-grid,
   .market-row-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .market-chart-manual-head {
     grid-template-columns: 1fr;
   }
 
