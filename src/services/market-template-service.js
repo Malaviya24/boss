@@ -4,17 +4,17 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { getHttpAgents } from '../config/http-agents.js';
 import { AppError } from '../utils/errors.js';
-import { normalizeMarketSlug, toLocalMarketPath } from '../utils/market-links.js';
+import { buildLocalMarketPath, normalizeMarketSlug, toLocalMarketPath } from '../utils/market-links.js';
 
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^\d+-jodi-dpboss\.boston-jodi-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-jodi-dpboss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
     sourcePath: 'jodi-chart-record',
   },
   panel: {
     folder: 'panel',
-    pattern: /^\d+-panel-dpboss\.boston-panel-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-panel-dpboss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
     sourcePath: 'panel-chart-record',
   },
 };
@@ -103,7 +103,7 @@ function sanitizeLinkHref(type, slug, value = '') {
   if (plainPhpMatch) {
     const nextSlug = normalizeMarketSlug(plainPhpMatch[1]);
     if (nextSlug) {
-      return `/market/${type}/${nextSlug}`;
+      return buildLocalMarketPath(type, nextSlug);
     }
   }
 
@@ -641,19 +641,23 @@ function buildRegistry(webzipRoot, logger) {
   };
 
   for (const [type, config] of Object.entries(TYPE_CONFIG)) {
-    const typePath = path.join(webzipRoot, config.folder);
-    if (!fs.existsSync(typePath)) {
+    const typePathCandidates = [
+      path.join(webzipRoot, config.folder),
+      path.join(path.dirname(webzipRoot), config.folder),
+    ];
+    const typePath = typePathCandidates.find((candidate) => fs.existsSync(candidate));
+    if (!typePath || !fs.existsSync(typePath)) {
       logger?.warn?.('market_template_type_missing', { type, path: typePath });
       continue;
     }
 
-    const directories = fs
+    const entries = fs
       .readdirSync(typePath, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() || entry.isFile())
       .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true }));
 
-    for (const directory of directories) {
-      const match = directory.name.match(config.pattern);
+    for (const entry of entries) {
+      const match = entry.name.match(config.pattern);
       if (!match) {
         continue;
       }
@@ -663,15 +667,23 @@ function buildRegistry(webzipRoot, logger) {
         continue;
       }
 
-      const fullPath = path.join(typePath, directory.name);
-      const indexPath = path.join(fullPath, 'index.html');
-      if (!fs.existsSync(indexPath)) {
+      if (entry.isDirectory()) {
+        const fullPath = path.join(typePath, entry.name);
+        const indexPath = path.join(fullPath, 'index.html');
+        if (!fs.existsSync(indexPath)) {
+          continue;
+        }
+
+        byType[type].set(slug, {
+          folderPath: fullPath,
+          indexPath,
+        });
         continue;
       }
 
       byType[type].set(slug, {
-        folderPath: fullPath,
-        indexPath,
+        folderPath: typePath,
+        indexPath: path.join(typePath, entry.name),
       });
     }
   }

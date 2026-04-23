@@ -1,5 +1,4 @@
 import { successResponse } from '../utils/response.js';
-import { AppError } from '../utils/errors.js';
 
 function countLiveSections(htmlBySectionId = {}) {
   return Object.values(htmlBySectionId).reduce((count, value) => {
@@ -30,10 +29,6 @@ export function createV1ContentHomepageController(contentService, store, matkaSe
           readinessState: 'empty',
           lastScrapeAt: snapshot.lastScrapeAt ?? null,
         });
-        throw new AppError('Homepage live data not ready', {
-          statusCode: 503,
-          code: 'HOMEPAGE_LIVE_NOT_READY',
-        });
       }
 
       let matkaCards = [];
@@ -62,29 +57,22 @@ export function createV1ContentHomepageController(contentService, store, matkaSe
         lastScrapeAt: snapshot.lastScrapeAt ?? null,
       });
 
+      response.setHeader(
+        'Cache-Control',
+        'public, max-age=5, s-maxage=10, stale-while-revalidate=30',
+      );
       response.json(successResponse(payload, 'Fetched homepage content'));
     } catch (error) {
-      if (error instanceof AppError) {
-        logger?.warn?.('homepage_live_content_failed', {
-          requestId: request.requestId,
-          code: error.code,
-          message: error.message,
-          reason: error.code === 'HOMEPAGE_LIVE_NOT_READY' ? 'no_live_sections' : 'app_error',
-          readinessState:
-            error.code === 'HOMEPAGE_LIVE_NOT_READY' ? 'empty' : 'error',
-        });
-      } else {
-        const message = String(error?.message ?? '');
-        const reason = message.toLowerCase().includes('timeout')
-          ? 'timeout'
-          : 'upstream_failure';
-        logger?.error?.('homepage_live_content_failed', {
-          requestId: request.requestId,
-          reason,
-          readinessState: 'error',
-          message,
-        });
-      }
+      const message = String(error?.message ?? '');
+      const reason = message.toLowerCase().includes('timeout')
+        ? 'timeout'
+        : 'upstream_failure';
+      logger?.error?.('homepage_live_content_failed', {
+        requestId: request.requestId,
+        reason,
+        readinessState: 'error',
+        message,
+      });
       next(error);
     }
   };

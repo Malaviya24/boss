@@ -28,7 +28,7 @@ function run() {
     'unsafe src should be rewritten to empty',
   );
   assert.equal(
-    sanitized.includes('href="/market/jodi/sridevi"'),
+    sanitized.includes('href="/jodi-chart-record/sridevi.php"'),
     true,
     'jodi chart link should be rewritten to local market path',
   );

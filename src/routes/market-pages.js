@@ -9,11 +9,11 @@ import { marketPageParamsSchema } from '../models/validators.js';
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^\d+-jodi-dpboss\.boston-jodi-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-jodi-dpboss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
   panel: {
     folder: 'panel',
-    pattern: /^\d+-panel-dpboss\.boston-panel-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-panel-dpboss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
 };
 
@@ -298,19 +298,23 @@ function buildRegistry(webzipRoot, logger) {
   };
 
   for (const [type, config] of Object.entries(TYPE_CONFIG)) {
-    const typePath = path.join(webzipRoot, config.folder);
-    if (!fs.existsSync(typePath)) {
+    const typePathCandidates = [
+      path.join(webzipRoot, config.folder),
+      path.join(path.dirname(webzipRoot), config.folder),
+    ];
+    const typePath = typePathCandidates.find((candidate) => fs.existsSync(candidate));
+    if (!typePath || !fs.existsSync(typePath)) {
       logger?.warn?.('market_pages_type_missing', { type, path: typePath });
       continue;
     }
 
-    const directories = fs
+    const entries = fs
       .readdirSync(typePath, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() || entry.isFile())
       .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true }));
 
-    for (const directory of directories) {
-      const match = directory.name.match(config.pattern);
+    for (const entry of entries) {
+      const match = entry.name.match(config.pattern);
       if (!match) {
         continue;
       }
@@ -320,13 +324,24 @@ function buildRegistry(webzipRoot, logger) {
         continue;
       }
 
-      const fullPath = path.join(typePath, directory.name);
-      const indexPath = path.join(fullPath, 'index.html');
-      if (!fs.existsSync(indexPath)) {
+      if (entry.isDirectory()) {
+        const fullPath = path.join(typePath, entry.name);
+        const indexPath = path.join(fullPath, 'index.html');
+        if (!fs.existsSync(indexPath)) {
+          continue;
+        }
+
+        byType[type].set(slug, {
+          folderPath: fullPath,
+          indexPath,
+        });
         continue;
       }
 
-      byType[type].set(slug, fullPath);
+      byType[type].set(slug, {
+        folderPath: typePath,
+        indexPath: path.join(typePath, entry.name),
+      });
     }
   }
 
@@ -393,8 +408,8 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
     return queue;
   }
 
-  function getCompiledMarketPage(type, slug, marketFolder) {
-    const indexPath = path.join(marketFolder, 'index.html');
+  function getCompiledMarketPage(type, slug, marketEntry) {
+    const indexPath = marketEntry?.indexPath ?? '';
     if (!fs.existsSync(indexPath)) {
       return null;
     }
@@ -445,13 +460,13 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
         index += 1;
         processed += 1;
 
-        const marketFolder = registry[entry.type]?.get(entry.slug);
-        if (!marketFolder) {
+        const marketEntry = registry[entry.type]?.get(entry.slug);
+        if (!marketEntry) {
           continue;
         }
 
         try {
-          getCompiledMarketPage(entry.type, entry.slug, marketFolder);
+          getCompiledMarketPage(entry.type, entry.slug, marketEntry);
         } catch (error) {
           logger?.warn?.('market_page_warmup_failed', {
             type: entry.type,
@@ -481,9 +496,9 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
   router.get('/:type(jodi|panel)/:slug', validateParams(marketPageParamsSchema), (request, response) => {
     const type = request.validatedParams.type;
     const slug = normalizeMarketSlug(request.validatedParams.slug);
-    const marketFolder = registry[type]?.get(slug);
+    const marketEntry = registry[type]?.get(slug);
 
-    if (!marketFolder) {
+    if (!marketEntry) {
       response
         .status(404)
         .type('html')
@@ -491,7 +506,7 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
       return;
     }
 
-    const pageHtml = getCompiledMarketPage(type, slug, marketFolder);
+    const pageHtml = getCompiledMarketPage(type, slug, marketEntry);
     if (!pageHtml) {
       response
         .status(404)
@@ -511,14 +526,14 @@ export function createMarketPagesRouter({ webzipRoot, logger }) {
       const type = request.validatedParams.type;
       const slug = normalizeMarketSlug(request.validatedParams.slug);
       const assetPath = request.params[0] ?? '';
-      const marketFolder = registry[type]?.get(slug);
+      const marketEntry = registry[type]?.get(slug);
 
-      if (!marketFolder || !assetPath) {
+      if (!marketEntry || !assetPath) {
         response.status(404).end();
         return;
       }
 
-      const localFilePath = resolveSafePath(marketFolder, assetPath);
+      const localFilePath = resolveSafePath(marketEntry.folderPath, assetPath);
       const sharedFilePath = getSharedAssetPath(webzipRoot, type, assetPath);
       const filePathCandidates = [localFilePath, sharedFilePath].filter(Boolean);
 

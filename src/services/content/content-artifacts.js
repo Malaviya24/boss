@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
-import { normalizeMarketSlug, toLocalMarketPath } from '../../utils/market-links.js';
+import { buildLocalMarketPath, normalizeMarketSlug, toLocalMarketPath } from '../../utils/market-links.js';
 
 export const CONTENT_ARTIFACTS_DIR = path.join('generated', 'content');
 
@@ -21,11 +21,11 @@ const DYNAMIC_SECTION_DEFINITIONS = [
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^\d+-jodi-dpboss\.boston-jodi-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-jodi-dpboss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
   panel: {
     folder: 'panel',
-    pattern: /^\d+-panel-dpboss\.boston-panel-chart-record-(.+)\.php$/i,
+    pattern: /^(?:\d+-panel-dpboss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
 };
 
@@ -205,7 +205,7 @@ function sanitizeMarketHref(rawValue, { defaultType, slug, knownSlugsByType }) {
   if (rawSlug) {
     const normalizedSlug = normalizeMarketSlug(rawSlug);
     if (normalizedSlug && (knownSlugsByType[targetType]?.has(normalizedSlug) ?? false)) {
-      return `/market/${targetType}/${normalizedSlug}`;
+      return buildLocalMarketPath(targetType, normalizedSlug);
     }
   }
 
@@ -245,6 +245,34 @@ function sanitizeCss(type, slug, cssText = '') {
       }
       return `url("${rewritten}")`;
     });
+}
+
+function isAmpBoilerplateStyleTag(styleTag, cssText = '') {
+  const attribs = styleTag?.attribs ?? {};
+  const hasAmpBoilerplateAttr = Object.keys(attribs).some(
+    (key) => String(key).toLowerCase() === 'amp-boilerplate',
+  );
+  if (hasAmpBoilerplateAttr) {
+    return true;
+  }
+
+  const source = String(cssText ?? '').toLowerCase();
+  const hasAmpAnimation =
+    source.includes('animation:-amp-start') ||
+    source.includes('animation: -amp-start') ||
+    source.includes('-webkit-animation:-amp-start') ||
+    source.includes('-moz-animation:-amp-start') ||
+    source.includes('-ms-animation:-amp-start');
+  const hasAmpVisibility =
+    source.includes('visibility:hidden') || source.includes('visibility: hidden');
+  const hasAmpKeyframes =
+    source.includes('@keyframes -amp-start') ||
+    source.includes('@-webkit-keyframes -amp-start') ||
+    source.includes('@-moz-keyframes -amp-start') ||
+    source.includes('@-ms-keyframes -amp-start') ||
+    source.includes('@-o-keyframes -amp-start');
+
+  return hasAmpKeyframes || (hasAmpAnimation && hasAmpVisibility);
 }
 
 function removeUnsafeNodes($root) {
@@ -465,6 +493,21 @@ function serializeChildren(nodes = []) {
   return nodes.map((node) => serializeNode(node)).filter(Boolean);
 }
 
+function sanitizeAttrs(attrs = {}) {
+  const next = {};
+  for (const [key, value] of Object.entries(attrs ?? {})) {
+    if (value === undefined || value === null) {
+      continue;
+    }
+    const normalizedKey = String(key).trim().toLowerCase();
+    if (!normalizedKey || normalizedKey.startsWith('on')) {
+      continue;
+    }
+    next[normalizedKey] = String(value);
+  }
+  return next;
+}
+
 function serializeMetaTags($) {
   return $('meta')
     .toArray()
@@ -563,6 +606,8 @@ function rowCells($, row) {
         id: `${cellIndex}`,
         text,
         isHighlight,
+        className,
+        attrs: sanitizeAttrs(cell.attribs),
       };
     });
 }
@@ -606,14 +651,21 @@ function getTableModel($) {
     bodyRows = allRows.slice(1);
   }
 
+  const panelHeading = $(best).closest('.panel').find('.panel-heading').first();
+  const panelHeadingTitle = panelHeading.find('h1').first();
+
   return {
+    attrs: sanitizeAttrs(best.attribs),
+    headingAttrs: sanitizeAttrs(panelHeading.get(0)?.attribs ?? {}),
+    titleAttrs: sanitizeAttrs(panelHeadingTitle.get(0)?.attribs ?? {}),
+    titleText: sanitizeText(panelHeadingTitle.text() ?? ''),
     columns,
     rows: bodyRows
       .map((row, rowIndex) => ({
         id: `${rowIndex}`,
-        cells: rowCells($, row).filter((cell) => cell.text.length > 0),
+        cells: rowCells($, row),
       }))
-      .filter((row) => row.cells.length > 0),
+      .filter((row) => row.cells.some((cell) => cell.text.length > 0)),
   };
 }
 
@@ -628,7 +680,12 @@ function parseMarketArtifact(type, slug, html, { knownSlugsByType }) {
     .filter(Boolean);
   const styleBlocks = $('style')
     .toArray()
-    .map((styleTag) => sanitizeCss(type, slug, String($(styleTag).html() ?? '')))
+    .map((styleTag) => ({
+      styleTag,
+      cssText: String($(styleTag).html() ?? ''),
+    }))
+    .filter(({ styleTag, cssText }) => !isAmpBoilerplateStyleTag(styleTag, cssText))
+    .map(({ cssText }) => sanitizeCss(type, slug, cssText))
     .filter((styleBlock) => styleBlock.trim().length > 0);
   const jsonLdBlocks = $('script[type="application/ld+json"]')
     .toArray()
@@ -670,18 +727,22 @@ export function buildRegistry(webzipRoot) {
   };
 
   for (const [type, config] of Object.entries(TYPE_CONFIG)) {
-    const typePath = path.join(webzipRoot, config.folder);
-    if (!fs.existsSync(typePath)) {
+    const typePathCandidates = [
+      path.join(webzipRoot, config.folder),
+      path.join(path.dirname(webzipRoot), config.folder),
+    ];
+    const typePath = typePathCandidates.find((candidate) => fs.existsSync(candidate));
+    if (!typePath || !fs.existsSync(typePath)) {
       continue;
     }
 
-    const directories = fs
+    const entries = fs
       .readdirSync(typePath, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() || entry.isFile())
       .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true }));
 
-    for (const directory of directories) {
-      const match = directory.name.match(config.pattern);
+    for (const entry of entries) {
+      const match = entry.name.match(config.pattern);
       if (!match) {
         continue;
       }
@@ -691,14 +752,23 @@ export function buildRegistry(webzipRoot) {
         continue;
       }
 
-      const folderPath = path.join(typePath, directory.name);
-      const indexPath = path.join(folderPath, 'index.html');
-      if (!fs.existsSync(indexPath)) {
+      if (entry.isDirectory()) {
+        const folderPath = path.join(typePath, entry.name);
+        const indexPath = path.join(folderPath, 'index.html');
+        if (!fs.existsSync(indexPath)) {
+          continue;
+        }
+
+        byType[type].set(slug, {
+          folderPath,
+          indexPath,
+        });
         continue;
       }
 
+      const indexPath = path.join(typePath, entry.name);
       byType[type].set(slug, {
-        folderPath,
+        folderPath: typePath,
         indexPath,
       });
     }
@@ -738,6 +808,14 @@ export function resolveMarketAssetFile({ webzipRoot, type, slug, assetPath, regi
   const isSafeShared = sharedFilePath === sharedRoot || sharedFilePath.startsWith(sharedPrefix);
   if (isSafeShared && fs.existsSync(sharedFilePath) && !fs.statSync(sharedFilePath).isDirectory()) {
     return sharedFilePath;
+  }
+
+  const projectRoot = path.resolve(path.dirname(webzipRoot));
+  const projectFilePath = path.resolve(projectRoot, cleanAssetPath);
+  const projectPrefix = `${projectRoot}${path.sep}`;
+  const isSafeProject = projectFilePath === projectRoot || projectFilePath.startsWith(projectPrefix);
+  if (isSafeProject && fs.existsSync(projectFilePath) && !fs.statSync(projectFilePath).isDirectory()) {
+    return projectFilePath;
   }
 
   return null;

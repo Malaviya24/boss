@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/images/(.*)",
-      "destination": "/api/asset?path=images/$1"
+      "destination": "/api/asset?path=img/$1"
     },
     {
       "source": "/img/(.*)",
@@ -11,26 +11,14 @@
     },
     {
       "source": "/newfev/(.*)",
-      "destination": "/api/asset?path=newfev/$1"
+      "destination": "/api/asset?path=img/$1"
     },
     {
-      "source": "/market/:type/:slug/static/:asset*",
-      "destination": "/api/market-page/:type/:slug/static/:asset*"
-    },
-    {
-      "source": "/market/:type/:slug.php",
+      "source": "/jodi-chart-record/:slug.php",
       "destination": "/"
     },
     {
-      "source": "/market/:type/:slug",
-      "destination": "/"
-    },
-    {
-      "source": "/market",
-      "destination": "/"
-    },
-    {
-      "source": "/market/(.*)",
+      "source": "/panel-chart-record/:slug.php",
       "destination": "/"
     },
     {
@@ -58,15 +46,6 @@
     },
     {
       "source": "/index.html",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, no-cache, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/market(.*)",
       "headers": [
         {
           "key": "Cache-Control",

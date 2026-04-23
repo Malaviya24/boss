@@ -37,6 +37,10 @@ function toBoolean(value, fallback = false) {
   return ['1', 'true', 'yes', 'on'].includes(normalized);
 }
 
+function normalizeMarketContentSource(value = '') {
+  return String(value).toLowerCase() === 'legacy' ? 'legacy' : 'mongo';
+}
+
 export function loadEnv() {
   const primaryTarget = process.env.TARGET_URL ?? 'https://dpboss.boston/';
   const scrapeTargets = toList(process.env.SCRAPE_TARGETS, [primaryTarget]);
@@ -71,5 +75,7 @@ export function loadEnv() {
     matkaTimezone: process.env.MATKA_TIMEZONE ?? 'Asia/Kolkata',
     matkaRevealLoadingMs: toInt(process.env.MATKA_REVEAL_LOADING_MS, 5000),
     matkaPreRevealLoadingMs: toInt(process.env.MATKA_PRE_REVEAL_LOADING_MS, 60_000),
+    marketContentSource: normalizeMarketContentSource(process.env.MARKET_CONTENT_SOURCE),
+    marketContentCacheTtlMs: toInt(process.env.MARKET_CONTENT_CACHE_TTL_MS, 300_000),
   };
 }

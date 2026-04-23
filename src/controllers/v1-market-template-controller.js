@@ -17,6 +17,10 @@ export function createV1MarketTemplateController(marketTemplateService, store) {
 
       const matchedRecord = store.getMarketRecords({ slug })[0] ?? null;
       const mergedPayload = applyStoreResultToMarketTemplate(payload, matchedRecord);
+      response.setHeader(
+        'Cache-Control',
+        'public, max-age=60, s-maxage=120, stale-while-revalidate=600',
+      );
       response.json(successResponse(mergedPayload, 'Fetched market template'));
     } catch (error) {
       next(error);

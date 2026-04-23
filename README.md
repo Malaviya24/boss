@@ -4,7 +4,7 @@ Production-ready Express + React application that clones homepage market blocks,
 
 ## Tech Stack
 
-- Backend: Node.js, Express, interval HTML scraper, in-memory state cache, generated content artifacts, Socket.io
+- Backend: Node.js, Express, interval HTML scraper, in-memory state cache, MongoDB market-content store, Socket.io
 - Frontend: React + Vite
 - Security: Helmet, rate limiting, request validation, HTML sanitization
 - Logging: Winston + rotating log files in `logs/`
@@ -45,6 +45,8 @@ Versioned:
 - `GET /api/v1/latest`
 - `GET /api/v1/history`
 - `GET /api/v1/market`
+- `GET /api/v1/market-content/:type/:slug`
+- `GET /api/v1/market-live/:slug`
 - `GET /api/v1/content/homepage`
 - `GET /api/v1/content/market/:type/:slug`
 - `GET /api/v1/content/market/:type/:slug/asset/*`
@@ -75,6 +77,8 @@ Market pages:
 ```bash
 npm install
 npm run content:extract
+npm run market:import
+npm run market:verify
 npm run dev
 npm run build
 npm start
@@ -93,11 +97,16 @@ Important:
 - Runtime store is in-memory only (no Redis required).
 - `SCRAPE_TARGETS` supports multiple websites (comma-separated).
 - `CSRF_TOKEN` protects non-GET routes.
-- Market pages are local-file backed from `webzip` in this phase.
+- Market pages run from MongoDB when `MARKET_CONTENT_SOURCE=mongo` (default).
+- Legacy file-backed routes (`/api/market-page/*`) are mounted only when `MARKET_CONTENT_SOURCE=legacy`.
 - Matka module is side-by-side and needs Mongo + admin auth env keys:
   - `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`
   - `MATKA_TIMEZONE` (default `Asia/Kolkata`)
   - `MATKA_REVEAL_LOADING_MS` (default `5000`)
+- Market content mode:
+  - `MARKET_CONTENT_SOURCE=mongo` (default) for DB runtime
+  - `MARKET_CONTENT_SOURCE=legacy` for rollback to generated artifacts
+  - `MARKET_CONTENT_CACHE_TTL_MS` controls API cache TTL
 - Client admin requests must send the same CSRF token via `client/.env`:
   - `VITE_CSRF_TOKEN=<same as backend CSRF_TOKEN>`
 - For split deploy reliability:
@@ -126,19 +135,20 @@ npm run start:pm2
 - Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://dpboss-king.vercel.app`).
 - Run `npm run prod:doctor` before deploy to catch common local-vs-production config drift.
 
-## Webzip Footprint
+## Webzip Import
 
 Use:
 
 ```bash
-npm run webzip:prune
+npm run content:extract
+npm run market:import
 ```
 
-This keeps `index.html` in each market folder and deduplicates shared assets under `webzip/shared/`.
+`webzip` is import-only for market migration. Runtime `/api/v1/market-content/:type/:slug` reads MongoDB.
 
 ## Notes
 
-- `/market/*` renders through React Router + structured content JSON from `/api/v1/content/*`.
+- `/market/*` renders through React Router + structured JSON from `/api/v1/market-content/*`.
 - New routes:
   - `/live` (public live result cards)
   - `/admin-x-secure-portal` (admin login)

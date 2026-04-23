@@ -21,6 +21,7 @@ import { createCloneCssRouter } from './routes/clone-css-route.js';
 import { createHealthRouter } from './routes/health-route.js';
 import { createMarketTemplateService } from './services/market-template-service.js';
 import { createGeneratedContentService } from './services/content/generated-content-service.js';
+import { createMarketContentService } from './services/market-content/market-content-service.js';
 import { createMatkaAuthService } from './services/matka/matka-auth-service.js';
 import { createMatkaAuditService } from './services/matka/matka-audit-service.js';
 import { createMatkaService } from './services/matka/matka-service.js';
@@ -29,13 +30,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
-function mountImageStatic(app) {
+function mountImageStatic(app, { allowWebzipAssets = true } = {}) {
   const imageStaticRoots = [
+    path.join(projectRoot, 'img'),
     path.join(projectRoot, 'images', 'img'),
     path.join(projectRoot, 'images', 'newfev'),
-    path.join(projectRoot, 'webzip', 'shared', 'panel', 'images'),
-    path.join(projectRoot, 'webzip', 'shared', 'jodi', 'images'),
   ];
+
+  if (allowWebzipAssets) {
+    imageStaticRoots.push(
+      path.join(projectRoot, 'webzip', 'shared', 'panel', 'images'),
+      path.join(projectRoot, 'webzip', 'shared', 'jodi', 'images'),
+    );
+  }
 
   for (const imageRoot of imageStaticRoots) {
     if (fs.existsSync(imageRoot)) {
@@ -43,14 +50,16 @@ function mountImageStatic(app) {
     }
   }
 
-  const imgRoot = path.join(projectRoot, 'images', 'img');
-  if (fs.existsSync(imgRoot)) {
-    app.use('/img', express.static(imgRoot));
+  for (const imageRoot of imageStaticRoots) {
+    if (fs.existsSync(imageRoot)) {
+      app.use('/img', express.static(imageRoot));
+    }
   }
 
-  const newfevRoot = path.join(projectRoot, 'images', 'newfev');
-  if (fs.existsSync(newfevRoot)) {
-    app.use('/newfev', express.static(newfevRoot));
+  for (const imageRoot of imageStaticRoots) {
+    if (fs.existsSync(imageRoot)) {
+      app.use('/newfev', express.static(imageRoot));
+    }
   }
 }
 
@@ -121,8 +130,20 @@ export async function bootstrapApp() {
   app.use(express.json({ limit: env.bodyLimit }));
   app.use(security.csrfGuard);
 
-  app.use('/api', security.apiLimiter, (_request, response, next) => {
-    response.setHeader('Cache-Control', 'no-store');
+  app.use('/api', security.apiLimiter, (request, response, next) => {
+    const method = String(request.method ?? '').toUpperCase();
+    const requestPath = String(request.path ?? '').toLowerCase();
+    const isReadOnlyMethod = method === 'GET' || method === 'HEAD';
+    const isSensitivePath =
+      requestPath.includes('/admin/') ||
+      requestPath.includes('/auth/') ||
+      requestPath.includes('/live/') ||
+      requestPath.includes('/stream');
+
+    if (!isReadOnlyMethod || isSensitivePath) {
+      response.setHeader('Cache-Control', 'no-store');
+    }
+
     next();
   });
 
@@ -135,18 +156,23 @@ export async function bootstrapApp() {
   app.use(createHealthRouter(store));
   app.use(createCloneCssRouter());
 
-  mountImageStatic(app);
-
-  const marketPagesRouter = createMarketPagesRouter({
-    webzipRoot: path.join(projectRoot, 'webzip'),
-    logger,
+  mountImageStatic(app, {
+    allowWebzipAssets: env.marketContentSource === 'legacy',
   });
+
   const contentService = createGeneratedContentService({
     projectRoot,
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
   });
   contentService.ensureArtifacts();
+  const marketContentService = createMarketContentService({
+    mode: env.marketContentSource,
+    cacheTtlMs: env.marketContentCacheTtlMs,
+    logger,
+    legacyContentService: contentService,
+    mongoEnabled: mongoState.enabled,
+  });
   const marketTemplateService = createMarketTemplateService({
     webzipRoot: path.join(projectRoot, 'webzip'),
     logger,
@@ -163,7 +189,17 @@ export async function bootstrapApp() {
     enabled: mongoState.enabled,
   });
 
-  app.use('/api/market-page', marketPagesRouter);
+  if (env.marketContentSource === 'legacy') {
+    const marketPagesRouter = createMarketPagesRouter({
+      webzipRoot: path.join(projectRoot, 'webzip'),
+      logger,
+    });
+    app.use('/api/market-page', marketPagesRouter);
+  } else {
+    logger.info('market_page_legacy_routes_disabled', {
+      reason: 'market_content_source_mongo',
+    });
+  }
 
   app.use(
     '/api/v1',
@@ -175,6 +211,7 @@ export async function bootstrapApp() {
       realtimeService,
       marketTemplateService,
       contentService,
+      marketContentService,
       matkaService,
       matkaAuthService,
       matkaAuditService,
@@ -276,6 +313,7 @@ export async function bootstrapApp() {
     scrapeIntervalMs: env.scrapeIntervalMs,
     scrapeTargets: env.scrapeTargets,
     corsOrigins: env.corsOrigins,
+    marketContentSource: marketContentService.mode,
   });
 
   async function shutdown(signal) {

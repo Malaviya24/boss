@@ -9,7 +9,7 @@ import {
   parseHomepageFragmentToNodes,
   resolveMarketAssetFile,
 } from './content-artifacts.js';
-import { normalizeMarketSlug } from '../../utils/market-links.js';
+import { buildLocalMarketPath, normalizeMarketSlug } from '../../utils/market-links.js';
 
 function normalizeType(rawType = '') {
   return String(rawType).toLowerCase() === 'panel' ? 'panel' : 'jodi';
@@ -30,6 +30,13 @@ function escapeHtml(value = '') {
 
 function normalizeText(value = '') {
   return String(value).replace(/\s+/g, ' ').trim();
+}
+
+function cloneJsonValue(value) {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(value);
+  }
+  return JSON.parse(JSON.stringify(value));
 }
 
 function toSlugDisplayName(slug = '') {
@@ -98,8 +105,8 @@ function toAdminMarketRowHtml(card) {
     `<h4>${escapeHtml(name)}</h4>`,
     `<span>${escapeHtml(result || 'Result Coming')}</span>`,
     `<p>${escapeHtml(timeLabel || 'Live Result')}</p>`,
-    `<a class="vl-clk gm-clk" href="/market/jodi/${escapeHtml(slug)}">Jodi</a>`,
-    `<a class="vl-clk-2 gm-clk" href="/market/panel/${escapeHtml(slug)}">Panel</a>`,
+    `<a class="vl-clk gm-clk" href="/jodi-chart-record/${escapeHtml(slug)}.php">Jodi</a>`,
+    `<a class="vl-clk-2 gm-clk" href="/panel-chart-record/${escapeHtml(slug)}.php">Panel</a>`,
     '</div>',
   ].join('');
 }
@@ -271,7 +278,7 @@ function applyFallbackMarketPatch({
     if (node.tag === 'a' && String(node.attrs?.['data-refresh-button'] ?? '') === 'true') {
       node.attrs = {
         ...(node.attrs ?? {}),
-        href: `/market/${type}/${slug}`,
+        href: buildLocalMarketPath(type, slug),
       };
     }
   });
@@ -424,7 +431,8 @@ export function createGeneratedContentService({
       if (liveHtml && String(liveHtml).trim()) {
         sections[sectionId] = parseHomepageFragmentToNodes(liveHtml);
       } else {
-        sections[sectionId] = [];
+        const fallbackNodes = homepage.fallbackSections?.[sectionId];
+        sections[sectionId] = Array.isArray(fallbackNodes) ? cloneJsonValue(fallbackNodes) : [];
       }
     }
 

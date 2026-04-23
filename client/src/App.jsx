@@ -1,5 +1,12 @@
 import { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
 const HomePage = lazy(() => import('./features/homepage/HomePage.jsx'));
 const MarketPage = lazy(() => import('./features/market/MarketPage.jsx'));
@@ -66,7 +73,8 @@ function NavigationInterceptor() {
       const nextPathname = nextUrl.pathname || '/';
       const isHandledRoute =
         nextPathname === '/' ||
-        nextPathname.startsWith('/market/') ||
+        nextPathname.startsWith('/jodi-chart-record/') ||
+        nextPathname.startsWith('/panel-chart-record/') ||
         nextPathname.startsWith('/admin-x-secure-portal');
       if (!isHandledRoute) {
         return;
@@ -97,8 +105,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/live" element={<Navigate to="/" replace />} />
-          <Route path="/market/:type/:slug" element={<MarketPage />} />
-          <Route path="/market/:type/:slug.php" element={<MarketPage />} />
+          <Route path="/jodi-chart-record/:slug.php" element={<MarketPage routeType="jodi" />} />
+          <Route path="/panel-chart-record/:slug.php" element={<MarketPage routeType="panel" />} />
           <Route path="/admin-x-secure-portal" element={<AdminLoginPage />} />
           <Route path="/admin-x-secure-portal/dashboard" element={<AdminDashboardPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

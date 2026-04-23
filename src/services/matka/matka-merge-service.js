@@ -1,3 +1,5 @@
+import { buildLocalMarketPath } from '../../utils/market-links.js';
+
 function normalizeText(value = '') {
   return String(value).replace(/\s+/g, ' ').trim();
 }
@@ -44,8 +46,8 @@ export function toMatkaStoreLikeRecord(card, index = 0) {
     name: safeName,
     time: safeTime || 'Live Result',
     links: {
-      jodi: `/market/jodi/${safeSlug}`,
-      panel: `/market/panel/${safeSlug}`,
+      jodi: buildLocalMarketPath('jodi', safeSlug),
+      panel: buildLocalMarketPath('panel', safeSlug),
     },
     current: {
       number: toRecordNumber(card),

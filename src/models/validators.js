@@ -7,7 +7,21 @@ export const marketQuerySchema = z.object({
 
 export const marketPageParamsSchema = z.object({
   type: z.enum(['jodi', 'panel']),
-  slug: z.string().trim().min(1).max(200),
+  slug: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid market slug'),
+});
+
+export const marketLiveParamsSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid market slug'),
 });
 
 export const marketTemplateQuerySchema = z.object({

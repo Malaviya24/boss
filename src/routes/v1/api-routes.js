@@ -9,9 +9,12 @@ import { createV1StreamController } from '../../controllers/v1-stream-controller
 import { createV1ContentHomepageController } from '../../controllers/v1-content-homepage-controller.js';
 import { createV1ContentMarketController } from '../../controllers/v1-content-market-controller.js';
 import { createV1ContentMarketAssetController } from '../../controllers/v1-content-market-asset-controller.js';
+import { createV1MarketContentController } from '../../controllers/v1-market-content-controller.js';
+import { createV1MarketLiveController } from '../../controllers/v1-market-live-controller.js';
 import { createV1MatkaRoutes } from './matka-routes.js';
 import { validateParams, validateQuery } from '../../middlewares/validate.js';
 import {
+  marketLiveParamsSchema,
   marketPageParamsSchema,
   marketQuerySchema,
   marketTemplateQuerySchema,
@@ -25,6 +28,7 @@ export function createV1ApiRouter({
   realtimeService,
   marketTemplateService,
   contentService,
+  marketContentService,
   matkaService,
   matkaAuthService,
   matkaAuditService,
@@ -48,13 +52,23 @@ export function createV1ApiRouter({
     createV1MarketTemplateController(marketTemplateService, store),
   );
   router.get(
+    '/market-content/:type/:slug',
+    validateParams(marketPageParamsSchema),
+    createV1MarketContentController(marketContentService),
+  );
+  router.get(
+    '/market-live/:slug',
+    validateParams(marketLiveParamsSchema),
+    createV1MarketLiveController(store, matkaService),
+  );
+  router.get(
     '/content/homepage',
     createV1ContentHomepageController(contentService, store, matkaService, logger),
   );
   router.get(
     '/content/market/:type/:slug',
     validateParams(marketPageParamsSchema),
-    createV1ContentMarketController(contentService, matkaService),
+    createV1ContentMarketController(contentService),
   );
   router.get(
     '/content/market/:type/:slug/asset/*',

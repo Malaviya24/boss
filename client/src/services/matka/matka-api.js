@@ -69,12 +69,16 @@ function isConfiguredBaseUnsafeForProd(configuredBase = '') {
   }
 }
 
-function resolveMatkaBaseUrl() {
+function resolveConfiguredMatkaBaseUrl() {
   const configured = normalizeBaseUrl(CONFIGURED_MATKA_BASE_URL);
   if (configured && !isConfiguredBaseUnsafeForProd(configured)) {
     return configured;
   }
 
+  return '';
+}
+
+function resolveRenderFallbackMatkaBaseUrl() {
   if (typeof window !== 'undefined') {
     const hostname = String(window.location.hostname || '').toLowerCase();
     if (!LOCAL_HOSTNAMES.has(hostname)) {
@@ -85,14 +89,15 @@ function resolveMatkaBaseUrl() {
   return '';
 }
 
-function withBaseUrl(path) {
-  const baseUrl = resolveMatkaBaseUrl();
+function withBaseUrl(path, baseUrl = '') {
   if (!baseUrl) {
     return path;
   }
+
   if (/^https?:\/\//i.test(path)) {
     return path;
   }
+
   return `${baseUrl}${path}`;
 }
 
@@ -164,7 +169,7 @@ async function doRequest(path, { method, headers, body, signal, requestPath }) {
 
 function isRetryableRequestFailure(error) {
   const statusCode = Number(error?.status ?? 0);
-  if ([404, 500, 502, 503, 504].includes(statusCode)) {
+  if ([500, 502, 503, 504].includes(statusCode)) {
     return true;
   }
 
@@ -172,7 +177,6 @@ function isRetryableRequestFailure(error) {
   const message = String(error?.message ?? '').toLowerCase();
 
   return (
-    code === 'aborterror' ||
     code === 'etimedout' ||
     code === 'econnaborted' ||
     message.includes('timeout') ||
@@ -200,7 +204,9 @@ function toRenderAbsolutePath(path) {
 }
 
 async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
-  const requestPath = withBaseUrl(path);
+  const configuredBase = resolveConfiguredMatkaBaseUrl();
+  const fallbackBase = configuredBase || resolveRenderFallbackMatkaBaseUrl();
+  const requestPath = path;
   const requestBody = body === undefined ? undefined : JSON.stringify(body);
   const headers = {
     Accept: 'application/json',
@@ -232,7 +238,13 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
     }
 
     const fallbackPath =
-      String(requestPath || '') === path ? toRenderAbsolutePath(path) : path;
+      fallbackBase && String(requestPath || '') === path
+        ? withBaseUrl(path, fallbackBase)
+        : path;
+
+    if (!fallbackPath || fallbackPath === requestPath) {
+      throw error;
+    }
 
     return doRequest(path, {
       method,

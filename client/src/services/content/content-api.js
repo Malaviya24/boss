@@ -45,12 +45,16 @@ function isConfiguredBaseUnsafeForProd(configuredBase = '') {
   }
 }
 
-function resolveContentBaseUrl() {
+function resolveConfiguredContentBaseUrl() {
   const configured = normalizeBaseUrl(CONFIGURED_CONTENT_API_BASE_URL);
   if (configured && !isConfiguredBaseUnsafeForProd(configured)) {
     return configured;
   }
 
+  return '';
+}
+
+function resolveRenderFallbackBaseUrl() {
   if (typeof window !== 'undefined') {
     const hostname = String(window.location.hostname || '').toLowerCase();
     if (!LOCAL_HOSTNAMES.has(hostname)) {
@@ -61,19 +65,20 @@ function resolveContentBaseUrl() {
   return '';
 }
 
-function withBaseUrl(path) {
-  const baseUrl = resolveContentBaseUrl();
+function withBaseUrl(path, baseUrl = '') {
   if (!baseUrl) {
     return path;
   }
+
   if (/^https?:\/\//i.test(path)) {
     return path;
   }
+
   return `${baseUrl}${path}`;
 }
 
 function isRetryableStatus(statusCode = 0) {
-  return [404, 500, 502, 503, 504].includes(Number(statusCode));
+  return [500, 502, 503, 504].includes(Number(statusCode));
 }
 
 function isRetryableRequestFailure(error) {
@@ -85,7 +90,6 @@ function isRetryableRequestFailure(error) {
   const code = String(error?.code ?? '').toLowerCase();
 
   return (
-    code === 'aborterror' ||
     code === 'etimedout' ||
     code === 'econnaborted' ||
     message.includes('timeout') ||
@@ -117,8 +121,10 @@ function withTimeout(promise, timeoutMs) {
 }
 
 async function requestJson(path, { signal } = {}) {
-  const primaryPath = withBaseUrl(path);
-  const secondaryPath = primaryPath !== path ? path : '';
+  const configuredBase = resolveConfiguredContentBaseUrl();
+  const fallbackBase = configuredBase || resolveRenderFallbackBaseUrl();
+  const primaryPath = path;
+  const secondaryPath = fallbackBase ? withBaseUrl(path, fallbackBase) : '';
 
   const request = async (requestPath) => {
     const response = await withTimeout(
@@ -150,7 +156,11 @@ async function requestJson(path, { signal } = {}) {
   try {
     return await request(primaryPath);
   } catch (error) {
-    if (!secondaryPath || !isRetryableRequestFailure(error)) {
+    if (
+      !secondaryPath ||
+      secondaryPath === primaryPath ||
+      !isRetryableRequestFailure(error)
+    ) {
       throw error;
     }
     return request(secondaryPath);
@@ -216,7 +226,7 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
   }
 
   const requestPromise = requestJson(
-    `/api/v1/content/market/${normalizedType}/${normalizedSlug}`,
+    `/api/v1/market-content/${normalizedType}/${normalizedSlug}`,
     { signal },
   )
     .then((data) => {
@@ -241,7 +251,5 @@ export function getMarketLiveRecord({ slug, signal } = {}) {
     return Promise.resolve(null);
   }
 
-  return requestJson(`/api/market?slug=${encodeURIComponent(normalizedSlug)}`, { signal })
-    .then((records) => (Array.isArray(records) ? records[0] ?? null : null))
-    .catch(() => null);
+  return requestJson(`/api/v1/market-live/${encodeURIComponent(normalizedSlug)}`, { signal }).catch(() => null);
 }
