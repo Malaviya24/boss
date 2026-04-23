@@ -129,6 +129,10 @@ function normalizeHref(value = '', fallback = '#') {
 
 function getLiveValue(liveRecord, type, fallbackValue = '') {
   const current = liveRecord?.current ?? {};
+  const currentNumber = normalizeText(current.number);
+  if (currentNumber) {
+    return currentNumber;
+  }
   if (type === 'panel' && current.panel) {
     return current.panel;
   }

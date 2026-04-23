@@ -1,3 +1,5 @@
+import { getLiveMarketBySlug } from '../matka/matka-api.js';
+
 const HOMEPAGE_CACHE_TTL_MS = Number.parseInt(
   import.meta.env.VITE_HOMEPAGE_CACHE_TTL_MS ?? '6000',
   10,
@@ -441,7 +443,7 @@ function withTimeout(promise, timeoutMs) {
   });
 }
 
-async function requestJson(path, { signal } = {}) {
+async function requestJson(path, { signal, includeNotFoundFallback = false } = {}) {
   const configuredBase = resolveConfiguredContentBaseUrl();
   const fallbackBase = configuredBase || resolveRenderFallbackBaseUrl();
   const primaryPath = path;
@@ -477,10 +479,12 @@ async function requestJson(path, { signal } = {}) {
   try {
     return await request(primaryPath);
   } catch (error) {
+    const shouldRetryOnNotFound =
+      includeNotFoundFallback && Number(error?.status ?? 0) === 404;
     if (
       !secondaryPath ||
       secondaryPath === primaryPath ||
-      !isRetryableRequestFailure(error)
+      (!isRetryableRequestFailure(error) && !shouldRetryOnNotFound)
     ) {
       throw error;
     }
@@ -575,7 +579,17 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
 
   const fetchMarketContent = async () => {
     if (STATIC_MARKET_FILE_ONLY) {
-      return fallbackToLegacyTemplate();
+      try {
+        return await fallbackToLegacyTemplate();
+      } catch (legacyError) {
+        if (Number(legacyError?.status ?? 0) !== 404) {
+          throw legacyError;
+        }
+        return requestJson(`/api/v1/market-content/${normalizedType}/${normalizedSlug}`, {
+          signal,
+          includeNotFoundFallback: true,
+        });
+      }
     }
 
     if (preferLegacyMarketContentApi) {
@@ -585,6 +599,7 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
     try {
       return await requestJson(`/api/v1/market-content/${normalizedType}/${normalizedSlug}`, {
         signal,
+        includeNotFoundFallback: true,
       });
     } catch (error) {
       if (Number(error?.status) !== 404) {
@@ -615,10 +630,6 @@ export function getMarketLiveRecord({ slug, type = '', signal } = {}) {
     return Promise.resolve(null);
   }
 
-  if (STATIC_MARKET_FILE_ONLY) {
-    return Promise.resolve(null);
-  }
-
   const loadLegacyLive = async () => {
     const cachedLive = readLegacyLiveCache(normalizedType, normalizedSlug);
     if (cachedLive) {
@@ -636,16 +647,69 @@ export function getMarketLiveRecord({ slug, type = '', signal } = {}) {
     return livePayload;
   };
 
+  const loadMatkaLive = async () => {
+    const card = await getLiveMarketBySlug({
+      slug: normalizedSlug,
+      signal,
+    });
+    if (!card || typeof card !== 'object') {
+      return null;
+    }
+
+    const openPanel = normalizeText(card.openPanel);
+    const closePanel = normalizeText(card.closePanel);
+    const displayResult = normalizeText(card.displayResult);
+    const resultText = normalizeText(card.resultText);
+    const derived = parseResultParts(displayResult || resultText);
+    const currentNumber =
+      displayResult ||
+      resultText ||
+      derived.number ||
+      (openPanel && closePanel ? `${openPanel}-${derived.jodi || ''}-${closePanel}` : '') ||
+      'Result Coming';
+
+    return {
+      slug: normalizedSlug,
+      name: normalizeText(card.name) || toSlugDisplayName(normalizedSlug).toUpperCase(),
+      time: normalizeText(`${card.openTimeLabel ?? ''} ${card.closeTimeLabel ?? ''}`),
+      links: {},
+      current: {
+        number: currentNumber,
+        jodi: normalizeText(card.middleJodi) || derived.jodi || '',
+        panel: openPanel && closePanel ? `${openPanel}-${closePanel}` : openPanel || '',
+      },
+      stale: false,
+      updatedAt: card.updatedAt ?? null,
+      lastChangedAt: card.updatedAt ?? null,
+    };
+  };
+
   if (preferLegacyMarketLiveApi) {
     return loadLegacyLive().catch(() => null);
   }
 
-  return requestJson(`/api/v1/market-live/${encodeURIComponent(normalizedSlug)}`, { signal }).catch(
-    async (error) => {
-      if (Number(error?.status) !== 404) {
-        return null;
+  return loadMatkaLive()
+    .catch(() => null)
+    .then(async (matkaLive) => {
+      if (matkaLive) {
+        return matkaLive;
       }
-      return loadLegacyLive().catch(() => null);
-    },
-  );
+
+      return requestJson(`/api/v1/market-live/${encodeURIComponent(normalizedSlug)}`, {
+        signal,
+        includeNotFoundFallback: true,
+      }).catch(async (error) => {
+        if (Number(error?.status) === 404 || isRetryableRequestFailure(error)) {
+          if (STATIC_MARKET_FILE_ONLY) {
+            return loadLegacyLive().catch(() => null);
+          }
+          return null;
+        }
+
+        if (STATIC_MARKET_FILE_ONLY) {
+          return loadLegacyLive().catch(() => null);
+        }
+        return null;
+      });
+    });
 }
