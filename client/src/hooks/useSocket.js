@@ -22,11 +22,6 @@ function resolveSocketUrl() {
     return fromSocketEnv;
   }
 
-  const fromApiEnv = normalizeUrl(import.meta.env.VITE_MATKA_API_BASE_URL ?? '');
-  if (fromApiEnv) {
-    return fromApiEnv;
-  }
-
   if (typeof window === 'undefined') {
     return '';
   }

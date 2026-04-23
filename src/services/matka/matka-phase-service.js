@@ -135,9 +135,11 @@ export function toLiveMarketCard({
   const visibleMiddleJodi = phaseState.phase === 'closed' ? display.middleJodi : '';
 
   let resultText = 'Result Coming';
-  if (phaseState.phase === 'open_loading' || phaseState.phase === 'close_loading') {
+  if (phaseState.phase === 'before_open' && display.displayResult) {
+    resultText = display.displayResult;
+  } else if (phaseState.phase === 'open_loading' || phaseState.phase === 'close_loading') {
     resultText = 'Loading...';
-  } else if (phaseState.phase === 'open_revealed' || phaseState.phase === 'close_loading') {
+  } else if (phaseState.phase === 'open_revealed') {
     resultText = visibleOpenPanel || 'Result Coming';
   } else if (phaseState.phase === 'closed') {
     resultText = display.displayResult || 'Result Coming';

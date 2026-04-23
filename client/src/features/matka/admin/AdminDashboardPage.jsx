@@ -74,6 +74,14 @@ function toTime24(parts) {
   return `${String(hour24).padStart(2, '0')}:${String(safeMinute).padStart(2, '0')}`;
 }
 
+function normalizePanelInput(value = '') {
+  return String(value ?? '').replace(/[^0-9]/g, '').trim();
+}
+
+function isValidPanel(value = '') {
+  return /^\d{3}$/.test(String(value ?? '').trim());
+}
+
 function TimePickerField({ label, value, onChange, idPrefix }) {
   const current = value ?? toTimeParts(DEFAULT_OPEN_TIME);
 
@@ -168,12 +176,18 @@ function AdminMarketRow({
   };
 
   const saveOpenPanel = async () => {
+    const normalizedPanel = normalizePanelInput(openPanel);
+    if (!isValidPanel(normalizedPanel)) {
+      setFeedback('Open panel must be exactly 3 digits');
+      return;
+    }
+
     setBusy(true);
     try {
       await updateOpenPanel({
         token,
         marketId: market.id,
-        panel: openPanel,
+        panel: normalizedPanel,
       });
       setFeedback('Open panel saved. It will show in live result at Open Time.');
       await onMutateComplete();
@@ -185,12 +199,18 @@ function AdminMarketRow({
   };
 
   const saveClosePanel = async () => {
+    const normalizedPanel = normalizePanelInput(closePanel);
+    if (!isValidPanel(normalizedPanel)) {
+      setFeedback('Close panel must be exactly 3 digits');
+      return;
+    }
+
     setBusy(true);
     try {
       await updateClosePanel({
         token,
         marketId: market.id,
-        panel: closePanel,
+        panel: normalizedPanel,
       });
       setFeedback('Close panel saved. It will show in live result at Close Time.');
       await onMutateComplete();
@@ -271,7 +291,7 @@ function AdminMarketRow({
       <div className="market-panel-grid">
         <input
           value={openPanel}
-          onChange={(event) => setOpenPanel(event.target.value.replace(/[^0-9]/g, ''))}
+          onChange={(event) => setOpenPanel(normalizePanelInput(event.target.value))}
           placeholder="Open Panel (3-digit)"
           maxLength={3}
         />
@@ -280,7 +300,7 @@ function AdminMarketRow({
         </button>
         <input
           value={closePanel}
-          onChange={(event) => setClosePanel(event.target.value.replace(/[^0-9]/g, ''))}
+          onChange={(event) => setClosePanel(normalizePanelInput(event.target.value))}
           placeholder="Close Panel (3-digit)"
           maxLength={3}
         />

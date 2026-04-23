@@ -15,7 +15,7 @@ const CONFIGURED_CONTENT_API_BASE_URL = String(
 const DEFAULT_RENDER_CONTENT_BASE_URL = 'https://boss-ehz0.onrender.com';
 const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 const DEFAULT_FOOTER_RIGHTS_LINES = [
-  'All Rights Reserved®',
+  'All Rights Reserved',
   '(1998-2024)',
   'Contact (Astrologer-Dpboss)',
 ];
@@ -512,6 +512,22 @@ export function getHomepageContent({ force = false, signal } = {}) {
   }
 
   const requestPromise = requestJson('/api/v1/content/homepage', { signal })
+    .catch(async (error) => {
+      const statusCode = Number(error?.status ?? 0);
+      const shouldTryLegacyFallback =
+        statusCode === 404 ||
+        statusCode === 500 ||
+        statusCode === 502 ||
+        statusCode === 503 ||
+        statusCode === 504 ||
+        isRetryableRequestFailure(error);
+
+      if (!shouldTryLegacyFallback) {
+        throw error;
+      }
+
+      return requestJson('/api/homepage', { signal });
+    })
     .then((data) => {
       homepageCache.data = data;
       homepageCache.expiresAt = Date.now() + HOMEPAGE_CACHE_TTL_MS;
