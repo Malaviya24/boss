@@ -63,6 +63,7 @@ export function useMarketContent({ type, slug }) {
         setStatus('ready');
 
         void getMarketLiveRecord({
+          type,
           slug,
           signal: controller.signal,
         })
@@ -122,6 +123,7 @@ export function useMarketContent({ type, slug }) {
         liveRequestInFlightRef.current = true;
         try {
           const payload = await getMarketLiveRecord({
+            type,
             slug,
             signal: controller.signal,
           });
@@ -150,7 +152,7 @@ export function useMarketContent({ type, slug }) {
       liveAbortRef.current = null;
       liveRequestInFlightRef.current = false;
     };
-  }, [slug]);
+  }, [slug, type]);
 
   useEffect(() => {
     if (status !== 'error') {
@@ -182,6 +184,7 @@ export function useMarketContent({ type, slug }) {
     liveAbortRef.current = controller;
 
     void getMarketLiveRecord({
+      type,
       slug,
       signal: controller.signal,
     })
@@ -198,7 +201,7 @@ export function useMarketContent({ type, slug }) {
         clearMarketContentCache();
         void load({ force: true });
       });
-  }, [load, slug]);
+  }, [load, slug, type]);
 
   return {
     content,

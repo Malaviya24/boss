@@ -3,11 +3,20 @@ const HOMEPAGE_CACHE_TTL_MS = Number.parseInt(
   10,
 );
 const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '30000', 10);
+const LEGACY_LIVE_CACHE_TTL_MS = Number.parseInt(
+  import.meta.env.VITE_LEGACY_LIVE_CACHE_TTL_MS ?? '5000',
+  10,
+);
 const CONFIGURED_CONTENT_API_BASE_URL = String(
   import.meta.env.VITE_CONTENT_API_BASE_URL ?? '',
 ).trim();
 const DEFAULT_RENDER_CONTENT_BASE_URL = 'https://boss-ehz0.onrender.com';
 const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
+const DEFAULT_FOOTER_RIGHTS_LINES = [
+  'All Rights Reserved®',
+  '(1998-2024)',
+  'Contact (Astrologer-Dpboss)',
+];
 
 const homepageCache = {
   data: null,
@@ -17,6 +26,311 @@ const homepageCache = {
 
 const marketCache = new Map();
 const marketInFlight = new Map();
+const legacyLiveCache = new Map();
+
+let preferLegacyMarketContentApi = false;
+let preferLegacyMarketLiveApi = false;
+
+function normalizeMarketType(type = '') {
+  return String(type).toLowerCase() === 'panel' ? 'panel' : 'jodi';
+}
+
+function normalizeMarketSlug(slug = '') {
+  return String(slug ?? '')
+    .toLowerCase()
+    .replace(/\.php$/i, '')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
+function normalizeText(value = '') {
+  return String(value ?? '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function toSlugDisplayName(slug = '') {
+  const normalizedSlug = normalizeMarketSlug(slug);
+  if (!normalizedSlug) {
+    return '';
+  }
+
+  return normalizedSlug
+    .split('-')
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(' ');
+}
+
+function stripHtmlToText(html = '') {
+  const source = String(html ?? '');
+  if (!source) {
+    return '';
+  }
+
+  if (typeof DOMParser !== 'undefined') {
+    const parser = new DOMParser();
+    const documentNode = parser.parseFromString(`<div>${source}</div>`, 'text/html');
+    const text = normalizeText(documentNode.body?.textContent ?? '');
+    if (text) {
+      return text;
+    }
+  }
+
+  return normalizeText(source.replace(/<[^>]+>/g, ' '));
+}
+
+function toStructuredFooterBlocks(htmlBlocks = []) {
+  if (!Array.isArray(htmlBlocks)) {
+    return [];
+  }
+
+  const blocks = [];
+  for (const blockHtml of htmlBlocks) {
+    const text = stripHtmlToText(blockHtml);
+    if (!text) {
+      continue;
+    }
+
+    blocks.push({
+      tag: 'p',
+      className: '',
+      text,
+    });
+  }
+
+  return blocks;
+}
+
+function toLegacyFooter(legacyPayload = {}) {
+  const footerBlocks = toStructuredFooterBlocks(legacyPayload.footerHtmlBlocks);
+  const summaryTitle = normalizeText(legacyPayload?.summary?.title);
+  const summaryDescription = normalizeText(legacyPayload?.summary?.description);
+
+  if (footerBlocks.length === 0) {
+    if (summaryTitle) {
+      footerBlocks.push({
+        tag: 'h3',
+        className: 'faq-heading',
+        text: summaryTitle,
+      });
+    }
+    if (summaryDescription) {
+      footerBlocks.push({
+        tag: 'p',
+        className: '',
+        text: summaryDescription,
+      });
+    }
+  }
+
+  return {
+    blocks: footerBlocks,
+    counterText: '',
+    brandTitle: 'DPBOSS.BOSTON',
+    rightsLines: DEFAULT_FOOTER_RIGHTS_LINES,
+    matkaPlay: {
+      label: 'Matka Play',
+      href: '/',
+    },
+  };
+}
+
+function toStructuredRows(rows = [], columns = []) {
+  const safeRows = Array.isArray(rows) ? rows : [];
+  return safeRows.map((row, rowIndex) => {
+    const sourceCells = Array.isArray(row?.cells) ? row.cells : [];
+    return {
+      id: String(row?.id ?? rowIndex),
+      rowIndex,
+      cells: sourceCells.map((cell, cellIndex) => ({
+        id: String(cell?.id ?? cellIndex),
+        column: String(columns[cellIndex] ?? ''),
+        text: normalizeText(cell?.text ?? ''),
+        isHighlight: Boolean(cell?.isHighlight),
+        className: Boolean(cell?.isHighlight) ? 'r' : '',
+        attrs: Boolean(cell?.isHighlight) ? { class: 'r' } : {},
+      })),
+    };
+  });
+}
+
+function parseResultParts(value = '') {
+  const normalized = normalizeText(value);
+  const groupedMatch = normalized.match(/(\d{1,3})\D+(\d{1,2})\D+(\d{1,3})/);
+  if (groupedMatch) {
+    const [, openPanel, jodi, closePanel] = groupedMatch;
+    return {
+      number: `${openPanel}-${jodi.padStart(2, '0')}-${closePanel}`,
+      jodi: jodi.padStart(2, '0'),
+      panel: `${openPanel}-${closePanel}`,
+    };
+  }
+
+  const jodiMatch = normalized.match(/\b\d{2}\b/);
+  return {
+    number: normalized,
+    jodi: jodiMatch ? jodiMatch[0] : '',
+    panel: '',
+  };
+}
+
+function toStructuredMarketContentFromLegacy(legacyPayload = {}, { type, slug } = {}) {
+  const normalizedType = normalizeMarketType(type);
+  const normalizedSlug = normalizeMarketSlug(slug);
+  const tableColumns = Array.isArray(legacyPayload?.table?.columns)
+    ? legacyPayload.table.columns.map((column) => normalizeText(column))
+    : [];
+  const tableRows = toStructuredRows(legacyPayload?.table?.rows, tableColumns);
+  const resultValue = normalizeText(legacyPayload?.result?.value) || 'Result Coming';
+  const fallbackName = toSlugDisplayName(normalizedSlug).toUpperCase();
+  const headingText = normalizeText(legacyPayload?.heading);
+  const resultName = normalizeText(legacyPayload?.result?.name) || headingText || fallbackName;
+  const pageTitle = normalizeText(legacyPayload?.title) || `${fallbackName} ${normalizedType.toUpperCase()} CHART`;
+  const description = normalizeText(legacyPayload?.description);
+
+  return {
+    version: 2,
+    type: normalizedType,
+    slug: normalizedSlug,
+    title: pageTitle,
+    description,
+    seo: {
+      meta: [],
+    },
+    styles: {
+      urls: Array.isArray(legacyPayload?.styleUrls) ? legacyPayload.styleUrls : [],
+      blocks: Array.isArray(legacyPayload?.styleBlocks) ? legacyPayload.styleBlocks : [],
+      jsonLdBlocks: [],
+    },
+    hero: {
+      logo: {
+        href: '/',
+        src: normalizeText(legacyPayload?.logoUrl) || '/img/logo.png',
+        alt: 'DPBOSS',
+      },
+      chartTitle: headingText,
+      smallHeading: normalizeText(legacyPayload?.summary?.title),
+      introText: normalizeText(legacyPayload?.summary?.description),
+    },
+    result: {
+      className: 'chart-result',
+      marketName: resultName,
+      value: resultValue,
+      refreshLabel: 'Refresh Result',
+      refreshHref: `/${normalizedType === 'panel' ? 'panel-chart-record' : 'jodi-chart-record'}/${normalizedSlug}.php`,
+    },
+    controls: {
+      topAnchorId: 'market-top',
+      bottomAnchorId: 'market-bottom',
+      goBottomLabel: normalizeText(legacyPayload?.actions?.goBottomLabel) || 'Go to Bottom',
+      goTopLabel: normalizeText(legacyPayload?.actions?.goTopLabel) || 'Go to Top',
+    },
+    table: {
+      title: normalizeText(legacyPayload?.table?.heading) || headingText,
+      attrs: {
+        class: 'panel-chart chart-table',
+        style: 'width: 100%; text-align:center;',
+      },
+      headingAttrs: {
+        class: 'panel-heading text-center',
+        style: 'background: #3f51b5;',
+      },
+      titleAttrs: {},
+      columns: tableColumns,
+      rows: tableRows,
+    },
+    footer: toLegacyFooter(legacyPayload),
+    importedAt: null,
+    updatedAt: null,
+  };
+}
+
+function toLegacyLivePayload(legacyPayload = {}, { slug } = {}) {
+  const normalizedSlug = normalizeMarketSlug(slug);
+  const resultText = normalizeText(legacyPayload?.result?.value) || 'Result Coming';
+  const parts = parseResultParts(resultText);
+  return {
+    slug: normalizedSlug,
+    name:
+      normalizeText(legacyPayload?.result?.name) ||
+      normalizeText(legacyPayload?.heading) ||
+      toSlugDisplayName(normalizedSlug).toUpperCase(),
+    time: '',
+    links: {},
+    current: {
+      number: parts.number || resultText,
+      jodi: parts.jodi,
+      panel: parts.panel,
+    },
+    stale: false,
+    updatedAt: null,
+    lastChangedAt: null,
+  };
+}
+
+function toLegacyLiveCacheKey(type, slug) {
+  return `${normalizeMarketType(type)}:${normalizeMarketSlug(slug)}`;
+}
+
+function readLegacyLiveCache(type, slug) {
+  const key = toLegacyLiveCacheKey(type, slug);
+  const cached = legacyLiveCache.get(key);
+  if (!cached) {
+    return null;
+  }
+  if (cached.expiresAt <= Date.now()) {
+    legacyLiveCache.delete(key);
+    return null;
+  }
+  return cached.value;
+}
+
+function writeLegacyLiveCache(type, slug, value) {
+  const key = toLegacyLiveCacheKey(type, slug);
+  const ttl = Number.isFinite(LEGACY_LIVE_CACHE_TTL_MS) && LEGACY_LIVE_CACHE_TTL_MS >= 2000
+    ? LEGACY_LIVE_CACHE_TTL_MS
+    : 5000;
+  legacyLiveCache.set(key, {
+    value,
+    expiresAt: Date.now() + ttl,
+  });
+}
+
+function getLegacyMarketTemplatePaths(type, slug) {
+  const encodedType = encodeURIComponent(type);
+  const encodedSlug = encodeURIComponent(slug);
+  return [
+    `/api/v1/market-template/${encodedType}/${encodedSlug}`,
+    `/api/market-template/${encodedType}/${encodedSlug}`,
+    `/api/v1/market-template?type=${encodedType}&slug=${encodedSlug}`,
+    `/api/market-template?type=${encodedType}&slug=${encodedSlug}`,
+  ];
+}
+
+async function requestLegacyMarketTemplate(type, slug, { signal } = {}) {
+  const normalizedType = normalizeMarketType(type);
+  const normalizedSlug = normalizeMarketSlug(slug);
+  const candidatePaths = getLegacyMarketTemplatePaths(normalizedType, normalizedSlug);
+  let lastError = null;
+
+  for (const candidatePath of candidatePaths) {
+    try {
+      const payload = await requestJson(candidatePath, { signal });
+      if (payload && typeof payload === 'object') {
+        return payload;
+      }
+    } catch (error) {
+      lastError = error;
+      if (Number(error?.status) && Number(error.status) !== 404) {
+        throw error;
+      }
+    }
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
+
+  throw new Error('Legacy market template unavailable');
+}
 
 function normalizeBaseUrl(value = '') {
   const raw = String(value ?? '').trim();
@@ -175,6 +489,9 @@ export function invalidateHomepageContentCache() {
 export function clearMarketContentCache() {
   marketCache.clear();
   marketInFlight.clear();
+  legacyLiveCache.clear();
+  preferLegacyMarketContentApi = false;
+  preferLegacyMarketLiveApi = false;
 }
 
 export function getHomepageContent({ force = false, signal } = {}) {
@@ -206,11 +523,8 @@ function toMarketCacheKey(type, slug) {
 }
 
 export function getMarketContent({ type, slug, force = false, signal } = {}) {
-  const normalizedType = type === 'panel' ? 'panel' : 'jodi';
-  const normalizedSlug = String(slug ?? '')
-    .toLowerCase()
-    .replace(/\.php$/i, '')
-    .replace(/[^a-z0-9-]/g, '');
+  const normalizedType = normalizeMarketType(type);
+  const normalizedSlug = normalizeMarketSlug(slug);
 
   if (!normalizedSlug) {
     throw new Error('Invalid market slug');
@@ -225,10 +539,35 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
     return marketInFlight.get(cacheKey);
   }
 
-  const requestPromise = requestJson(
-    `/api/v1/market-content/${normalizedType}/${normalizedSlug}`,
-    { signal },
-  )
+  const fallbackToLegacyTemplate = async () => {
+    const legacyPayload = await requestLegacyMarketTemplate(normalizedType, normalizedSlug, {
+      signal,
+    });
+    preferLegacyMarketContentApi = true;
+    return toStructuredMarketContentFromLegacy(legacyPayload, {
+      type: normalizedType,
+      slug: normalizedSlug,
+    });
+  };
+
+  const fetchMarketContent = async () => {
+    if (preferLegacyMarketContentApi) {
+      return fallbackToLegacyTemplate();
+    }
+
+    try {
+      return await requestJson(`/api/v1/market-content/${normalizedType}/${normalizedSlug}`, {
+        signal,
+      });
+    } catch (error) {
+      if (Number(error?.status) !== 404) {
+        throw error;
+      }
+      return fallbackToLegacyTemplate();
+    }
+  };
+
+  const requestPromise = fetchMarketContent()
     .then((data) => {
       marketCache.set(cacheKey, data);
       return data;
@@ -241,15 +580,41 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
   return requestPromise;
 }
 
-export function getMarketLiveRecord({ slug, signal } = {}) {
-  const normalizedSlug = String(slug ?? '')
-    .toLowerCase()
-    .replace(/\.php$/i, '')
-    .replace(/[^a-z0-9-]/g, '');
+export function getMarketLiveRecord({ slug, type = '', signal } = {}) {
+  const normalizedSlug = normalizeMarketSlug(slug);
+  const normalizedType = normalizeMarketType(type);
 
   if (!normalizedSlug) {
     return Promise.resolve(null);
   }
 
-  return requestJson(`/api/v1/market-live/${encodeURIComponent(normalizedSlug)}`, { signal }).catch(() => null);
+  const loadLegacyLive = async () => {
+    const cachedLive = readLegacyLiveCache(normalizedType, normalizedSlug);
+    if (cachedLive) {
+      return cachedLive;
+    }
+
+    const legacyPayload = await requestLegacyMarketTemplate(normalizedType, normalizedSlug, {
+      signal,
+    });
+    const livePayload = toLegacyLivePayload(legacyPayload, {
+      slug: normalizedSlug,
+    });
+    writeLegacyLiveCache(normalizedType, normalizedSlug, livePayload);
+    preferLegacyMarketLiveApi = true;
+    return livePayload;
+  };
+
+  if (preferLegacyMarketLiveApi) {
+    return loadLegacyLive().catch(() => null);
+  }
+
+  return requestJson(`/api/v1/market-live/${encodeURIComponent(normalizedSlug)}`, { signal }).catch(
+    async (error) => {
+      if (Number(error?.status) !== 404) {
+        return null;
+      }
+      return loadLegacyLive().catch(() => null);
+    },
+  );
 }
