@@ -185,10 +185,28 @@ function isRetryableRequestFailure(error) {
   );
 }
 
+function isMatkaPath(path = '') {
+  const normalized = String(path ?? '');
+  return normalized.startsWith('/api/v1/admin/') || normalized.startsWith('/api/v1/live/');
+}
+
+function shouldUseDirectBackendForMatka(path = '', fallbackBase = '') {
+  if (!fallbackBase || !isMatkaPath(path)) {
+    return false;
+  }
+
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const hostname = String(window.location.hostname || '').toLowerCase();
+  return !LOCAL_HOSTNAMES.has(hostname);
+}
+
 function shouldRetryWithAlternatePath(path, requestPath, error) {
-  const isMatkaPath =
-    String(path).startsWith('/api/v1/admin/') || String(path).startsWith('/api/v1/live/');
-  if (!isMatkaPath || !isRetryableRequestFailure(error)) {
+  const statusCode = Number(error?.status ?? 0);
+  const fallbackEligibleFailure = isRetryableRequestFailure(error) || statusCode === 404;
+  if (!isMatkaPath(path) || !fallbackEligibleFailure) {
     return false;
   }
 
@@ -206,7 +224,9 @@ function toRenderAbsolutePath(path) {
 async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
   const configuredBase = resolveConfiguredMatkaBaseUrl();
   const fallbackBase = configuredBase || resolveRenderFallbackMatkaBaseUrl();
-  const requestPath = path;
+  const requestPath = shouldUseDirectBackendForMatka(path, fallbackBase)
+    ? withBaseUrl(path, fallbackBase)
+    : path;
   const requestBody = body === undefined ? undefined : JSON.stringify(body);
   const headers = {
     Accept: 'application/json',
@@ -237,10 +257,7 @@ async function requestJson(path, { method = 'GET', body, token, signal } = {}) {
       throw error;
     }
 
-    const fallbackPath =
-      fallbackBase && String(requestPath || '') === path
-        ? withBaseUrl(path, fallbackBase)
-        : path;
+    const fallbackPath = fallbackBase ? withBaseUrl(path, fallbackBase) : '';
 
     if (!fallbackPath || fallbackPath === requestPath) {
       throw error;
