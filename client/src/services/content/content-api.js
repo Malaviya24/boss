@@ -7,6 +7,8 @@ const LEGACY_LIVE_CACHE_TTL_MS = Number.parseInt(
   import.meta.env.VITE_LEGACY_LIVE_CACHE_TTL_MS ?? '5000',
   10,
 );
+const STATIC_MARKET_FILE_ONLY =
+  String(import.meta.env.VITE_MARKET_STATIC_FILE_ONLY ?? 'true').toLowerCase() !== 'false';
 const CONFIGURED_CONTENT_API_BASE_URL = String(
   import.meta.env.VITE_CONTENT_API_BASE_URL ?? '',
 ).trim();
@@ -297,6 +299,11 @@ function writeLegacyLiveCache(type, slug, value) {
 function getLegacyMarketTemplatePaths(type, slug) {
   const encodedType = encodeURIComponent(type);
   const encodedSlug = encodeURIComponent(slug);
+
+  if (STATIC_MARKET_FILE_ONLY) {
+    return [`/api/market-template?type=${encodedType}&slug=${encodedSlug}`];
+  }
+
   return [
     `/api/v1/market-template/${encodedType}/${encodedSlug}`,
     `/api/market-template/${encodedType}/${encodedSlug}`,
@@ -551,6 +558,10 @@ export function getMarketContent({ type, slug, force = false, signal } = {}) {
   };
 
   const fetchMarketContent = async () => {
+    if (STATIC_MARKET_FILE_ONLY) {
+      return fallbackToLegacyTemplate();
+    }
+
     if (preferLegacyMarketContentApi) {
       return fallbackToLegacyTemplate();
     }
@@ -585,6 +596,10 @@ export function getMarketLiveRecord({ slug, type = '', signal } = {}) {
   const normalizedType = normalizeMarketType(type);
 
   if (!normalizedSlug) {
+    return Promise.resolve(null);
+  }
+
+  if (STATIC_MARKET_FILE_ONLY) {
     return Promise.resolve(null);
   }
 
