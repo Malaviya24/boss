@@ -81,6 +81,37 @@ function sanitizeRows(rows = [], columns = []) {
   });
 }
 
+function toJodiRowsFromPanelRows(panelRows = []) {
+  return panelRows
+    .map((row, rowIndex) => {
+      const sourceCells = Array.isArray(row?.cells) ? row.cells : [];
+      if (sourceCells.length < 4) {
+        return null;
+      }
+
+      const cells = [
+        {
+          ...(sourceCells[0] ?? {}),
+          column: 'Date',
+        },
+      ];
+
+      for (let cellIndex = 2; cellIndex < sourceCells.length; cellIndex += 3) {
+        const middleCell = sourceCells[cellIndex] ?? {};
+        cells.push({
+          ...middleCell,
+        });
+      }
+
+      return {
+        id: String(row?.rowIndex ?? rowIndex),
+        rowIndex: Number.isFinite(row?.rowIndex) ? row.rowIndex : rowIndex,
+        cells,
+      };
+    })
+    .filter(Boolean);
+}
+
 export function createMarketContentService({
   mode = 'mongo',
   cacheTtlMs = 300000,
@@ -171,7 +202,7 @@ export function createMarketContentService({
       });
     }
 
-    const [metaDoc, rowDocs] = await Promise.all([
+    const [metaDoc, rowDocs, siblingPanelMarket] = await Promise.all([
       MarketMetaModel.findOne({
         marketId: market._id,
         type,
@@ -182,6 +213,13 @@ export function createMarketContentService({
       })
         .sort({ rowIndex: 1 })
         .lean(),
+      type === 'jodi'
+        ? MarketContentMarketModel.findOne({
+            type: 'panel',
+            slug,
+            isActive: true,
+          }).lean()
+        : Promise.resolve(null),
     ]);
 
     if (!metaDoc) {
@@ -191,9 +229,23 @@ export function createMarketContentService({
       });
     }
 
+    let resolvedRowDocs = rowDocs;
+    if (type === 'jodi' && siblingPanelMarket?._id) {
+      const panelRows = await MarketChartRowModel.find({
+        marketId: siblingPanelMarket._id,
+        type: 'panel',
+      })
+        .sort({ rowIndex: 1 })
+        .lean();
+      const derivedRows = toJodiRowsFromPanelRows(panelRows);
+      if (derivedRows.length > 0) {
+        resolvedRowDocs = derivedRows;
+      }
+    }
+
     const columns = sanitizeColumns(metaDoc.table?.columns);
     const rows = sanitizeRows(
-      rowDocs.map((row) => ({
+      resolvedRowDocs.map((row) => ({
         id: String(row.rowIndex),
         rowIndex: row.rowIndex,
         cells: row.cells,
