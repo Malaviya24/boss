@@ -87,6 +87,7 @@ export function createMatkaService({ env }) {
   const timeZone = env.matkaTimezone;
   const loadingMs = env.matkaRevealLoadingMs;
   const preRevealLeadMs = env.matkaPreRevealLoadingMs;
+  const openResultVisibleMs = env.matkaOpenResultVisibleMs;
   const memoryState = {
     marketSeq: 1,
     markets: [],
@@ -119,6 +120,7 @@ export function createMatkaService({ env }) {
             timeZone,
             loadingMs,
             preRevealLeadMs,
+            openResultVisibleMs,
           }),
         );
     }
@@ -143,6 +145,7 @@ export function createMatkaService({ env }) {
         timeZone,
         loadingMs,
         preRevealLeadMs,
+        openResultVisibleMs,
       }),
     );
   }
@@ -174,6 +177,7 @@ export function createMatkaService({ env }) {
         timeZone,
         loadingMs,
         preRevealLeadMs,
+        openResultVisibleMs,
       });
     }
 
@@ -207,6 +211,7 @@ export function createMatkaService({ env }) {
       timeZone,
       loadingMs,
       preRevealLeadMs,
+      openResultVisibleMs,
     });
   }
 
@@ -740,6 +745,7 @@ export function createMatkaService({ env }) {
     timeZone,
     loadingMs,
     preRevealLeadMs,
+    openResultVisibleMs,
     listLiveMarkets,
     getLiveMarketBySlug,
     listAdminMarkets,

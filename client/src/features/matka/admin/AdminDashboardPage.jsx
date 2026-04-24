@@ -26,6 +26,7 @@ const AUTO_CHART_START_YEAR = 2023;
 const HOURS = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, '0'));
 const MINUTES = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
 const CHART_DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const DELAYED_LOADER_MS = 2000;
 
 function ensureNoIndexMeta() {
   const existing = document.querySelector('meta[name="robots"]');
@@ -144,6 +145,35 @@ function formatManualDateRange(startDate, endDate) {
   return `${start} to ${end}`;
 }
 
+function useDelayedFlag(active, delayMs = DELAYED_LOADER_MS) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!active) {
+      setVisible(false);
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => setVisible(true), delayMs);
+    return () => window.clearTimeout(timer);
+  }, [active, delayMs]);
+
+  return visible;
+}
+
+function AdminProgressNotice({ visible, label = 'Working...' }) {
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <div className="matka-admin-progress" role="status" aria-live="polite">
+      <span className="matka-admin-progress-spinner" aria-hidden="true" />
+      <span>{label}</span>
+    </div>
+  );
+}
+
 function TimePickerField({ label, value, onChange, idPrefix }) {
   const current = value ?? toTimeParts(DEFAULT_OPEN_TIME);
 
@@ -211,6 +241,7 @@ function AdminMarketRow({
   const [manualEndDate, setManualEndDate] = useState('');
   const [manualDays, setManualDays] = useState(() => createEmptyManualDays());
   const [busy, setBusy] = useState(false);
+  const showBusyLoader = useDelayedFlag(busy);
 
   useEffect(() => {
     setName(market.name);
@@ -385,6 +416,7 @@ function AdminMarketRow({
 
   return (
     <article className="matka-admin-market-row">
+      <AdminProgressNotice visible={showBusyLoader} label={`Updating ${market.name}...`} />
       <div className="market-row-top">
         <h3>{market.name}</h3>
         <span className={`market-flag ${market.isActive ? 'on' : 'off'}`}>
@@ -529,6 +561,8 @@ export default function AdminDashboardPage() {
   const [auditLogs, setAuditLogs] = useState([]);
   const [status, setStatus] = useState('loading');
   const [feedback, setFeedback] = useState('');
+  const [createBusy, setCreateBusy] = useState(false);
+  const showCreateLoader = useDelayedFlag(createBusy);
 
   const [createForm, setCreateForm] = useState({
     name: '',
@@ -599,6 +633,7 @@ export default function AdminDashboardPage() {
 
   const onCreateMarket = async (event) => {
     event.preventDefault();
+    setCreateBusy(true);
     try {
       const created = await createAdminMarket({
         token,
@@ -637,6 +672,8 @@ export default function AdminDashboardPage() {
       await loadAll(token);
     } catch (error) {
       setFeedback(getReadableErrorMessage(error, 'Create market failed'));
+    } finally {
+      setCreateBusy(false);
     }
   };
 
@@ -711,8 +748,11 @@ export default function AdminDashboardPage() {
             }
             idPrefix="create-close"
           />
-          <button type="submit">Create</button>
+          <button type="submit" disabled={createBusy}>
+            {createBusy ? 'Creating...' : 'Create'}
+          </button>
         </form>
+        <AdminProgressNotice visible={showCreateLoader} label="Creating market and chart history..." />
         <p className="matka-admin-note">
           Open/Close panel values are shown to users in Live Result only when those market times are reached.
         </p>

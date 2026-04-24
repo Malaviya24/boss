@@ -75,6 +75,7 @@ export function loadEnv() {
     matkaTimezone: process.env.MATKA_TIMEZONE ?? 'Asia/Kolkata',
     matkaRevealLoadingMs: toInt(process.env.MATKA_REVEAL_LOADING_MS, 5000),
     matkaPreRevealLoadingMs: toInt(process.env.MATKA_PRE_REVEAL_LOADING_MS, 60_000),
+    matkaOpenResultVisibleMs: toInt(process.env.MATKA_OPEN_RESULT_VISIBLE_MS, 120_000),
     marketContentSource: normalizeMarketContentSource(process.env.MARKET_CONTENT_SOURCE),
     marketContentCacheTtlMs: toInt(process.env.MARKET_CONTENT_CACHE_TTL_MS, 300_000),
   };

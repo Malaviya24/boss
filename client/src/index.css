@@ -1092,6 +1092,30 @@ body {
   font-weight: 700;
 }
 
+.matka-admin-progress {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0;
+  border: 2px solid #ff2d55;
+  border-radius: 999px;
+  background: #fff8ea;
+  color: #001a7a;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.matka-admin-progress-spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(0, 26, 122, 0.2);
+  border-top-color: #522f92;
+  border-radius: 50%;
+  animation: cloneSpin 0.8s linear infinite;
+}
+
 .audit-log-list {
   display: grid;
   gap: 6px;

@@ -34,6 +34,17 @@ function withLoadingWindow(startAt, loadingMs) {
   };
 }
 
+function withVisibleWindow(startAt, visibleMs) {
+  if (!startAt) {
+    return null;
+  }
+  const safeVisibleMs = Number.isFinite(visibleMs) && visibleMs > 0 ? visibleMs : 120_000;
+  return {
+    startAt,
+    endAt: new Date(startAt.getTime() + safeVisibleMs),
+  };
+}
+
 function formatOpenPartial(display = {}) {
   if (!display.openPanel || !display.openSingle) {
     return '';
@@ -52,7 +63,14 @@ function cycleCloseWaitingText({ nowMs, openPartial = '' }) {
   return 'Result Coming';
 }
 
-export function resolveMarketPhase({ market, result, timeZone, loadingMs, preRevealLeadMs = 60_000 }) {
+export function resolveMarketPhase({
+  market,
+  result,
+  timeZone,
+  loadingMs,
+  preRevealLeadMs = 60_000,
+  openResultVisibleMs = 120_000,
+}) {
   const now = new Date();
   const nowMs = now.getTime();
   const safeLeadMs = Number.isFinite(preRevealLeadMs) && preRevealLeadMs > 0 ? preRevealLeadMs : 60_000;
@@ -66,9 +84,11 @@ export function resolveMarketPhase({ market, result, timeZone, loadingMs, preRev
   const closeLoadingStart = new Date(closeRevealAt.getTime() - safeLeadMs);
   const openLoading = withLoadingWindow(openLoadingStart, loadingMs + safeLeadMs);
   const closeLoading = withLoadingWindow(closeLoadingStart, loadingMs + safeLeadMs);
-
   const hasOpen = Boolean(result?.openPanel);
   const hasClose = Boolean(result?.closePanel);
+  const openVisible = hasOpen
+    ? withVisibleWindow(openLoading?.endAt ?? openRevealAt, openResultVisibleMs)
+    : null;
 
   let phase = 'before_open';
   let nextTransitionAt = openLoading?.startAt ?? schedule.openAt;
@@ -86,8 +106,11 @@ export function resolveMarketPhase({ market, result, timeZone, loadingMs, preRev
     } else if (nowMs < openLoading.endAt.getTime()) {
       phase = 'open_loading';
       nextTransitionAt = openLoading.endAt;
-    } else {
+    } else if (openVisible && nowMs < openVisible.endAt.getTime()) {
       phase = 'open_revealed';
+      nextTransitionAt = openVisible.endAt;
+    } else {
+      phase = 'result_waiting';
       nextTransitionAt = closeLoading.startAt;
     }
   } else if (nowMs < openLoading.startAt.getTime()) {
@@ -97,10 +120,13 @@ export function resolveMarketPhase({ market, result, timeZone, loadingMs, preRev
     phase = 'open_loading';
     nextTransitionAt = openLoading.endAt;
   } else if (!hasOpen) {
-    phase = 'open_loading';
-    nextTransitionAt = null;
-  } else if (closeLoading && nowMs < closeLoading.startAt.getTime()) {
+    phase = 'result_waiting';
+    nextTransitionAt = closeLoading?.startAt ?? null;
+  } else if (openVisible && nowMs < openVisible.endAt.getTime()) {
     phase = 'open_revealed';
+    nextTransitionAt = openVisible.endAt;
+  } else if (closeLoading && nowMs < closeLoading.startAt.getTime()) {
+    phase = 'result_waiting';
     nextTransitionAt = closeLoading.startAt;
   } else if (closeLoading && nowMs < closeLoading.endAt.getTime()) {
     phase = 'close_loading';
@@ -134,6 +160,7 @@ export function toLiveMarketCard({
   timeZone,
   loadingMs,
   preRevealLeadMs = 60_000,
+  openResultVisibleMs = 120_000,
 }) {
   const isFallbackResult = Boolean(result?.isFallbackResult);
   const phaseState = resolveMarketPhase({
@@ -142,6 +169,7 @@ export function toLiveMarketCard({
     timeZone,
     loadingMs,
     preRevealLeadMs,
+    openResultVisibleMs,
   });
   const liveDisplay = phaseState.display;
   const fallbackDisplay = isFallbackResult
