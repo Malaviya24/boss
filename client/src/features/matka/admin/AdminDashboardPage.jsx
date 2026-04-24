@@ -98,6 +98,52 @@ function createEmptyManualDays() {
   };
 }
 
+function toDateInputValue(date = new Date()) {
+  const safeDate = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(safeDate.getTime())) {
+    return '';
+  }
+
+  return [
+    safeDate.getFullYear(),
+    String(safeDate.getMonth() + 1).padStart(2, '0'),
+    String(safeDate.getDate()).padStart(2, '0'),
+  ].join('-');
+}
+
+function addDaysToDateInput(value, daysToAdd) {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  date.setDate(date.getDate() + daysToAdd);
+  return toDateInputValue(date);
+}
+
+function formatDateInputForChart(value) {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return [
+    String(date.getDate()).padStart(2, '0'),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    date.getFullYear(),
+  ].join('/');
+}
+
+function formatManualDateRange(startDate, endDate) {
+  const start = formatDateInputForChart(startDate);
+  const end = formatDateInputForChart(endDate);
+  if (!start || !end) {
+    return '';
+  }
+
+  return `${start} to ${end}`;
+}
+
 function TimePickerField({ label, value, onChange, idPrefix }) {
   const current = value ?? toTimeParts(DEFAULT_OPEN_TIME);
 
@@ -161,7 +207,8 @@ function AdminMarketRow({
   const [openPanel, setOpenPanel] = useState(market.todayResult?.openPanel ?? '');
   const [closePanel, setClosePanel] = useState(market.todayResult?.closePanel ?? '');
   const [manualType, setManualType] = useState('jodi');
-  const [manualDateRange, setManualDateRange] = useState('');
+  const [manualStartDate, setManualStartDate] = useState('');
+  const [manualEndDate, setManualEndDate] = useState('');
   const [manualDays, setManualDays] = useState(() => createEmptyManualDays());
   const [busy, setBusy] = useState(false);
 
@@ -292,9 +339,14 @@ function AdminMarketRow({
   };
 
   const onSaveManualRow = async () => {
-    const safeDateRange = String(manualDateRange ?? '').trim();
+    const safeDateRange = formatManualDateRange(manualStartDate, manualEndDate);
     if (!safeDateRange) {
-      setFeedback('Manual row date range is required');
+      setFeedback('Manual row start and end date are required');
+      return;
+    }
+
+    if (manualEndDate < manualStartDate) {
+      setFeedback('Manual row end date must be after start date');
       return;
     }
 
@@ -320,7 +372,8 @@ function AdminMarketRow({
       setFeedback(
         `${String(saved.type).toUpperCase()} manual row saved at index ${saved.rowIndex}`,
       );
-      setManualDateRange('');
+      setManualStartDate('');
+      setManualEndDate('');
       setManualDays(createEmptyManualDays());
       await onMutateComplete();
     } catch (error) {
@@ -405,11 +458,37 @@ function AdminMarketRow({
             <option value="jodi">Jodi</option>
             <option value="panel">Panel</option>
           </select>
-          <input
-            value={manualDateRange}
-            onChange={(event) => setManualDateRange(event.target.value)}
-            placeholder="Date range (e.g. 01/01/2023 to 07/01/2023)"
-          />
+          <label className="matka-field-block">
+            <span>Start Date</span>
+            <input
+              type="date"
+              value={manualStartDate}
+              onChange={(event) => {
+                const nextStartDate = event.target.value;
+                setManualStartDate(nextStartDate);
+                setManualEndDate((currentEndDate) => {
+                  if (!nextStartDate) {
+                    return currentEndDate;
+                  }
+
+                  if (!currentEndDate || currentEndDate < nextStartDate) {
+                    return addDaysToDateInput(nextStartDate, 6);
+                  }
+
+                  return currentEndDate;
+                });
+              }}
+            />
+          </label>
+          <label className="matka-field-block">
+            <span>End Date</span>
+            <input
+              type="date"
+              value={manualEndDate}
+              min={manualStartDate || undefined}
+              onChange={(event) => setManualEndDate(event.target.value)}
+            />
+          </label>
         </div>
         <div className="market-chart-manual-grid">
           {CHART_DAY_KEYS.map((dayKey) => (
