@@ -79,6 +79,231 @@ body {
   }
 }
 
+.market-page {
+  min-height: 100vh;
+  background: #ffcc99;
+  color: #000;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  overflow-x: hidden;
+}
+
+.market-page .logo {
+  display: block;
+  margin: 4px;
+  padding: 12px 8px;
+  border: 2px solid #f00;
+  border-radius: 10px;
+  background: #ffcc99;
+  overflow: hidden;
+  text-align: center;
+}
+
+.market-page .logo img {
+  max-width: min(420px, 82vw);
+  max-height: 110px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.market-page .chart-h1 {
+  margin: 4px 0;
+  padding: 7px 8px;
+  background: #f40097;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  font-size: 26px;
+  line-height: 1.05;
+  text-shadow: 1px 1px 2px #333;
+}
+
+.market-page .para3 {
+  margin: 4px;
+  padding: 8px 14px;
+  border: 2px solid #f00;
+  color: #001b7a;
+  line-height: 1.15;
+}
+
+.market-page .small-heading {
+  color: #001b7a;
+  font-size: 18px;
+}
+
+.market-page .chart-result {
+  margin: 6px 7px 0;
+  padding: 8px 6px 12px;
+  border: 1px solid #000;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.market-page .chart-result div {
+  color: #001b7a;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.market-page .chart-result span {
+  display: inline-block;
+  margin-top: 6px;
+  color: #9a0054;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.market-page .chart-result a,
+.market-page .button2 {
+  display: inline-block;
+  margin-top: 6px;
+  border: 1px solid #fff;
+  background: #4f2b91;
+  color: #fff;
+  padding: 7px 10px;
+  text-decoration: none;
+  font-weight: 700;
+  text-shadow: none;
+}
+
+.market-page .button2 {
+  min-width: 150px;
+  border-color: #777;
+  background: #9bd0f6;
+  color: #001b7a;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.market-page .ad-div11 {
+  margin: 8px 0 16px;
+}
+
+.market-page .panel {
+  margin: 0 auto;
+}
+
+.market-page .panel-heading {
+  width: min(1324px, calc(100vw - 24px));
+  margin: 0 auto;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  background: #3f51b5;
+  color: #fff;
+}
+
+.market-page .panel-heading h1 {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 1px 1px 1px #111;
+}
+
+.market-page .panel-body {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.market-page .chart-table {
+  width: min(1324px, calc(100vw - 24px));
+  margin: 0 auto 10px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  box-sizing: border-box;
+  background: #ffcc99;
+}
+
+.market-page .chart-table th,
+.market-page .chart-table td {
+  border: 1px solid #2786cf;
+  padding: 7px 8px;
+  color: #000;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.05;
+}
+
+.market-page .chart-table th {
+  background: #ffd000;
+  font-size: 20px;
+}
+
+.market-page .chart-table td {
+  font-size: 28px;
+}
+
+.market-page .chart-table td:first-child {
+  width: 130px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.market-page .chart-table .r {
+  color: #f00;
+}
+
+.market-page .footer-text-div {
+  margin: 10px 7px;
+  padding: 10px 14px;
+  border: 2px solid #b000b0;
+  background: #fff;
+  color: #000;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.market-page footer {
+  margin: 14px 7px 0;
+  padding: 8px 10px;
+  border: 3px solid #b000b0;
+  background: #fff;
+  color: #001b7a;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.market-page .ftr-icon {
+  color: #0071ff;
+  font-size: 42px;
+  text-decoration: none;
+}
+
+.market-page .mp-btn {
+  position: fixed;
+  left: 10px;
+  bottom: 8px;
+  z-index: 10;
+  background: #0054c7;
+  color: #fff;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .market-page .chart-h1 {
+    font-size: 20px;
+  }
+
+  .market-page .chart-result div {
+    font-size: 24px;
+  }
+
+  .market-page .panel-heading h1 {
+    font-size: 28px;
+  }
+
+  .market-page .chart-table {
+    min-width: 960px;
+  }
+
+  .market-page .chart-table td {
+    font-size: 24px;
+  }
+}
+
 .market-explorer-shell {
   margin-bottom: 8px;
   padding: 8px;

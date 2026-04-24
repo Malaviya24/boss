@@ -32,10 +32,12 @@ export function createV1AdminMarketChartSeedController({
         replace: request.validatedBody.replace,
       });
 
-      marketContentService?.clearCache?.({
-        type,
-        slug: seeded.slug,
-      });
+      for (const syncedType of seeded.syncedTypes ?? [type]) {
+        marketContentService?.clearCache?.({
+          type: syncedType,
+          slug: seeded.slug,
+        });
+      }
 
       if (auditService?.log) {
         await auditService.log({
@@ -84,10 +86,12 @@ export function createV1AdminMarketChartManualRowController({
         rowIndex: request.validatedBody.rowIndex,
       });
 
-      marketContentService?.clearCache?.({
-        type,
-        slug: saved.slug,
-      });
+      for (const syncedType of saved.syncedTypes ?? [type]) {
+        marketContentService?.clearCache?.({
+          type: syncedType,
+          slug: saved.slug,
+        });
+      }
 
       if (auditService?.log) {
         await auditService.log({
@@ -108,4 +112,3 @@ export function createV1AdminMarketChartManualRowController({
     }
   };
 }
-

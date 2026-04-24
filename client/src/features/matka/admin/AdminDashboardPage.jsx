@@ -281,7 +281,7 @@ function AdminMarketRow({
         replace: true,
       });
       setFeedback(
-        `${String(chartType).toUpperCase()} random history generated (${result.generatedRows} rows from ${result.startYear})`,
+        `${String(chartType).toUpperCase()} random history generated and synced (${result.generatedRows} rows from ${result.startYear})`,
       );
       await onMutateComplete();
     } catch (error) {
@@ -432,7 +432,7 @@ function AdminMarketRow({
           Add Manual Row
         </button>
         <p className="matka-admin-note">
-          Panel format: 123-45-678 for each day. Jodi format: 2-digit value.
+          Panel format: 123-45-678 for each day. Jodi is calculated from panel open/close.
         </p>
       </div>
       <p className="market-result-preview">
@@ -532,30 +532,19 @@ export default function AdminDashboardPage() {
 
       const createdId = String(created?.id ?? '');
       if (createdId) {
-        const autoSeedResults = await Promise.allSettled([
-          seedMarketChartData({
-            token,
-            marketId: createdId,
-            type: 'jodi',
-            startYear: AUTO_CHART_START_YEAR,
-            replace: true,
-          }),
-          seedMarketChartData({
+        try {
+          await seedMarketChartData({
             token,
             marketId: createdId,
             type: 'panel',
             startYear: AUTO_CHART_START_YEAR,
             replace: true,
-          }),
-        ]);
-        const failedSeeds = autoSeedResults.filter((result) => result.status === 'rejected');
-        if (failedSeeds.length > 0) {
-          const firstError = failedSeeds[0].reason;
+          });
+          setFeedback('Market created with synced random Jodi + Panel chart data (2023+)');
+        } catch (seedError) {
           setFeedback(
-            `Market created, but auto chart seed failed: ${getReadableErrorMessage(firstError, 'Try auto buttons manually')}`,
+            `Market created, but auto chart seed failed: ${getReadableErrorMessage(seedError, 'Try auto buttons manually')}`,
           );
-        } else {
-          setFeedback('Market created with random Jodi + Panel chart data (2023+)');
         }
       } else {
         setFeedback('Market created');

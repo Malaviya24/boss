@@ -48,14 +48,6 @@ function toUpperCaseName(value = '') {
   return normalized ? normalized.toUpperCase() : '';
 }
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function toTwoDigits(value) {
-  return String(value).padStart(2, '0');
-}
-
 function toDateString(date) {
   const day = String(date.getUTCDate()).padStart(2, '0');
   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -104,18 +96,29 @@ function isHighlightJodi(value = '') {
   return HIGHLIGHT_JODI_VALUES.has(String(value ?? '').trim());
 }
 
-function generateRandomJodiValue() {
-  return toTwoDigits(randomInt(0, 99));
+function hashString(value = '') {
+  let hash = 2166136261;
+  for (const character of String(value)) {
+    hash ^= character.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
 }
 
-function generateRandomPanelTriplet() {
-  const openPanel = String(randomInt(100, 999));
-  const closePanel = String(randomInt(100, 999));
+function seededInt(seed, min, max) {
+  return min + (hashString(seed) % (max - min + 1));
+}
+
+function generateLinkedPanelTriplet(seed) {
+  const openPanel = String(seededInt(`${seed}:open`, 100, 999));
+  const closePanel = String(seededInt(`${seed}:close`, 100, 999));
   const openSingle = calculateSingle(openPanel);
   const closeSingle = calculateSingle(closePanel);
   const middleJodi = `${openSingle}${closeSingle}`;
 
   return {
+    openPanel,
+    closePanel,
     left: toSpacedDigits(openPanel),
     middle: middleJodi,
     right: toSpacedDigits(closePanel),
@@ -135,10 +138,14 @@ function parsePanelTripletFromManual(value = '', dayLabel = '') {
     );
   }
 
+  const openPanel = matched[1];
+  const closePanel = matched[3];
+  const middleJodi = `${calculateSingle(openPanel)}${calculateSingle(closePanel)}`;
+
   return {
-    left: toSpacedDigits(matched[1]),
-    middle: matched[2],
-    right: toSpacedDigits(matched[3]),
+    left: toSpacedDigits(openPanel),
+    middle: middleJodi,
+    right: toSpacedDigits(closePanel),
   };
 }
 
@@ -169,44 +176,48 @@ function buildWeeklyDateRanges(startYear) {
   return ranges;
 }
 
-function buildRandomRows(type, startYear) {
-  const normalizedType = normalizeType(type);
+function buildLinkedRandomRows(startYear, seedKey = '') {
   const weekRanges = buildWeeklyDateRanges(startYear);
+  const normalizedSeedKey = createSlug(seedKey) || 'market';
+  const jodiRows = [];
+  const panelRows = [];
 
-  return weekRanges.map((week, rowIndex) => {
-    const cells = [createCell({ column: 'Date', text: week.label })];
+  for (let rowIndex = 0; rowIndex < weekRanges.length; rowIndex += 1) {
+    const week = weekRanges[rowIndex];
+    const jodiCells = [createCell({ column: 'Date', text: week.label })];
+    const panelCells = [createCell({ column: 'Date', text: week.label })];
 
     for (let dayIndex = 0; dayIndex < DAY_LABELS.length; dayIndex += 1) {
       const dayLabel = DAY_LABELS[dayIndex];
-      if (normalizedType === 'panel') {
-        const triplet = generateRandomPanelTriplet();
-        cells.push(
-          createCell({ column: dayLabel, text: triplet.left }),
-          createCell({
-            column: dayLabel,
-            text: triplet.middle,
-            isHighlight: isHighlightJodi(triplet.middle),
-          }),
-          createCell({ column: dayLabel, text: triplet.right }),
-        );
-        continue;
-      }
-
-      const jodiValue = generateRandomJodiValue();
-      cells.push(
+      const triplet = generateLinkedPanelTriplet(
+        `${normalizedSeedKey}:${week.label}:${dayIndex}`,
+      );
+      panelCells.push(
+        createCell({ column: dayLabel, text: triplet.left }),
         createCell({
           column: dayLabel,
-          text: jodiValue,
-          isHighlight: isHighlightJodi(jodiValue),
+          text: triplet.middle,
+          isHighlight: isHighlightJodi(triplet.middle),
+        }),
+        createCell({ column: dayLabel, text: triplet.right }),
+      );
+      jodiCells.push(
+        createCell({
+          column: dayLabel,
+          text: triplet.middle,
+          isHighlight: isHighlightJodi(triplet.middle),
         }),
       );
     }
 
-    return {
-      rowIndex,
-      cells,
-    };
-  });
+    jodiRows.push({ rowIndex, cells: jodiCells });
+    panelRows.push({ rowIndex, cells: panelCells });
+  }
+
+  return {
+    jodi: jodiRows,
+    panel: panelRows,
+  };
 }
 
 function buildManualRowCells({ type, dateRange, days }) {
@@ -250,6 +261,26 @@ function buildManualRowCells({ type, dateRange, days }) {
         column: dayLabel,
         text: rawValue,
         isHighlight: isHighlightJodi(rawValue),
+      }),
+    );
+  }
+
+  return cells;
+}
+
+function buildManualJodiRowCellsFromPanel({ dateRange, days }) {
+  const safeDateRange = normalizeText(dateRange);
+  const cells = [createCell({ column: 'Date', text: safeDateRange })];
+
+  for (let index = 0; index < DAY_KEYS.length; index += 1) {
+    const dayKey = DAY_KEYS[index];
+    const dayLabel = DAY_LABELS[index];
+    const triplet = parsePanelTripletFromManual(days?.[dayKey] ?? '', dayLabel);
+    cells.push(
+      createCell({
+        column: dayLabel,
+        text: triplet.middle,
+        isHighlight: isHighlightJodi(triplet.middle),
       }),
     );
   }
@@ -512,16 +543,12 @@ export function createMarketContentAdminService({
     });
   }
 
-  async function seedRandomHistory({
+  async function ensureContentForMarketType({
     market,
     type,
-    startYear = DEFAULT_START_YEAR,
-    replace = true,
+    startYear,
   }) {
-    ensureMongoEnabled();
     const normalizedType = normalizeType(type);
-    const normalizedReplace = replace !== false;
-    const safeStartYear = sanitizeStartYear(startYear);
     const ensuredMarket = await ensureContentMarket({
       name: market.name,
       slug: market.slug,
@@ -535,53 +562,90 @@ export function createMarketContentAdminService({
       type: normalizedType,
       slug: ensuredMarket.slug,
       marketName: ensuredMarket.name,
-      startYear: safeStartYear,
+      startYear,
     });
 
-    const generatedRows = buildRandomRows(normalizedType, safeStartYear);
-    if (generatedRows.length === 0) {
+    return ensuredMarket;
+  }
+
+  async function seedRandomHistory({
+    market,
+    type,
+    startYear = DEFAULT_START_YEAR,
+    replace = true,
+  }) {
+    ensureMongoEnabled();
+    const normalizedType = normalizeType(type);
+    const normalizedReplace = replace !== false;
+    const safeStartYear = sanitizeStartYear(startYear);
+    const generatedRowsByType = buildLinkedRandomRows(
+      safeStartYear,
+      market.slug || market.name,
+    );
+    const generatedRows = generatedRowsByType[normalizedType];
+    if (!Array.isArray(generatedRows) || generatedRows.length === 0) {
       throw new AppError('No rows generated. Check start year.', {
         statusCode: 400,
         code: 'MARKET_HISTORY_GENERATION_FAILED',
       });
     }
 
-    if (normalizedReplace) {
-      await replaceChartRows({
-        marketId: ensuredMarket._id,
-        type: normalizedType,
-        rows: generatedRows,
+    const syncedTypes = normalizedType === 'panel' ? ['panel', 'jodi'] : ['jodi', 'panel'];
+    const totalsByType = {};
+    let primaryContentMarket = null;
+
+    for (const syncType of syncedTypes) {
+      const contentMarket = await ensureContentForMarketType({
+        market,
+        type: syncType,
+        startYear: safeStartYear,
       });
-    } else {
-      let nextRowIndex = await getNextRowIndex(ensuredMarket._id, normalizedType);
-      for (const row of generatedRows) {
-        await upsertSingleChartRow({
-          marketId: ensuredMarket._id,
-          type: normalizedType,
-          rowIndex: nextRowIndex,
-          cells: row.cells,
-        });
-        nextRowIndex += 1;
+      if (syncType === normalizedType) {
+        primaryContentMarket = contentMarket;
       }
+
+      const rowsForType = generatedRowsByType[syncType];
+      if (normalizedReplace) {
+        await replaceChartRows({
+          marketId: contentMarket._id,
+          type: syncType,
+          rows: rowsForType,
+        });
+      } else {
+        let nextRowIndex = await getNextRowIndex(contentMarket._id, syncType);
+        for (const row of rowsForType) {
+          await upsertSingleChartRow({
+            marketId: contentMarket._id,
+            type: syncType,
+            rowIndex: nextRowIndex,
+            cells: row.cells,
+          });
+          nextRowIndex += 1;
+        }
+      }
+
+      totalsByType[syncType] = await getRowCount(contentMarket._id, syncType);
     }
 
-    const totalRows = await getRowCount(ensuredMarket._id, normalizedType);
+    const totalRows = totalsByType[normalizedType] ?? generatedRows.length;
     logger?.info?.('market_content_seeded_random_history', {
       type: normalizedType,
-      slug: ensuredMarket.slug,
+      slug: primaryContentMarket?.slug ?? market.slug,
       startYear: safeStartYear,
       generatedRows: generatedRows.length,
       replace: normalizedReplace,
       totalRows,
+      syncedTypes,
     });
 
     return {
       type: normalizedType,
-      slug: ensuredMarket.slug,
+      slug: primaryContentMarket?.slug ?? market.slug,
       startYear: safeStartYear,
       generatedRows: generatedRows.length,
       totalRows,
       replace: normalizedReplace,
+      syncedTypes,
     };
   }
 
@@ -594,19 +658,9 @@ export function createMarketContentAdminService({
   }) {
     ensureMongoEnabled();
     const normalizedType = normalizeType(type);
-    const ensuredMarket = await ensureContentMarket({
-      name: market.name,
-      slug: market.slug,
+    const ensuredMarket = await ensureContentForMarketType({
+      market,
       type: normalizedType,
-      openTime: market.openTime,
-      closeTime: market.closeTime,
-    });
-
-    await ensureContentMeta({
-      marketId: ensuredMarket._id,
-      type: normalizedType,
-      slug: ensuredMarket.slug,
-      marketName: ensuredMarket.name,
       startYear: DEFAULT_START_YEAR,
     });
 
@@ -628,11 +682,33 @@ export function createMarketContentAdminService({
     });
 
     const totalRows = await getRowCount(ensuredMarket._id, normalizedType);
+    const syncedTypes = [normalizedType];
+
+    if (normalizedType === 'panel') {
+      const jodiMarket = await ensureContentForMarketType({
+        market,
+        type: 'jodi',
+        startYear: DEFAULT_START_YEAR,
+      });
+      const jodiCells = buildManualJodiRowCellsFromPanel({
+        dateRange,
+        days,
+      });
+      await upsertSingleChartRow({
+        marketId: jodiMarket._id,
+        type: 'jodi',
+        rowIndex: savedRowIndex,
+        cells: jodiCells,
+      });
+      syncedTypes.push('jodi');
+    }
+
     logger?.info?.('market_content_manual_row_saved', {
       type: normalizedType,
       slug: ensuredMarket.slug,
       rowIndex: savedRowIndex,
       totalRows,
+      syncedTypes,
     });
 
     return {
@@ -640,6 +716,7 @@ export function createMarketContentAdminService({
       slug: ensuredMarket.slug,
       rowIndex: savedRowIndex,
       totalRows,
+      syncedTypes,
     };
   }
 
@@ -648,4 +725,3 @@ export function createMarketContentAdminService({
     addManualRow,
   };
 }
-
