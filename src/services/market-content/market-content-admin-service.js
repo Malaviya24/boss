@@ -61,12 +61,31 @@ function toDateRangeLabel(startDate) {
   return `${toDateString(startDate)} to ${toDateString(endDate)}`;
 }
 
+function toDateFromDateKey(dateKey = '') {
+  const matched = String(dateKey).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!matched) {
+    return new Date();
+  }
+
+  const [, year, month, day] = matched;
+  return new Date(Date.UTC(
+    Number.parseInt(year, 10),
+    Number.parseInt(month, 10) - 1,
+    Number.parseInt(day, 10),
+  ));
+}
+
 function toMondayAlignedDate(date) {
   const aligned = new Date(date.getTime());
   const day = aligned.getUTCDay();
   const offset = day === 0 ? -6 : 1 - day;
   aligned.setUTCDate(aligned.getUTCDate() + offset);
   return aligned;
+}
+
+function getMondayDayIndex(date) {
+  const day = date.getUTCDay();
+  return day === 0 ? 6 : day - 1;
 }
 
 function toSpacedDigits(value = '') {
@@ -286,6 +305,87 @@ function buildManualJodiRowCellsFromPanel({ dateRange, days }) {
   }
 
   return cells;
+}
+
+function createEmptyChartRowCells(type, dateRange) {
+  const normalizedType = normalizeType(type);
+  const cells = [createCell({ column: 'Date', text: dateRange })];
+
+  for (const dayLabel of DAY_LABELS) {
+    if (normalizedType === 'panel') {
+      cells.push(
+        createCell({ column: dayLabel, text: '' }),
+        createCell({ column: dayLabel, text: '' }),
+        createCell({ column: dayLabel, text: '' }),
+      );
+      continue;
+    }
+
+    cells.push(createCell({ column: dayLabel, text: '' }));
+  }
+
+  return cells;
+}
+
+function normalizeCompletedResult(result = {}) {
+  const openPanel = normalizeText(result.openPanel);
+  const closePanel = normalizeText(result.closePanel);
+  if (!/^\d{3}$/.test(openPanel) || !/^\d{3}$/.test(closePanel)) {
+    return null;
+  }
+
+  const middleJodi =
+    normalizeText(result.middleJodi) ||
+    `${calculateSingle(openPanel)}${calculateSingle(closePanel)}`;
+
+  if (!/^\d{2}$/.test(middleJodi)) {
+    return null;
+  }
+
+  return {
+    openPanel,
+    closePanel,
+    middleJodi,
+  };
+}
+
+function upsertCompletedResultIntoCells({
+  type,
+  cells,
+  dayIndex,
+  completedResult,
+}) {
+  const normalizedType = normalizeType(type);
+  const nextCells = Array.isArray(cells) && cells.length > 0
+    ? cells.map((cell) => ({ ...cell }))
+    : createEmptyChartRowCells(normalizedType, '');
+  const dayLabel = DAY_LABELS[dayIndex] ?? '';
+
+  if (normalizedType === 'panel') {
+    const baseIndex = 1 + dayIndex * 3;
+    nextCells[baseIndex] = createCell({
+      column: dayLabel,
+      text: toSpacedDigits(completedResult.openPanel),
+    });
+    nextCells[baseIndex + 1] = createCell({
+      column: dayLabel,
+      text: completedResult.middleJodi,
+      isHighlight: isHighlightJodi(completedResult.middleJodi),
+    });
+    nextCells[baseIndex + 2] = createCell({
+      column: dayLabel,
+      text: toSpacedDigits(completedResult.closePanel),
+    });
+    return nextCells;
+  }
+
+  const cellIndex = 1 + dayIndex;
+  nextCells[cellIndex] = createCell({
+    column: dayLabel,
+    text: completedResult.middleJodi,
+    isHighlight: isHighlightJodi(completedResult.middleJodi),
+  });
+  return nextCells;
 }
 
 function defaultFooter() {
@@ -568,6 +668,108 @@ export function createMarketContentAdminService({
     return ensuredMarket;
   }
 
+  async function upsertCompletedResultRow({
+    market,
+    type,
+    result,
+  }) {
+    const completedResult = normalizeCompletedResult(result);
+    if (!completedResult) {
+      return null;
+    }
+
+    const normalizedType = normalizeType(type);
+    const resultDate = toDateFromDateKey(result.resultDate);
+    const weekStart = toMondayAlignedDate(resultDate);
+    const dateRange = toDateRangeLabel(weekStart);
+    const dayIndex = getMondayDayIndex(resultDate);
+    const contentMarket = await ensureContentForMarketType({
+      market,
+      type: normalizedType,
+      startYear: resultDate.getUTCFullYear(),
+    });
+
+    const matchingRows = await MarketChartRowModel.find({
+      marketId: contentMarket._id,
+      type: normalizedType,
+    })
+      .sort({ rowIndex: 1 })
+      .lean();
+    const existingRow = matchingRows.find((row) => {
+      const firstCellText = normalizeText(row?.cells?.[0]?.text);
+      return firstCellText === dateRange;
+    });
+    const rowIndex = Number.isFinite(existingRow?.rowIndex)
+      ? existingRow.rowIndex
+      : await getNextRowIndex(contentMarket._id, normalizedType);
+    const sourceCells = existingRow?.cells?.length
+      ? existingRow.cells
+      : createEmptyChartRowCells(normalizedType, dateRange);
+    sourceCells[0] = createCell({ column: 'Date', text: dateRange });
+
+    const cells = upsertCompletedResultIntoCells({
+      type: normalizedType,
+      cells: sourceCells,
+      dayIndex,
+      completedResult,
+    });
+
+    await upsertSingleChartRow({
+      marketId: contentMarket._id,
+      type: normalizedType,
+      rowIndex,
+      cells,
+    });
+
+    return {
+      type: normalizedType,
+      slug: contentMarket.slug,
+      rowIndex,
+      dateRange,
+    };
+  }
+
+  async function addCompletedResultToCharts({
+    market,
+    result,
+  }) {
+    ensureMongoEnabled();
+    const completedResult = normalizeCompletedResult(result);
+    if (!completedResult) {
+      return {
+        syncedTypes: [],
+        skipped: true,
+      };
+    }
+
+    const saved = [];
+    for (const chartType of ['panel', 'jodi']) {
+      const row = await upsertCompletedResultRow({
+        market,
+        type: chartType,
+        result: {
+          ...result,
+          ...completedResult,
+        },
+      });
+      if (row) {
+        saved.push(row);
+      }
+    }
+
+    logger?.info?.('market_content_completed_result_saved', {
+      slug: market.slug,
+      displayResult: `${completedResult.openPanel}-${completedResult.middleJodi}-${completedResult.closePanel}`,
+      syncedTypes: saved.map((row) => row.type),
+    });
+
+    return {
+      syncedTypes: saved.map((row) => row.type),
+      rows: saved,
+      skipped: false,
+    };
+  }
+
   async function seedRandomHistory({
     market,
     type,
@@ -723,5 +925,6 @@ export function createMarketContentAdminService({
   return {
     seedRandomHistory,
     addManualRow,
+    addCompletedResultToCharts,
   };
 }

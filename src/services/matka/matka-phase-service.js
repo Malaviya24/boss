@@ -34,6 +34,24 @@ function withLoadingWindow(startAt, loadingMs) {
   };
 }
 
+function formatOpenPartial(display = {}) {
+  if (!display.openPanel || !display.openSingle) {
+    return '';
+  }
+  return `${display.openPanel}-${display.openSingle}`;
+}
+
+function cycleCloseWaitingText({ nowMs, openPartial = '' }) {
+  const slot = Math.floor(nowMs / 10_000) % 3;
+  if (slot === 0 && openPartial) {
+    return openPartial;
+  }
+  if (slot === 1) {
+    return 'Loading...';
+  }
+  return 'Result Coming';
+}
+
 export function resolveMarketPhase({ market, result, timeZone, loadingMs, preRevealLeadMs = 60_000 }) {
   const now = new Date();
   const nowMs = now.getTime();
@@ -133,14 +151,21 @@ export function toLiveMarketCard({
 
   const visibleClosePanel = phaseState.phase === 'closed' ? display.closePanel : '';
   const visibleMiddleJodi = phaseState.phase === 'closed' ? display.middleJodi : '';
+  const openPartial = formatOpenPartial(display);
 
   let resultText = 'Result Coming';
   if (phaseState.phase === 'before_open' && display.displayResult) {
     resultText = display.displayResult;
   } else if (phaseState.phase === 'open_loading' || phaseState.phase === 'close_loading') {
-    resultText = 'Loading...';
+    resultText =
+      phaseState.phase === 'close_loading'
+        ? cycleCloseWaitingText({
+            nowMs: Date.now(),
+            openPartial,
+          })
+        : 'Loading...';
   } else if (phaseState.phase === 'open_revealed') {
-    resultText = visibleOpenPanel || 'Result Coming';
+    resultText = openPartial || visibleOpenPanel || 'Result Coming';
   } else if (phaseState.phase === 'closed') {
     resultText = display.displayResult || 'Result Coming';
   }

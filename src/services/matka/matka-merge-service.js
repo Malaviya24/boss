@@ -17,12 +17,16 @@ function toRecordNumber(card) {
     return card.displayResult;
   }
 
-  if (card.phase === 'open_loading' || card.phase === 'close_loading') {
+  if (card.phase === 'open_loading') {
     return 'Loading...';
   }
 
-  if (card.phase === 'open_revealed' && card.openPanel) {
-    return card.openPanel;
+  if (card.phase === 'close_loading') {
+    return card.resultText || 'Loading...';
+  }
+
+  if (card.phase === 'open_revealed') {
+    return card.resultText || card.openPanel || 'Result Coming';
   }
 
   return card.resultText || 'Result Coming';

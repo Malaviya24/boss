@@ -1,5 +1,10 @@
 import { successResponse } from '../utils/response.js';
 
+async function resolveAdminMarket(matkaService, marketId = '') {
+  const markets = await matkaService.listAdminMarkets();
+  return markets.find((market) => String(market.id) === String(marketId)) ?? null;
+}
+
 export function createV1AdminOpenPanelController(matkaService, auditService, realtimeService) {
   return async (request, response, next) => {
     try {
@@ -41,7 +46,13 @@ export function createV1AdminOpenPanelController(matkaService, auditService, rea
   };
 }
 
-export function createV1AdminClosePanelController(matkaService, auditService, realtimeService) {
+export function createV1AdminClosePanelController({
+  matkaService,
+  auditService,
+  realtimeService,
+  marketContentAdminService,
+  marketContentService,
+}) {
   return async (request, response, next) => {
     try {
       const updated = await matkaService.upsertClosePanel({
@@ -65,6 +76,22 @@ export function createV1AdminClosePanelController(matkaService, auditService, re
         ip: request.ip,
         userAgent: request.get('user-agent') ?? '',
       });
+
+      if (updated.openPanel && updated.closePanel && marketContentAdminService?.addCompletedResultToCharts) {
+        const market = await resolveAdminMarket(matkaService, request.validatedParams.marketId);
+        if (market) {
+          const savedChartRows = await marketContentAdminService.addCompletedResultToCharts({
+            market,
+            result: updated,
+          });
+          for (const syncedType of savedChartRows.syncedTypes ?? []) {
+            marketContentService?.clearCache?.({
+              type: syncedType,
+              slug: market.slug,
+            });
+          }
+        }
+      }
 
       const cards = await matkaService.listLiveMarkets();
       realtimeService.emit('matka:markets_updated', {

@@ -51,7 +51,8 @@ function MarketCard({ market, onRefresh }) {
       </p>
       <p className={`matka-phase phase-${market.phase}`}>{phaseLabel(market.phase)}</p>
       <div className="matka-result-wrap">
-        {(market.phase === 'open_loading' || market.phase === 'close_loading') && (
+        {(market.phase === 'open_loading' ||
+          (market.phase === 'close_loading' && market.resultText === 'Loading...')) && (
           <div className="matka-loader" aria-hidden="true" />
         )}
         <p className="matka-result-value">{market.resultText || 'Result Coming'}</p>
@@ -102,7 +103,7 @@ export default function LivePage() {
       } catch {
         // Keep realtime page alive even if one poll fails.
       }
-    }, 30000);
+    }, 10000);
 
     return () => window.clearInterval(timer);
   }, []);
