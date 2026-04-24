@@ -62,6 +62,31 @@ function toDateRangeLabel(startDate) {
   return `${toDateString(startDate)} to ${toDateString(endDate)}`;
 }
 
+function getTodayUtcDateForCharts() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(
+      parts
+        .filter((part) => part.type !== 'literal')
+        .map((part) => [part.type, part.value]),
+    );
+
+    return new Date(Date.UTC(
+      Number.parseInt(values.year, 10),
+      Number.parseInt(values.month, 10) - 1,
+      Number.parseInt(values.day, 10),
+    ));
+  } catch {
+    const today = new Date();
+    return new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  }
+}
+
 function toDateFromDateKey(dateKey = '') {
   const matched = String(dateKey).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!matched) {
@@ -179,8 +204,7 @@ function sanitizeStartYear(value) {
 
 function buildWeeklyDateRanges(startYear) {
   const normalizedStartYear = sanitizeStartYear(startYear);
-  const today = new Date();
-  const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const todayUtc = getTodayUtcDateForCharts();
   const startUtc = toMondayAlignedDate(new Date(Date.UTC(normalizedStartYear, 0, 1)));
   const ranges = [];
 
@@ -199,6 +223,7 @@ function buildWeeklyDateRanges(startYear) {
 function buildLinkedRandomRows(startYear, seedKey = '') {
   const weekRanges = buildWeeklyDateRanges(startYear);
   const normalizedSeedKey = createSlug(seedKey) || 'market';
+  const todayUtc = getTodayUtcDateForCharts();
   const jodiRows = [];
   const panelRows = [];
 
@@ -209,6 +234,20 @@ function buildLinkedRandomRows(startYear, seedKey = '') {
 
     for (let dayIndex = 0; dayIndex < DAY_LABELS.length; dayIndex += 1) {
       const dayLabel = DAY_LABELS[dayIndex];
+      const dayDate = new Date(week.weekStart.getTime());
+      dayDate.setUTCDate(dayDate.getUTCDate() + dayIndex);
+      const shouldFillRandomValue = dayDate.getTime() < todayUtc.getTime();
+
+      if (!shouldFillRandomValue) {
+        panelCells.push(
+          createCell({ column: dayLabel, text: '' }),
+          createCell({ column: dayLabel, text: '' }),
+          createCell({ column: dayLabel, text: '' }),
+        );
+        jodiCells.push(createCell({ column: dayLabel, text: '' }));
+        continue;
+      }
+
       const triplet = generateLinkedPanelTriplet(
         `${normalizedSeedKey}:${week.label}:${dayIndex}`,
       );

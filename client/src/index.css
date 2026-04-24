@@ -291,6 +291,10 @@ body {
   line-height: 1.25;
 }
 
+.market-page-panel .chart-table thead tr th:first-child {
+  width: 100px;
+}
+
 .market-page-panel .chart-table tbody td:nth-child(2),
 .market-page-panel .chart-table tbody td:nth-child(5),
 .market-page-panel .chart-table tbody td:nth-child(8),
@@ -419,11 +423,16 @@ body {
     width: 100%;
   }
 
+  .market-page-panel .chart-table thead tr th:first-child {
+    width: 55px;
+  }
+
   .market-page-jodi .chart-table td:first-child {
     font-size: 24px;
   }
 
   .market-page-panel .chart-table td:first-child,
+  .market-page-panel .chart-table thead tr th:first-child,
   .market-page-panel .chart-table tbody td:nth-child(2),
   .market-page-panel .chart-table tbody td:nth-child(5),
   .market-page-panel .chart-table tbody td:nth-child(8),

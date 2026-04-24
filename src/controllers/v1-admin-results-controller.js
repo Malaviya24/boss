@@ -5,7 +5,41 @@ async function resolveAdminMarket(matkaService, marketId = '') {
   return markets.find((market) => String(market.id) === String(marketId)) ?? null;
 }
 
-export function createV1AdminOpenPanelController(matkaService, auditService, realtimeService) {
+async function syncCompletedResultToMarketCharts({
+  matkaService,
+  marketContentAdminService,
+  marketContentService,
+  marketId,
+  updated,
+}) {
+  if (!updated.openPanel || !updated.closePanel || !marketContentAdminService?.addCompletedResultToCharts) {
+    return;
+  }
+
+  const market = await resolveAdminMarket(matkaService, marketId);
+  if (!market) {
+    return;
+  }
+
+  const savedChartRows = await marketContentAdminService.addCompletedResultToCharts({
+    market,
+    result: updated,
+  });
+  for (const syncedType of savedChartRows.syncedTypes ?? []) {
+    marketContentService?.clearCache?.({
+      type: syncedType,
+      slug: market.slug,
+    });
+  }
+}
+
+export function createV1AdminOpenPanelController({
+  matkaService,
+  auditService,
+  realtimeService,
+  marketContentAdminService,
+  marketContentService,
+}) {
   return async (request, response, next) => {
     try {
       const updated = await matkaService.upsertOpenPanel({
@@ -27,6 +61,14 @@ export function createV1AdminOpenPanelController(matkaService, auditService, rea
         },
         ip: request.ip,
         userAgent: request.get('user-agent') ?? '',
+      });
+
+      await syncCompletedResultToMarketCharts({
+        matkaService,
+        marketContentAdminService,
+        marketContentService,
+        marketId: request.validatedParams.marketId,
+        updated,
       });
 
       const cards = await matkaService.listLiveMarkets();
@@ -77,21 +119,13 @@ export function createV1AdminClosePanelController({
         userAgent: request.get('user-agent') ?? '',
       });
 
-      if (updated.openPanel && updated.closePanel && marketContentAdminService?.addCompletedResultToCharts) {
-        const market = await resolveAdminMarket(matkaService, request.validatedParams.marketId);
-        if (market) {
-          const savedChartRows = await marketContentAdminService.addCompletedResultToCharts({
-            market,
-            result: updated,
-          });
-          for (const syncedType of savedChartRows.syncedTypes ?? []) {
-            marketContentService?.clearCache?.({
-              type: syncedType,
-              slug: market.slug,
-            });
-          }
-        }
-      }
+      await syncCompletedResultToMarketCharts({
+        matkaService,
+        marketContentAdminService,
+        marketContentService,
+        marketId: request.validatedParams.marketId,
+        updated,
+      });
 
       const cards = await matkaService.listLiveMarkets();
       realtimeService.emit('matka:markets_updated', {

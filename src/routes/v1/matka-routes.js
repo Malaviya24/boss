@@ -137,7 +137,13 @@ export function createV1MatkaRoutes({
     requireAdminAuth,
     validateParams(matkaMarketIdParamsSchema),
     validateBody(matkaPanelUpdateSchema),
-    createV1AdminOpenPanelController(matkaService, auditService, realtimeService),
+    createV1AdminOpenPanelController({
+      matkaService,
+      auditService,
+      realtimeService,
+      marketContentAdminService,
+      marketContentService,
+    }),
   );
   router.put(
     '/admin/markets/:marketId/results/close',
