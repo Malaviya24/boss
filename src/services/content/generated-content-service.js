@@ -103,9 +103,10 @@ function toAdminMarketRowHtml(card) {
   const openTime = normalizeText(card?.openTimeLabel ?? '');
   const closeTime = normalizeText(card?.closeTimeLabel ?? '');
   const timeLabel = normalizeText(`${openTime}  ${closeTime}`);
+  const priorityAttr = card?.isPriorityLive ? ' data-priority-live="true"' : '';
 
   return [
-    '<div>',
+    `<div${priorityAttr}>`,
     `<h4>${escapeHtml(name)}</h4>`,
     `<span>${escapeHtml(result || 'Result Coming')}</span>`,
     `<p>${escapeHtml(timeLabel || 'Live Result')}</p>`,
@@ -300,7 +301,21 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
     return sections;
   }
 
-  const rowHtml = matkaCards.map((card) => toAdminMarketRowHtml(card)).filter(Boolean).join('');
+  const sortedCards = [...matkaCards].sort((left, right) => {
+    const priorityDelta = (left.priorityRank ?? 1) - (right.priorityRank ?? 1);
+    if (priorityDelta !== 0) {
+      return priorityDelta;
+    }
+
+    const sortDelta = (left.sortOrder ?? 0) - (right.sortOrder ?? 0);
+    if (sortDelta !== 0) {
+      return sortDelta;
+    }
+
+    return String(left.name ?? '').localeCompare(String(right.name ?? ''));
+  });
+
+  const rowHtml = sortedCards.map((card) => toAdminMarketRowHtml(card)).filter(Boolean).join('');
   if (!rowHtml) {
     return sections;
   }
@@ -324,18 +339,15 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
     ? marketContainer.children
     : [];
 
-  const existingIndexByName = new Map();
-  marketContainer.children.forEach((child, index) => {
-    if (child?.type !== 'element' || child.tag !== 'div') {
-      return;
-    }
-    const titleNode =
-      (child.children ?? []).find((node) => node?.type === 'element' && node.tag === 'h4') ?? null;
-    const title = normalizeText(nodeText(titleNode)).toLowerCase();
-    if (title) {
-      existingIndexByName.set(title, index);
-    }
-  });
+  const findExistingMarketIndex = (title) =>
+    marketContainer.children.findIndex((child) => {
+      if (child?.type !== 'element' || child.tag !== 'div') {
+        return false;
+      }
+      const titleNode =
+        (child.children ?? []).find((node) => node?.type === 'element' && node.tag === 'h4') ?? null;
+      return normalizeText(nodeText(titleNode)).toLowerCase() === title;
+    });
 
   rowNodes.forEach((rowNode) => {
     if (rowNode?.type !== 'element' || rowNode.tag !== 'div') {
@@ -346,8 +358,21 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
       (rowNode.children ?? []).find((node) => node?.type === 'element' && node.tag === 'h4') ?? null;
     const title = normalizeText(nodeText(titleNode)).toLowerCase();
 
-    if (title && existingIndexByName.has(title)) {
-      marketContainer.children[existingIndexByName.get(title)] = rowNode;
+    const isPriorityLive = String(rowNode.attrs?.['data-priority-live'] ?? '') === 'true';
+
+    const existingIndex = title ? findExistingMarketIndex(title) : -1;
+    if (existingIndex >= 0) {
+      marketContainer.children.splice(existingIndex, 1);
+      if (isPriorityLive) {
+        marketContainer.children.unshift(rowNode);
+      } else {
+        marketContainer.children.splice(existingIndex, 0, rowNode);
+      }
+      return;
+    }
+
+    if (isPriorityLive) {
+      marketContainer.children.unshift(rowNode);
       return;
     }
 

@@ -122,6 +122,7 @@ export default function LivePage() {
     () =>
       [...markets].sort(
         (left, right) =>
+          (left.priorityRank ?? 1) - (right.priorityRank ?? 1) ||
           (left.sortOrder ?? 0) - (right.sortOrder ?? 0) ||
           String(left.name ?? '').localeCompare(String(right.name ?? '')),
       ),

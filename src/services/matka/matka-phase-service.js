@@ -45,6 +45,15 @@ function withVisibleWindow(startAt, visibleMs) {
   };
 }
 
+function isInsideWindow(nowMs, startAt, endAt) {
+  return (
+    startAt instanceof Date &&
+    endAt instanceof Date &&
+    nowMs >= startAt.getTime() &&
+    nowMs < endAt.getTime()
+  );
+}
+
 function formatOpenPartial(display = {}) {
   if (!display.openPanel || !display.openSingle) {
     return '';
@@ -70,6 +79,7 @@ export function resolveMarketPhase({
   loadingMs,
   preRevealLeadMs = 60_000,
   openResultVisibleMs = 120_000,
+  priorityLeadMs = 120_000,
 }) {
   const now = new Date();
   const nowMs = now.getTime();
@@ -89,6 +99,11 @@ export function resolveMarketPhase({
   const openVisible = hasOpen
     ? withVisibleWindow(openLoading?.endAt ?? openRevealAt, openResultVisibleMs)
     : null;
+  const safePriorityLeadMs = Number.isFinite(priorityLeadMs) && priorityLeadMs > 0 ? priorityLeadMs : 120_000;
+  const openPriorityStart = new Date(openRevealAt.getTime() - safePriorityLeadMs);
+  const openPriorityEnd = openVisible?.endAt ?? openLoading?.endAt ?? openRevealAt;
+  const closePriorityStart = new Date(closeRevealAt.getTime() - safePriorityLeadMs);
+  const closePriorityEnd = closeLoading?.endAt ?? closeRevealAt;
 
   let phase = 'before_open';
   let nextTransitionAt = openLoading?.startAt ?? schedule.openAt;
@@ -150,6 +165,15 @@ export function resolveMarketPhase({
     openRevealAt: toIsoStringOrNull(openRevealAt),
     closeRevealAt: toIsoStringOrNull(closeRevealAt),
     openSavedAt: toIsoStringOrNull(openSavedAt),
+    isPriorityLive:
+      isInsideWindow(nowMs, openPriorityStart, openPriorityEnd) ||
+      isInsideWindow(nowMs, closePriorityStart, closePriorityEnd),
+    priorityAt:
+      isInsideWindow(nowMs, openPriorityStart, openPriorityEnd)
+        ? openPriorityStart.toISOString()
+        : isInsideWindow(nowMs, closePriorityStart, closePriorityEnd)
+          ? closePriorityStart.toISOString()
+          : null,
     display: panelValues,
   };
 }
@@ -161,6 +185,7 @@ export function toLiveMarketCard({
   loadingMs,
   preRevealLeadMs = 60_000,
   openResultVisibleMs = 120_000,
+  priorityLeadMs = 120_000,
 }) {
   const isFallbackResult = Boolean(result?.isFallbackResult);
   const phaseState = resolveMarketPhase({
@@ -170,6 +195,7 @@ export function toLiveMarketCard({
     loadingMs,
     preRevealLeadMs,
     openResultVisibleMs,
+    priorityLeadMs,
   });
   const liveDisplay = phaseState.display;
   const fallbackDisplay = isFallbackResult
@@ -215,6 +241,9 @@ export function toLiveMarketCard({
     closeTimeLabel: formatTo12Hour(market.closeTime),
     isActive: market.isActive,
     sortOrder: market.sortOrder,
+    isPriorityLive: phaseState.isPriorityLive,
+    priorityRank: phaseState.isPriorityLive ? 0 : 1,
+    priorityAt: phaseState.priorityAt,
     phase: phaseState.phase,
     nextTransitionAt: phaseState.nextTransitionAt,
     countdownMs: phaseState.countdownMs,

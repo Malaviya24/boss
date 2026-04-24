@@ -88,6 +88,7 @@ export function createMatkaService({ env }) {
   const loadingMs = env.matkaRevealLoadingMs;
   const preRevealLeadMs = env.matkaPreRevealLoadingMs;
   const openResultVisibleMs = env.matkaOpenResultVisibleMs;
+  const priorityLeadMs = env.matkaPriorityLeadMs;
   const memoryState = {
     marketSeq: 1,
     markets: [],
@@ -107,6 +108,20 @@ export function createMatkaService({ env }) {
     return payload;
   }
 
+  function compareLiveCards(left, right) {
+    const priorityDelta = (left.priorityRank ?? 1) - (right.priorityRank ?? 1);
+    if (priorityDelta !== 0) {
+      return priorityDelta;
+    }
+
+    const sourceDelta = (left.sortOrder ?? 0) - (right.sortOrder ?? 0);
+    if (sourceDelta !== 0) {
+      return sourceDelta;
+    }
+
+    return String(left.name ?? '').localeCompare(String(right.name ?? ''));
+  }
+
   async function listLiveMarkets() {
     if (!mongoEnabled) {
       const dateKey = getCurrentDateKey(timeZone);
@@ -121,8 +136,10 @@ export function createMatkaService({ env }) {
             loadingMs,
             preRevealLeadMs,
             openResultVisibleMs,
+            priorityLeadMs,
           }),
-        );
+        )
+        .sort(compareLiveCards);
     }
 
     const markets = await MatkaMarketModel.find({ isActive: true })
@@ -135,8 +152,9 @@ export function createMatkaService({ env }) {
       loadLatestResultsMap(markets, dateKey),
     ]);
 
-    return markets.map((market) =>
-      toLiveMarketCard({
+    return markets
+      .map((market) =>
+        toLiveMarketCard({
         market,
         result:
           resultsMap.get(toObjectIdString(market._id)) ??
@@ -146,8 +164,10 @@ export function createMatkaService({ env }) {
         loadingMs,
         preRevealLeadMs,
         openResultVisibleMs,
-      }),
-    );
+          priorityLeadMs,
+        }),
+      )
+      .sort(compareLiveCards);
   }
 
   async function getLiveMarketBySlug(slug) {
@@ -178,6 +198,7 @@ export function createMatkaService({ env }) {
         loadingMs,
         preRevealLeadMs,
         openResultVisibleMs,
+        priorityLeadMs,
       });
     }
 
@@ -212,6 +233,7 @@ export function createMatkaService({ env }) {
       loadingMs,
       preRevealLeadMs,
       openResultVisibleMs,
+      priorityLeadMs,
     });
   }
 
@@ -746,6 +768,7 @@ export function createMatkaService({ env }) {
     loadingMs,
     preRevealLeadMs,
     openResultVisibleMs,
+    priorityLeadMs,
     listLiveMarkets,
     getLiveMarketBySlug,
     listAdminMarkets,
