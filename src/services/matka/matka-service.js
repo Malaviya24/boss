@@ -54,6 +54,33 @@ async function loadTodayResultsMap(markets, dateKey) {
   return byMarketId;
 }
 
+async function loadLatestResultsMap(markets, beforeDateKey) {
+  if (markets.length === 0) {
+    return new Map();
+  }
+
+  const marketIds = markets.map((market) => market._id);
+  const results = await MatkaMarketResultModel.find({
+    marketId: { $in: marketIds },
+    resultDate: { $lt: beforeDateKey },
+    displayResult: { $ne: '' },
+  })
+    .sort({ resultDate: -1, updatedAt: -1 })
+    .lean();
+
+  const byMarketId = new Map();
+  for (const result of results) {
+    const key = toObjectIdString(result.marketId);
+    if (!byMarketId.has(key)) {
+      byMarketId.set(key, {
+        ...result,
+        isFallbackResult: true,
+      });
+    }
+  }
+  return byMarketId;
+}
+
 export function createMatkaService({ env }) {
   const mongoEnabled = Boolean(env.mongoUri);
   const enabled = true;
@@ -101,12 +128,18 @@ export function createMatkaService({ env }) {
       .lean();
 
     const dateKey = getCurrentDateKey(timeZone);
-    const resultsMap = await loadTodayResultsMap(markets, dateKey);
+    const [resultsMap, latestResultsMap] = await Promise.all([
+      loadTodayResultsMap(markets, dateKey),
+      loadLatestResultsMap(markets, dateKey),
+    ]);
 
     return markets.map((market) =>
       toLiveMarketCard({
         market,
-        result: resultsMap.get(toObjectIdString(market._id)) ?? null,
+        result:
+          resultsMap.get(toObjectIdString(market._id)) ??
+          latestResultsMap.get(toObjectIdString(market._id)) ??
+          null,
         timeZone,
         loadingMs,
         preRevealLeadMs,
@@ -153,10 +186,20 @@ export function createMatkaService({ env }) {
     }
 
     const dateKey = getCurrentDateKey(timeZone);
-    const result = await MatkaMarketResultModel.findOne({
+    const todayResult = await MatkaMarketResultModel.findOne({
       marketId: market._id,
       resultDate: dateKey,
     }).lean();
+    const fallbackResult = todayResult
+      ? null
+      : await MatkaMarketResultModel.findOne({
+      marketId: market._id,
+      resultDate: { $lt: dateKey },
+      displayResult: { $ne: '' },
+    })
+      .sort({ resultDate: -1, updatedAt: -1 })
+      .lean();
+    const result = todayResult || (fallbackResult ? { ...fallbackResult, isFallbackResult: true } : null);
 
     return toLiveMarketCard({
       market,
@@ -610,6 +653,87 @@ export function createMatkaService({ env }) {
     return result.toObject();
   }
 
+  async function upsertHistoricalResult({ marketId, resultDate, openPanel, closePanel, adminUser }) {
+    const normalizedOpenPanel = ensurePanel(openPanel);
+    const normalizedClosePanel = ensurePanel(closePanel);
+    const dateKey = String(resultDate ?? '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+      throw new AppError('Invalid result date', {
+        statusCode: 400,
+        code: 'INVALID_RESULT_DATE',
+      });
+    }
+
+    const derived = calculateFromPanels({
+      openPanel: normalizedOpenPanel,
+      closePanel: normalizedClosePanel,
+    });
+    const revealAt = new Date(`${dateKey}T23:59:00.000Z`);
+
+    if (!mongoEnabled) {
+      const market = memoryState.markets.find((item) => item._id === marketId);
+      if (!market) {
+        throw new AppError('Market not found', {
+          statusCode: 404,
+          code: 'MARKET_NOT_FOUND',
+        });
+      }
+
+      return setMemoryResult(market._id, dateKey, {
+        marketId: market._id,
+        resultDate: dateKey,
+        openPanel: derived.openPanel,
+        closePanel: derived.closePanel,
+        openSingle: derived.openSingle,
+        closeSingle: derived.closeSingle,
+        jodiLeft: derived.jodiLeft,
+        jodiRight: derived.jodiRight,
+        middleJodi: derived.middleJodi,
+        displayResult: derived.displayResult,
+        openRevealAt: revealAt.toISOString(),
+        closeRevealAt: revealAt.toISOString(),
+        openUpdatedBy: adminUser,
+        closeUpdatedBy: adminUser,
+        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+      });
+    }
+
+    const market = await MatkaMarketModel.findById(marketId).lean();
+    if (!market) {
+      throw new AppError('Market not found', {
+        statusCode: 404,
+        code: 'MARKET_NOT_FOUND',
+      });
+    }
+
+    const result =
+      (await MatkaMarketResultModel.findOne({
+        marketId: market._id,
+        resultDate: dateKey,
+      })) ||
+      new MatkaMarketResultModel({
+        marketId: market._id,
+        resultDate: dateKey,
+      });
+
+    result.openPanel = derived.openPanel;
+    result.closePanel = derived.closePanel;
+    result.openSingle = derived.openSingle;
+    result.closeSingle = derived.closeSingle;
+    result.jodiLeft = derived.jodiLeft;
+    result.jodiRight = derived.jodiRight;
+    result.middleJodi = derived.middleJodi;
+    result.displayResult = derived.displayResult;
+    result.openRevealAt = revealAt;
+    result.closeRevealAt = revealAt;
+    result.openUpdatedBy = adminUser;
+    result.closeUpdatedBy = adminUser;
+
+    await result.save();
+    return result.toObject();
+  }
+
   return {
     enabled,
     mode: mongoEnabled ? 'mongo' : 'memory',
@@ -625,5 +749,6 @@ export function createMatkaService({ env }) {
     toggleMarketActive,
     upsertOpenPanel,
     upsertClosePanel,
+    upsertHistoricalResult,
   };
 }

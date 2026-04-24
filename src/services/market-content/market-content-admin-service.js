@@ -56,6 +56,14 @@ function toDateString(date) {
   return `${day}/${month}/${year}`;
 }
 
+function toDateKey(date) {
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
+    String(date.getUTCDate()).padStart(2, '0'),
+  ].join('-');
+}
+
 function toDateRangeLabel(startDate) {
   const endDate = new Date(startDate.getTime());
   endDate.setUTCDate(endDate.getUTCDate() + 6);
@@ -125,15 +133,24 @@ function createCell({
   column = '',
   text = '',
   isHighlight = false,
+  source = '',
 } = {}) {
   const safeText = normalizeText(text).slice(0, 32);
   const highlight = Boolean(isHighlight);
+  const attrs = {};
+  if (highlight) {
+    attrs.class = 'r';
+  }
+  if (source) {
+    attrs['data-source'] = source;
+  }
+
   return {
     column: normalizeText(column).slice(0, 32),
     text: safeText,
     isHighlight: highlight,
     className: highlight ? 'r' : '',
-    attrs: highlight ? { class: 'r' } : {},
+    attrs,
   };
 }
 
@@ -226,6 +243,7 @@ function buildLinkedRandomRows(startYear, seedKey = '') {
   const todayUtc = getTodayUtcDateForCharts();
   const jodiRows = [];
   const panelRows = [];
+  let latestCompletedResult = null;
 
   for (let rowIndex = 0; rowIndex < weekRanges.length; rowIndex += 1) {
     const week = weekRanges[rowIndex];
@@ -251,20 +269,28 @@ function buildLinkedRandomRows(startYear, seedKey = '') {
       const triplet = generateLinkedPanelTriplet(
         `${normalizedSeedKey}:${week.label}:${dayIndex}`,
       );
+      latestCompletedResult = {
+        resultDate: toDateKey(dayDate),
+        openPanel: triplet.openPanel,
+        closePanel: triplet.closePanel,
+        middleJodi: triplet.middle,
+      };
       panelCells.push(
-        createCell({ column: dayLabel, text: triplet.left }),
+        createCell({ column: dayLabel, text: triplet.left, source: 'seed' }),
         createCell({
           column: dayLabel,
           text: triplet.middle,
           isHighlight: isHighlightJodi(triplet.middle),
+          source: 'seed',
         }),
-        createCell({ column: dayLabel, text: triplet.right }),
+        createCell({ column: dayLabel, text: triplet.right, source: 'seed' }),
       );
       jodiCells.push(
         createCell({
           column: dayLabel,
           text: triplet.middle,
           isHighlight: isHighlightJodi(triplet.middle),
+          source: 'seed',
         }),
       );
     }
@@ -276,6 +302,7 @@ function buildLinkedRandomRows(startYear, seedKey = '') {
   return {
     jodi: jodiRows,
     panel: panelRows,
+    latestCompletedResult,
   };
 }
 
@@ -306,13 +333,14 @@ function buildManualRowCells({ type, dateRange, days }) {
     if (normalizedType === 'panel') {
       const triplet = parsePanelTripletFromManual(rawValue, dayLabel);
       cells.push(
-        createCell({ column: dayLabel, text: triplet.left }),
+        createCell({ column: dayLabel, text: triplet.left, source: 'manual' }),
         createCell({
           column: dayLabel,
           text: triplet.middle,
           isHighlight: isHighlightJodi(triplet.middle),
+          source: 'manual',
         }),
-        createCell({ column: dayLabel, text: triplet.right }),
+        createCell({ column: dayLabel, text: triplet.right, source: 'manual' }),
       );
       continue;
     }
@@ -322,6 +350,7 @@ function buildManualRowCells({ type, dateRange, days }) {
         column: dayLabel,
         text: rawValue,
         isHighlight: isHighlightJodi(rawValue),
+        source: 'manual',
       }),
     );
   }
@@ -342,6 +371,7 @@ function buildManualJodiRowCellsFromPanel({ dateRange, days }) {
         column: dayLabel,
         text: triplet.middle,
         isHighlight: isHighlightJodi(triplet.middle),
+        source: 'manual',
       }),
     );
   }
@@ -410,15 +440,18 @@ function upsertCompletedResultIntoCells({
     nextCells[baseIndex] = createCell({
       column: dayLabel,
       text: toSpacedDigits(completedResult.openPanel),
+      source: 'admin-result',
     });
     nextCells[baseIndex + 1] = createCell({
       column: dayLabel,
       text: completedResult.middleJodi,
       isHighlight: isHighlightJodi(completedResult.middleJodi),
+      source: 'admin-result',
     });
     nextCells[baseIndex + 2] = createCell({
       column: dayLabel,
       text: toSpacedDigits(completedResult.closePanel),
+      source: 'admin-result',
     });
     return nextCells;
   }
@@ -428,6 +461,7 @@ function upsertCompletedResultIntoCells({
     column: dayLabel,
     text: completedResult.middleJodi,
     isHighlight: isHighlightJodi(completedResult.middleJodi),
+    source: 'admin-result',
   });
   return nextCells;
 }
@@ -981,6 +1015,7 @@ export function createMarketContentAdminService({
       totalRows,
       replace: normalizedReplace,
       syncedTypes,
+      latestCompletedResult: generatedRowsByType.latestCompletedResult,
     };
   }
 

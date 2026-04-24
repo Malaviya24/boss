@@ -135,27 +135,34 @@ export function toLiveMarketCard({
   loadingMs,
   preRevealLeadMs = 60_000,
 }) {
+  const isFallbackResult = Boolean(result?.isFallbackResult);
   const phaseState = resolveMarketPhase({
     market,
-    result,
+    result: isFallbackResult ? null : result,
     timeZone,
     loadingMs,
     preRevealLeadMs,
   });
-  const display = phaseState.display;
+  const liveDisplay = phaseState.display;
+  const fallbackDisplay = isFallbackResult
+    ? calculateFromPanels({
+        openPanel: result?.openPanel ?? '',
+        closePanel: result?.closePanel ?? '',
+      })
+    : null;
 
   const visibleOpenPanel =
-    ['open_revealed', 'close_loading', 'closed'].includes(phaseState.phase) && display.openPanel
-      ? display.openPanel
+    ['open_revealed', 'close_loading', 'closed'].includes(phaseState.phase) && liveDisplay.openPanel
+      ? liveDisplay.openPanel
       : '';
 
-  const visibleClosePanel = phaseState.phase === 'closed' ? display.closePanel : '';
-  const visibleMiddleJodi = phaseState.phase === 'closed' ? display.middleJodi : '';
-  const openPartial = formatOpenPartial(display);
+  const visibleClosePanel = phaseState.phase === 'closed' ? liveDisplay.closePanel : '';
+  const visibleMiddleJodi = phaseState.phase === 'closed' ? liveDisplay.middleJodi : '';
+  const openPartial = formatOpenPartial(liveDisplay);
 
   let resultText = 'Result Coming';
-  if (phaseState.phase === 'before_open' && display.displayResult) {
-    resultText = display.displayResult;
+  if (phaseState.phase === 'before_open' && (liveDisplay.displayResult || fallbackDisplay?.displayResult)) {
+    resultText = liveDisplay.displayResult || fallbackDisplay.displayResult;
   } else if (phaseState.phase === 'open_loading' || phaseState.phase === 'close_loading') {
     resultText =
       phaseState.phase === 'close_loading'
@@ -167,7 +174,7 @@ export function toLiveMarketCard({
   } else if (phaseState.phase === 'open_revealed') {
     resultText = openPartial || visibleOpenPanel || 'Result Coming';
   } else if (phaseState.phase === 'closed') {
-    resultText = display.displayResult || 'Result Coming';
+    resultText = liveDisplay.displayResult || 'Result Coming';
   }
 
   return {
@@ -187,9 +194,9 @@ export function toLiveMarketCard({
     openPanel: visibleOpenPanel,
     closePanel: visibleClosePanel,
     middleJodi: visibleMiddleJodi,
-    openSingle: display.openSingle,
-    closeSingle: display.closeSingle,
-    displayResult: phaseState.phase === 'closed' ? display.displayResult : '',
+    openSingle: liveDisplay.openSingle,
+    closeSingle: liveDisplay.closeSingle,
+    displayResult: phaseState.phase === 'closed' ? liveDisplay.displayResult : '',
     openRevealAt: phaseState.openRevealAt,
     closeRevealAt: phaseState.closeRevealAt,
     openAt: phaseState.openAt,

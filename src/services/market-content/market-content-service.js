@@ -6,6 +6,7 @@ import { MarketMetaModel } from '../../models/market-meta-model.js';
 import { toStructuredMarketContent } from './market-content-transform.js';
 
 const JODI_COLUMNS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const PROTECTED_CHART_SOURCES = new Set(['admin-result', 'manual']);
 
 function normalizeType(value = '') {
   return String(value).toLowerCase() === 'panel' ? 'panel' : 'jodi';
@@ -16,6 +17,95 @@ function normalizeText(value = '') {
     .replace(/\u00a0/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function getTodayUtcDateForCharts() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(
+      parts
+        .filter((part) => part.type !== 'literal')
+        .map((part) => [part.type, part.value]),
+    );
+
+    return new Date(Date.UTC(
+      Number.parseInt(values.year, 10),
+      Number.parseInt(values.month, 10) - 1,
+      Number.parseInt(values.day, 10),
+    ));
+  } catch {
+    const today = new Date();
+    return new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  }
+}
+
+function parseChartDate(value = '') {
+  const matched = normalizeText(value).match(/(\d{2})[/-](\d{2})[/-](\d{4})/);
+  if (!matched) {
+    return null;
+  }
+
+  const [, day, month, year] = matched;
+  const parsed = new Date(Date.UTC(
+    Number.parseInt(year, 10),
+    Number.parseInt(month, 10) - 1,
+    Number.parseInt(day, 10),
+  ));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function isProtectedChartCell(cell = {}) {
+  const source = normalizeText(cell?.attrs?.['data-source']);
+  return PROTECTED_CHART_SOURCES.has(source);
+}
+
+function blankCell(cell = {}) {
+  return {
+    ...cell,
+    text: '',
+    isHighlight: false,
+    className: '',
+    attrs: {},
+  };
+}
+
+function blankAdminTodayAndFuturePanelRows(rows = []) {
+  const todayUtc = getTodayUtcDateForCharts();
+
+  return rows.map((row) => {
+    const cells = Array.isArray(row?.cells) ? row.cells : [];
+    const weekStart = parseChartDate(cells[0]?.text);
+    if (!weekStart) {
+      return row;
+    }
+
+    const nextCells = cells.map((cell) => ({ ...cell }));
+    for (let dayIndex = 0; dayIndex < JODI_COLUMNS.length; dayIndex += 1) {
+      const dayDate = new Date(weekStart.getTime());
+      dayDate.setUTCDate(dayDate.getUTCDate() + dayIndex);
+      if (dayDate.getTime() < todayUtc.getTime()) {
+        continue;
+      }
+
+      const baseIndex = 1 + dayIndex * 3;
+      for (let offset = 0; offset < 3; offset += 1) {
+        const cellIndex = baseIndex + offset;
+        if (nextCells[cellIndex] && !isProtectedChartCell(nextCells[cellIndex])) {
+          nextCells[cellIndex] = blankCell(nextCells[cellIndex]);
+        }
+      }
+    }
+
+    return {
+      ...row,
+      cells: nextCells,
+    };
+  });
 }
 
 function toPageTypeLabel(type = '') {
@@ -320,7 +410,10 @@ export function createMarketContentService({
       });
     }
 
-    let resolvedRowDocs = rowDocs;
+    const isAdminMarket = String(market.importSource ?? '') === 'admin';
+    let resolvedRowDocs = isAdminMarket && type === 'panel'
+      ? blankAdminTodayAndFuturePanelRows(rowDocs)
+      : rowDocs;
     if (type === 'jodi' && siblingPanelMarket?._id) {
       const panelRows = await MarketChartRowModel.find({
         marketId: siblingPanelMarket._id,
@@ -328,7 +421,10 @@ export function createMarketContentService({
       })
         .sort({ rowIndex: 1 })
         .lean();
-      const derivedRows = toJodiRowsFromPanelRows(panelRows);
+      const safePanelRows = isAdminMarket
+        ? blankAdminTodayAndFuturePanelRows(panelRows)
+        : panelRows;
+      const derivedRows = toJodiRowsFromPanelRows(safePanelRows);
       if (derivedRows.length > 0) {
         resolvedRowDocs = derivedRows;
       }
@@ -337,7 +433,6 @@ export function createMarketContentService({
       resolvedRowDocs = stripDateCellFromJodiRows(resolvedRowDocs);
     }
 
-    const isAdminMarket = String(market.importSource ?? '') === 'admin';
     const marketName = normalizeText(market.name).toUpperCase();
     const chartTypeLabel = type === 'panel' ? 'PANEL CHART' : 'JODI CHART';
     const columns = sanitizeColumns(metaDoc.table?.columns);

@@ -32,6 +32,16 @@ export function createV1AdminMarketChartSeedController({
         replace: request.validatedBody.replace,
       });
 
+      if (seeded.latestCompletedResult && matkaService?.upsertHistoricalResult) {
+        await matkaService.upsertHistoricalResult({
+          marketId,
+          resultDate: seeded.latestCompletedResult.resultDate,
+          openPanel: seeded.latestCompletedResult.openPanel,
+          closePanel: seeded.latestCompletedResult.closePanel,
+          adminUser: request.adminUser.username,
+        });
+      }
+
       for (const syncedType of seeded.syncedTypes ?? [type]) {
         marketContentService?.clearCache?.({
           type: syncedType,
