@@ -47,6 +47,7 @@ export function createV1AdminOpenPanelController({
         panel: request.validatedBody.panel,
         adminUser: request.adminUser.username,
       });
+      const market = await resolveAdminMarket(matkaService, request.validatedParams.marketId);
 
       await auditService.log({
         adminUser: request.adminUser.username,
@@ -55,6 +56,8 @@ export function createV1AdminOpenPanelController({
         entityId: String(updated._id),
         before: null,
         after: {
+          marketName: market?.name ?? '',
+          marketSlug: market?.slug ?? '',
           openPanel: updated.openPanel,
           openSingle: updated.openSingle,
           middleJodi: updated.middleJodi,
@@ -102,6 +105,7 @@ export function createV1AdminClosePanelController({
         panel: request.validatedBody.panel,
         adminUser: request.adminUser.username,
       });
+      const market = await resolveAdminMarket(matkaService, request.validatedParams.marketId);
 
       await auditService.log({
         adminUser: request.adminUser.username,
@@ -110,6 +114,8 @@ export function createV1AdminClosePanelController({
         entityId: String(updated._id),
         before: null,
         after: {
+          marketName: market?.name ?? '',
+          marketSlug: market?.slug ?? '',
           closePanel: updated.closePanel,
           closeSingle: updated.closeSingle,
           middleJodi: updated.middleJodi,

@@ -56,7 +56,11 @@ export function createV1AdminMarketChartSeedController({
           entityType: 'market_content',
           entityId: `${seeded.type}:${seeded.slug}`,
           before: null,
-          after: seeded,
+          after: {
+            ...seeded,
+            marketName: market.name,
+            marketSlug: market.slug,
+          },
           ip: request.ip,
           userAgent: request.get('user-agent') ?? '',
         });
@@ -110,7 +114,11 @@ export function createV1AdminMarketChartManualRowController({
           entityType: 'market_content',
           entityId: `${saved.type}:${saved.slug}`,
           before: null,
-          after: saved,
+          after: {
+            ...saved,
+            marketName: market.name,
+            marketSlug: market.slug,
+          },
           ip: request.ip,
           userAgent: request.get('user-agent') ?? '',
         });

@@ -103,6 +103,9 @@ export function createV1AdminMarketsDeleteController(matkaService, auditService)
 export function createV1AdminMarketsToggleController(matkaService, auditService) {
   return async (request, response, next) => {
     try {
+      const beforeState = (await matkaService.listAdminMarkets()).find(
+        (market) => market.id === request.validatedParams.marketId,
+      );
       const updated = await matkaService.toggleMarketActive(request.validatedParams.marketId);
 
       await auditService.log({
@@ -110,8 +113,8 @@ export function createV1AdminMarketsToggleController(matkaService, auditService)
         action: 'market_toggle_active',
         entityType: 'market',
         entityId: String(updated._id),
-        before: null,
-        after: { isActive: updated.isActive },
+        before: beforeState ?? null,
+        after: sanitizeMarketPayload(updated),
         ip: request.ip,
         userAgent: request.get('user-agent') ?? '',
       });

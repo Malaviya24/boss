@@ -189,10 +189,10 @@ function generateLinkedPanelTriplet(seed) {
 
 function parsePanelTripletFromManual(value = '', dayLabel = '') {
   const source = normalizeText(value);
-  const matched = source.match(/(\d{3})\D+(\d{2})\D+(\d{3})/);
+  const matched = source.match(/^(\d{3})-(\d{2})-(\d{3})$/);
   if (!matched) {
     throw new AppError(
-      `Invalid ${dayLabel} panel value. Use format like 123-45-678`,
+      `Invalid ${dayLabel} panel value. Use format like 356-46-259`,
       {
         statusCode: 400,
         code: 'INVALID_MANUAL_PANEL_VALUE',
