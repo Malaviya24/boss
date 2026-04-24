@@ -240,6 +240,22 @@ body {
   line-height: 1.3;
 }
 
+.market-page-jodi .panel-heading,
+.market-page-jodi .chart-table {
+  width: min(946px, 50%);
+}
+
+.market-page-jodi .chart-table td:first-child {
+  width: auto;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.market-page-panel .panel-heading,
+.market-page-panel .chart-table {
+  width: min(1324px, 70%);
+}
+
 .market-page .chart-table .r {
   color: #f00;
 }
@@ -297,6 +313,21 @@ body {
 
   .market-page .chart-table {
     min-width: 960px;
+  }
+
+  .market-page-jodi .panel-heading,
+  .market-page-jodi .chart-table {
+    width: 95%;
+    min-width: 0;
+  }
+
+  .market-page-panel .panel-heading,
+  .market-page-panel .chart-table {
+    width: 99%;
+  }
+
+  .market-page-jodi .chart-table td:first-child {
+    font-size: 24px;
   }
 
   .market-page .chart-table td {

@@ -301,7 +301,7 @@ export function MarketTemplate({
   const headingClassName = mergeClassNames('panel-heading', headingProps.className);
 
   return (
-    <main className="market-page" id={topAnchorId}>
+    <main className={`market-page market-page-${type}`} id={topAnchorId}>
       {(styles.urls ?? []).map((href, index) => (
         <link key={`market-style-url-${index}`} rel="stylesheet" href={href} />
       ))}

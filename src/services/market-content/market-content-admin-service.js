@@ -7,7 +7,8 @@ import { MarketChartRowModel } from '../../models/market-chart-row-model.js';
 
 const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const TABLE_COLUMNS = ['Date', ...DAY_LABELS];
+const PANEL_TABLE_COLUMNS = ['Date', ...DAY_LABELS];
+const JODI_TABLE_COLUMNS = DAY_LABELS;
 const DEFAULT_START_YEAR = 2023;
 const HIGHLIGHT_JODI_VALUES = new Set([
   '00',
@@ -203,7 +204,7 @@ function buildLinkedRandomRows(startYear, seedKey = '') {
 
   for (let rowIndex = 0; rowIndex < weekRanges.length; rowIndex += 1) {
     const week = weekRanges[rowIndex];
-    const jodiCells = [createCell({ column: 'Date', text: week.label })];
+    const jodiCells = [];
     const panelCells = [createCell({ column: 'Date', text: week.label })];
 
     for (let dayIndex = 0; dayIndex < DAY_LABELS.length; dayIndex += 1) {
@@ -249,7 +250,9 @@ function buildManualRowCells({ type, dateRange, days }) {
     });
   }
 
-  const cells = [createCell({ column: 'Date', text: safeDateRange })];
+  const cells = normalizedType === 'panel'
+    ? [createCell({ column: 'Date', text: safeDateRange })]
+    : [];
   for (let index = 0; index < DAY_KEYS.length; index += 1) {
     const dayKey = DAY_KEYS[index];
     const dayLabel = DAY_LABELS[index];
@@ -288,8 +291,8 @@ function buildManualRowCells({ type, dateRange, days }) {
 }
 
 function buildManualJodiRowCellsFromPanel({ dateRange, days }) {
-  const safeDateRange = normalizeText(dateRange);
-  const cells = [createCell({ column: 'Date', text: safeDateRange })];
+  normalizeText(dateRange);
+  const cells = [];
 
   for (let index = 0; index < DAY_KEYS.length; index += 1) {
     const dayKey = DAY_KEYS[index];
@@ -309,7 +312,9 @@ function buildManualJodiRowCellsFromPanel({ dateRange, days }) {
 
 function createEmptyChartRowCells(type, dateRange) {
   const normalizedType = normalizeType(type);
-  const cells = [createCell({ column: 'Date', text: dateRange })];
+  const cells = normalizedType === 'panel'
+    ? [createCell({ column: 'Date', text: dateRange })]
+    : [];
 
   for (const dayLabel of DAY_LABELS) {
     if (normalizedType === 'panel') {
@@ -379,7 +384,7 @@ function upsertCompletedResultIntoCells({
     return nextCells;
   }
 
-  const cellIndex = 1 + dayIndex;
+  const cellIndex = dayIndex;
   nextCells[cellIndex] = createCell({
     column: dayLabel,
     text: completedResult.middleJodi,
@@ -398,6 +403,75 @@ function defaultFooter() {
       label: 'Matka Play',
       href: '/',
     },
+  };
+}
+
+function toPageTypeLabel(type = '') {
+  return normalizeType(type) === 'panel' ? 'Panel' : 'Jodi';
+}
+
+function buildIntroText(marketName = '', type = '') {
+  const pageTypeLabel = toPageTypeLabel(type);
+  return [
+    `Dpboss ${marketName} ${pageTypeLabel.toLowerCase()} chart, ${marketName} ${pageTypeLabel.toLowerCase()} chart, old ${marketName} ${pageTypeLabel.toLowerCase()} chart,`,
+    `${marketName} ${pageTypeLabel.toLowerCase()} record, ${marketName} ${pageTypeLabel.toLowerCase()} chart 2012 to 2023,`,
+    `${marketName} final ank, ${marketName} ${pageTypeLabel.toLowerCase()} chart matka, ${marketName} matka chart,`,
+    `${marketName} chart result, डीपी बॉस, सट्टा चार्ट, सट्टा मटका ${pageTypeLabel === 'Panel' ? 'पैनल' : 'जोड़ी'} चार्ट`,
+  ].join(' ');
+}
+
+function buildFooterBlocks(marketName = '', type = '') {
+  const pageTypeLabel = toPageTypeLabel(type);
+  const recordLabel = `${marketName} ${pageTypeLabel} Chart Records`;
+
+  return [
+    {
+      tag: 'p',
+      className: '',
+      text: `Welcome to DPBoss Services, your ultimate destination for comprehensive ${recordLabel}. In the realm of matka gambling, where precision is paramount, DPBoss Services stands as a reliable source committed to providing accurate data, enhancing your matka gaming experience.`,
+    },
+    {
+      tag: 'h3',
+      className: 'faq-heading',
+      text: `Chart Your Path to Success:${recordLabel}:`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `Explore the nuances of the ${marketName} market with our meticulously crafted ${pageTypeLabel} Chart Records. Our charts provide valuable insights into market trends, empowering you to make well informed decisions in the dynamic matka landscape.`,
+    },
+    {
+      tag: 'h3',
+      className: 'faq-heading',
+      text: `Frequently Asked Questions (FAQ) for ${recordLabel}:`,
+    },
+    {
+      tag: 'p',
+      className: 'faq-title',
+      text: `Q1: How frequently are the ${recordLabel} updated?`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `The ${recordLabel} are updated regularly to provide access to the latest trends and patterns.`,
+    },
+    {
+      tag: 'p',
+      className: 'faq-title',
+      text: `Q2: Is the interface user-friendly for navigating the ${recordLabel}?`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `Absolutely. The interface is designed to be intuitive and easy to navigate for experienced players and newcomers.`,
+    },
+  ];
+}
+
+function buildFooter(marketName = '', type = '') {
+  return {
+    ...defaultFooter(),
+    blocks: buildFooterBlocks(marketName, type),
   };
 }
 
@@ -477,22 +551,17 @@ export function createMarketContentAdminService({
     const normalizedType = normalizeType(type);
     const normalizedSlug = createSlug(slug);
     const normalizedName = toUpperCaseName(marketName);
-    const existing = await MarketMetaModel.findOne({
-      marketId,
-      type: normalizedType,
-    }).lean();
-
-    if (existing) {
-      return existing;
-    }
-
     const templateMeta = await MarketMetaModel.findOne({ type: normalizedType })
       .sort({ updatedAt: -1 })
       .lean();
 
     const chartTypeLabel = normalizedType === 'panel' ? 'PANEL CHART' : 'JODI CHART';
     const pageTypeLabel = normalizedType === 'panel' ? 'Panel' : 'Jodi';
-    const footer = cloneValue(templateMeta?.footer) ?? defaultFooter();
+    const footer = buildFooter(normalizedName, normalizedType);
+    const tableTitle = normalizedType === 'panel'
+      ? `${normalizedName} MATKA PANEL RECORD ${sanitizeStartYear(startYear)} - ${new Date().getFullYear()}`
+      : `${normalizedName} JODI CHART`;
+    const tableColumns = normalizedType === 'panel' ? PANEL_TABLE_COLUMNS : JODI_TABLE_COLUMNS;
 
     const payload = {
       marketId,
@@ -510,6 +579,8 @@ export function createMarketContentAdminService({
       hero: {
         ...(cloneValue(templateMeta?.hero) ?? {}),
         chartTitle: `${normalizedName} ${chartTypeLabel}`,
+        smallHeading: `${normalizedName} ${chartTypeLabel} RECORDS`,
+        introText: buildIntroText(normalizedName, normalizedType),
       },
       result: {
         ...(cloneValue(templateMeta?.result) ?? {}),
@@ -526,8 +597,8 @@ export function createMarketContentAdminService({
         goTopLabel: 'Go to Top',
       },
       table: {
-        title: `${normalizedName} MATKA ${normalizedType === 'panel' ? 'PANEL' : 'JODI'} RECORD ${sanitizeStartYear(startYear)} - ${new Date().getFullYear()}`,
-        columns: TABLE_COLUMNS,
+        title: tableTitle,
+        columns: tableColumns,
         attrs: cloneValue(templateMeta?.table?.attrs) ?? {
           class: 'panel-chart chart-table',
           style: 'width: 100%; text-align:center;',
@@ -542,8 +613,20 @@ export function createMarketContentAdminService({
       headings: [],
     };
 
-    await MarketMetaModel.create(payload);
-    return payload;
+    return MarketMetaModel.findOneAndUpdate(
+      {
+        marketId,
+        type: normalizedType,
+      },
+      {
+        $set: payload,
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      },
+    ).lean();
   }
 
   function normalizeRowsForInsert(rows = [], type = 'jodi') {
@@ -672,6 +755,7 @@ export function createMarketContentAdminService({
     market,
     type,
     result,
+    rowIndexOverride,
   }) {
     const completedResult = normalizeCompletedResult(result);
     if (!completedResult) {
@@ -695,17 +779,23 @@ export function createMarketContentAdminService({
     })
       .sort({ rowIndex: 1 })
       .lean();
-    const existingRow = matchingRows.find((row) => {
-      const firstCellText = normalizeText(row?.cells?.[0]?.text);
-      return firstCellText === dateRange;
-    });
-    const rowIndex = Number.isFinite(existingRow?.rowIndex)
-      ? existingRow.rowIndex
-      : await getNextRowIndex(contentMarket._id, normalizedType);
+    const existingRow = normalizedType === 'panel'
+      ? matchingRows.find((row) => {
+          const firstCellText = normalizeText(row?.cells?.[0]?.text);
+          return firstCellText === dateRange;
+        })
+      : matchingRows.find((row) => row.rowIndex === rowIndexOverride);
+    const rowIndex = Number.isFinite(rowIndexOverride)
+      ? rowIndexOverride
+      : Number.isFinite(existingRow?.rowIndex)
+        ? existingRow.rowIndex
+        : await getNextRowIndex(contentMarket._id, normalizedType);
     const sourceCells = existingRow?.cells?.length
       ? existingRow.cells
       : createEmptyChartRowCells(normalizedType, dateRange);
-    sourceCells[0] = createCell({ column: 'Date', text: dateRange });
+    if (normalizedType === 'panel') {
+      sourceCells[0] = createCell({ column: 'Date', text: dateRange });
+    }
 
     const cells = upsertCompletedResultIntoCells({
       type: normalizedType,
@@ -742,20 +832,24 @@ export function createMarketContentAdminService({
       };
     }
 
-    const saved = [];
-    for (const chartType of ['panel', 'jodi']) {
-      const row = await upsertCompletedResultRow({
-        market,
-        type: chartType,
-        result: {
-          ...result,
-          ...completedResult,
-        },
-      });
-      if (row) {
-        saved.push(row);
-      }
-    }
+    const panelRow = await upsertCompletedResultRow({
+      market,
+      type: 'panel',
+      result: {
+        ...result,
+        ...completedResult,
+      },
+    });
+    const jodiRow = await upsertCompletedResultRow({
+      market,
+      type: 'jodi',
+      rowIndexOverride: panelRow?.rowIndex,
+      result: {
+        ...result,
+        ...completedResult,
+      },
+    });
+    const saved = [panelRow, jodiRow].filter(Boolean);
 
     logger?.info?.('market_content_completed_result_saved', {
       slug: market.slug,

@@ -5,8 +5,92 @@ import { MarketChartRowModel } from '../../models/market-chart-row-model.js';
 import { MarketMetaModel } from '../../models/market-meta-model.js';
 import { toStructuredMarketContent } from './market-content-transform.js';
 
+const JODI_COLUMNS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 function normalizeType(value = '') {
   return String(value).toLowerCase() === 'panel' ? 'panel' : 'jodi';
+}
+
+function normalizeText(value = '') {
+  return String(value ?? '')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function toPageTypeLabel(type = '') {
+  return normalizeType(type) === 'panel' ? 'Panel' : 'Jodi';
+}
+
+function buildAdminIntroText(marketName = '', type = '') {
+  const pageTypeLabel = toPageTypeLabel(type);
+  return [
+    `Dpboss ${marketName} ${pageTypeLabel.toLowerCase()} chart, ${marketName} ${pageTypeLabel.toLowerCase()} chart, old ${marketName} ${pageTypeLabel.toLowerCase()} chart,`,
+    `${marketName} ${pageTypeLabel.toLowerCase()} record, ${marketName} ${pageTypeLabel.toLowerCase()} chart 2012 to 2023,`,
+    `${marketName} final ank, ${marketName} ${pageTypeLabel.toLowerCase()} chart matka, ${marketName} matka chart,`,
+    `${marketName} chart result, डीपी बॉस, सट्टा चार्ट, सट्टा मटका ${pageTypeLabel === 'Panel' ? 'पैनल' : 'जोड़ी'} चार्ट`,
+  ].join(' ');
+}
+
+function buildAdminFooterBlocks(marketName = '', type = '') {
+  const pageTypeLabel = toPageTypeLabel(type);
+  const recordLabel = `${marketName} ${pageTypeLabel} Chart Records`;
+
+  return [
+    {
+      tag: 'p',
+      className: '',
+      text: `Welcome to DPBoss Services, your ultimate destination for comprehensive ${recordLabel}. In the realm of matka gambling, where precision is paramount, DPBoss Services stands as a reliable source committed to providing accurate data, enhancing your matka gaming experience.`,
+    },
+    {
+      tag: 'h3',
+      className: 'faq-heading',
+      text: `Chart Your Path to Success:${recordLabel}:`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `Explore the nuances of the ${marketName} market with our meticulously crafted ${pageTypeLabel} Chart Records. Our charts provide valuable insights into market trends, empowering you to make well informed decisions in the dynamic matka landscape.`,
+    },
+    {
+      tag: 'h3',
+      className: 'faq-heading',
+      text: `Frequently Asked Questions (FAQ) for ${recordLabel}:`,
+    },
+    {
+      tag: 'p',
+      className: 'faq-title',
+      text: `Q1: How frequently are the ${recordLabel} updated?`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `The ${recordLabel} are updated regularly to provide access to the latest trends and patterns.`,
+    },
+    {
+      tag: 'p',
+      className: 'faq-title',
+      text: `Q2: Is the interface user-friendly for navigating the ${recordLabel}?`,
+    },
+    {
+      tag: 'p',
+      className: '',
+      text: `Absolutely. The interface is designed to be intuitive and easy to navigate for experienced players and newcomers.`,
+    },
+  ];
+}
+
+function buildAdminFooter(marketName = '', type = '', fallbackFooter = {}) {
+  return {
+    ...fallbackFooter,
+    blocks: buildAdminFooterBlocks(marketName, type),
+    brandTitle: 'DPBOSS.BOSTON',
+    rightsLines: ['All Rights Reserved', '(1998-2024)', 'Contact (Astrologer-Dpboss)'],
+    matkaPlay: {
+      label: 'Matka Play',
+      href: '/',
+    },
+  };
 }
 
 function normalizeMode(value = '') {
@@ -89,12 +173,7 @@ function toJodiRowsFromPanelRows(panelRows = []) {
         return null;
       }
 
-      const cells = [
-        {
-          ...(sourceCells[0] ?? {}),
-          column: 'Date',
-        },
-      ];
+      const cells = [];
 
       for (let cellIndex = 2; cellIndex < sourceCells.length; cellIndex += 3) {
         const middleCell = sourceCells[cellIndex] ?? {};
@@ -110,6 +189,18 @@ function toJodiRowsFromPanelRows(panelRows = []) {
       };
     })
     .filter(Boolean);
+}
+
+function stripDateCellFromJodiRows(rows = []) {
+  return rows.map((row) => {
+    const cells = Array.isArray(row?.cells) ? row.cells : [];
+    const firstText = String(cells[0]?.text ?? '').toLowerCase();
+    const hasDateCell = firstText.includes(' to ') || /^\d{2}[/-]\d{2}[/-]\d{4}/.test(firstText);
+    return {
+      ...row,
+      cells: hasDateCell ? cells.slice(1) : cells,
+    };
+  });
 }
 
 export function createMarketContentService({
@@ -242,15 +333,22 @@ export function createMarketContentService({
         resolvedRowDocs = derivedRows;
       }
     }
+    if (type === 'jodi') {
+      resolvedRowDocs = stripDateCellFromJodiRows(resolvedRowDocs);
+    }
 
+    const isAdminMarket = String(market.importSource ?? '') === 'admin';
+    const marketName = normalizeText(market.name).toUpperCase();
+    const chartTypeLabel = type === 'panel' ? 'PANEL CHART' : 'JODI CHART';
     const columns = sanitizeColumns(metaDoc.table?.columns);
+    const resolvedColumns = type === 'jodi' ? JODI_COLUMNS : columns;
     const rows = sanitizeRows(
       resolvedRowDocs.map((row) => ({
         id: String(row.rowIndex),
         rowIndex: row.rowIndex,
         cells: row.cells,
       })),
-      columns,
+      resolvedColumns,
     );
 
     return {
@@ -267,7 +365,14 @@ export function createMarketContentService({
         blocks: Array.isArray(metaDoc.styleBlocks) ? metaDoc.styleBlocks : [],
         jsonLdBlocks: Array.isArray(metaDoc.jsonLdBlocks) ? metaDoc.jsonLdBlocks : [],
       },
-      hero: metaDoc.hero ?? {},
+      hero: isAdminMarket
+        ? {
+            ...(metaDoc.hero ?? {}),
+            chartTitle: `${marketName} ${chartTypeLabel}`,
+            smallHeading: `${marketName} ${chartTypeLabel} RECORDS`,
+            introText: buildAdminIntroText(marketName, type),
+          }
+        : metaDoc.hero ?? {},
       result: metaDoc.result ?? {},
       controls: metaDoc.controls ?? {
         topAnchorId: 'market-top',
@@ -276,8 +381,12 @@ export function createMarketContentService({
         goTopLabel: 'Go to Top',
       },
       table: {
-        title: String(metaDoc.table?.title ?? '').trim(),
-        columns,
+        title: isAdminMarket
+          ? type === 'jodi'
+            ? `${marketName} JODI CHART`
+            : `${marketName} MATKA PANEL RECORD 2023 - ${new Date().getFullYear()}`
+          : String(metaDoc.table?.title ?? '').trim(),
+        columns: resolvedColumns,
         attrs: metaDoc.table?.attrs && typeof metaDoc.table.attrs === 'object'
           ? { ...metaDoc.table.attrs }
           : {},
@@ -291,7 +400,9 @@ export function createMarketContentService({
             : {},
         rows,
       },
-      footer: metaDoc.footer ?? {},
+      footer: isAdminMarket
+        ? buildAdminFooter(marketName, type, metaDoc.footer ?? {})
+        : metaDoc.footer ?? {},
       importedAt: market.importedAt,
       updatedAt: metaDoc.updatedAt ?? market.updatedAt ?? null,
     };
