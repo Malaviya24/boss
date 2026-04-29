@@ -108,6 +108,24 @@ export function createMatkaService({ env }) {
     return payload;
   }
 
+  function getLatestMemoryResult(marketId, beforeDateKey) {
+    const marketKey = `${marketId}::`;
+    return [...memoryState.resultsByKey.entries()]
+      .filter(([key, result]) =>
+        key.startsWith(marketKey) &&
+        String(result?.resultDate ?? '') < beforeDateKey &&
+        String(result?.displayResult ?? '').trim(),
+      )
+      .map(([, result]) => ({
+        ...result,
+        isFallbackResult: true,
+      }))
+      .sort((left, right) =>
+        String(right.resultDate ?? '').localeCompare(String(left.resultDate ?? '')) ||
+        new Date(right.updatedAt ?? 0).getTime() - new Date(left.updatedAt ?? 0).getTime(),
+      )[0] ?? null;
+  }
+
   function compareLiveCards(left, right) {
     const priorityDelta = (left.priorityRank ?? 1) - (right.priorityRank ?? 1);
     if (priorityDelta !== 0) {
@@ -131,7 +149,16 @@ export function createMatkaService({ env }) {
         .map((market) =>
           toLiveMarketCard({
             market,
-            result: getMemoryResult(market._id, dateKey),
+            result: (() => {
+              const todayResult = getMemoryResult(market._id, dateKey);
+              const fallbackResult = getLatestMemoryResult(market._id, dateKey);
+              return todayResult
+                ? {
+                    ...todayResult,
+                    fallbackResult,
+                  }
+                : fallbackResult;
+            })(),
             timeZone,
             loadingMs,
             preRevealLeadMs,
@@ -155,15 +182,21 @@ export function createMatkaService({ env }) {
     return markets
       .map((market) =>
         toLiveMarketCard({
-        market,
-        result:
-          resultsMap.get(toObjectIdString(market._id)) ??
-          latestResultsMap.get(toObjectIdString(market._id)) ??
-          null,
-        timeZone,
-        loadingMs,
-        preRevealLeadMs,
-        openResultVisibleMs,
+          market,
+          result: (() => {
+            const todayResult = resultsMap.get(toObjectIdString(market._id)) ?? null;
+            const fallbackResult = latestResultsMap.get(toObjectIdString(market._id)) ?? null;
+            return todayResult
+              ? {
+                  ...todayResult,
+                  fallbackResult,
+                }
+              : fallbackResult;
+          })(),
+          timeZone,
+          loadingMs,
+          preRevealLeadMs,
+          openResultVisibleMs,
           priorityLeadMs,
         }),
       )
@@ -190,7 +223,14 @@ export function createMatkaService({ env }) {
         });
       }
       const dateKey = getCurrentDateKey(timeZone);
-      const result = getMemoryResult(market._id, dateKey);
+      const todayResult = getMemoryResult(market._id, dateKey);
+      const fallbackResult = getLatestMemoryResult(market._id, dateKey);
+      const result = todayResult
+        ? {
+            ...todayResult,
+            fallbackResult,
+          }
+        : fallbackResult;
       return toLiveMarketCard({
         market,
         result,
@@ -215,16 +255,20 @@ export function createMatkaService({ env }) {
       marketId: market._id,
       resultDate: dateKey,
     }).lean();
-    const fallbackResult = todayResult
-      ? null
-      : await MatkaMarketResultModel.findOne({
+    const fallbackResult = await MatkaMarketResultModel.findOne({
       marketId: market._id,
       resultDate: { $lt: dateKey },
       displayResult: { $ne: '' },
     })
       .sort({ resultDate: -1, updatedAt: -1 })
       .lean();
-    const result = todayResult || (fallbackResult ? { ...fallbackResult, isFallbackResult: true } : null);
+    const safeFallbackResult = fallbackResult ? { ...fallbackResult, isFallbackResult: true } : null;
+    const result = todayResult
+      ? {
+          ...todayResult,
+          fallbackResult: safeFallbackResult,
+        }
+      : safeFallbackResult;
 
     return toLiveMarketCard({
       market,

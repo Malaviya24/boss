@@ -47,8 +47,8 @@ function withVisibleWindow(startAt, visibleMs) {
 
 function isInsideWindow(nowMs, startAt, endAt) {
   return (
-    startAt instanceof Date &&
-    endAt instanceof Date &&
+    Number.isFinite(startAt?.getTime?.()) &&
+    Number.isFinite(endAt?.getTime?.()) &&
     nowMs >= startAt.getTime() &&
     nowMs < endAt.getTime()
   );
@@ -61,29 +61,19 @@ function formatOpenPartial(display = {}) {
   return `${display.openPanel}-${display.openSingle}`;
 }
 
-function cycleCloseWaitingText({ nowMs, openPartial = '' }) {
-  const slot = Math.floor(nowMs / 10_000) % 3;
-  if (slot === 0 && openPartial) {
-    return openPartial;
-  }
-  if (slot === 1) {
-    return 'Loading...';
-  }
-  return 'Result Coming';
-}
-
 export function resolveMarketPhase({
   market,
   result,
   timeZone,
   loadingMs,
-  preRevealLeadMs = 60_000,
+  preRevealLeadMs = 300_000,
   openResultVisibleMs = 120_000,
-  priorityLeadMs = 120_000,
+  priorityLeadMs = 300_000,
 }) {
   const now = new Date();
   const nowMs = now.getTime();
-  const safeLeadMs = Number.isFinite(preRevealLeadMs) && preRevealLeadMs > 0 ? preRevealLeadMs : 60_000;
+  const safeLeadMs = Number.isFinite(preRevealLeadMs) && preRevealLeadMs > 0 ? preRevealLeadMs : 300_000;
+  const safeLoadingMs = Number.isFinite(loadingMs) && loadingMs > 0 ? loadingMs : 5000;
 
   const schedule = computeOpenCloseSchedule(market, timeZone);
   const openSavedAt = safeDate(result?.updatedAt);
@@ -92,51 +82,34 @@ export function resolveMarketPhase({
 
   const openLoadingStart = new Date(openRevealAt.getTime() - safeLeadMs);
   const closeLoadingStart = new Date(closeRevealAt.getTime() - safeLeadMs);
-  const openLoading = withLoadingWindow(openLoadingStart, loadingMs + safeLeadMs);
-  const closeLoading = withLoadingWindow(closeLoadingStart, loadingMs + safeLeadMs);
+  const openLoading = withLoadingWindow(openLoadingStart, safeLoadingMs);
+  const closeLoading = withLoadingWindow(closeLoadingStart, safeLoadingMs);
   const hasOpen = Boolean(result?.openPanel);
   const hasClose = Boolean(result?.closePanel);
   const openVisible = hasOpen
-    ? withVisibleWindow(openLoading?.endAt ?? openRevealAt, openResultVisibleMs)
+    ? withVisibleWindow(openRevealAt, openResultVisibleMs)
     : null;
-  const safePriorityLeadMs = Number.isFinite(priorityLeadMs) && priorityLeadMs > 0 ? priorityLeadMs : 120_000;
+  const safePriorityLeadMs = Number.isFinite(priorityLeadMs) && priorityLeadMs > 0 ? priorityLeadMs : safeLeadMs;
   const openPriorityStart = new Date(openRevealAt.getTime() - safePriorityLeadMs);
-  const openPriorityEnd = openVisible?.endAt ?? openLoading?.endAt ?? openRevealAt;
+  const openPriorityEnd = openVisible?.endAt ?? openRevealAt;
   const closePriorityStart = new Date(closeRevealAt.getTime() - safePriorityLeadMs);
-  const closePriorityEnd = closeLoading?.endAt ?? closeRevealAt;
+  const closePriorityEnd = closeRevealAt;
 
   let phase = 'before_open';
   let nextTransitionAt = openLoading?.startAt ?? schedule.openAt;
 
-  if (hasClose && closeLoading) {
-    if (nowMs >= closeLoading.endAt.getTime()) {
-      phase = 'closed';
-      nextTransitionAt = null;
-    } else if (nowMs >= closeLoading.startAt.getTime()) {
-      phase = 'close_loading';
-      nextTransitionAt = closeLoading.endAt;
-    } else if (nowMs < openLoading.startAt.getTime()) {
-      phase = 'before_open';
-      nextTransitionAt = openLoading.startAt;
-    } else if (nowMs < openLoading.endAt.getTime()) {
-      phase = 'open_loading';
-      nextTransitionAt = openLoading.endAt;
-    } else if (openVisible && nowMs < openVisible.endAt.getTime()) {
-      phase = 'open_revealed';
-      nextTransitionAt = openVisible.endAt;
-    } else {
-      phase = 'result_waiting';
-      nextTransitionAt = closeLoading.startAt;
-    }
+  if (hasClose && nowMs >= closeRevealAt.getTime()) {
+    phase = 'closed';
+    nextTransitionAt = null;
   } else if (nowMs < openLoading.startAt.getTime()) {
     phase = 'before_open';
     nextTransitionAt = openLoading.startAt;
   } else if (nowMs < openLoading.endAt.getTime()) {
     phase = 'open_loading';
     nextTransitionAt = openLoading.endAt;
-  } else if (!hasOpen) {
-    phase = 'result_waiting';
-    nextTransitionAt = closeLoading?.startAt ?? null;
+  } else if (nowMs < openRevealAt.getTime()) {
+    phase = 'before_open';
+    nextTransitionAt = openRevealAt;
   } else if (openVisible && nowMs < openVisible.endAt.getTime()) {
     phase = 'open_revealed';
     nextTransitionAt = openVisible.endAt;
@@ -146,8 +119,14 @@ export function resolveMarketPhase({
   } else if (closeLoading && nowMs < closeLoading.endAt.getTime()) {
     phase = 'close_loading';
     nextTransitionAt = closeLoading.endAt;
+  } else if (nowMs < closeRevealAt.getTime()) {
+    phase = 'result_waiting';
+    nextTransitionAt = closeRevealAt;
+  } else if (hasClose) {
+    phase = 'closed';
+    nextTransitionAt = null;
   } else {
-    phase = 'close_loading';
+    phase = 'result_waiting';
     nextTransitionAt = null;
   }
 
@@ -183,11 +162,12 @@ export function toLiveMarketCard({
   result,
   timeZone,
   loadingMs,
-  preRevealLeadMs = 60_000,
+  preRevealLeadMs = 300_000,
   openResultVisibleMs = 120_000,
-  priorityLeadMs = 120_000,
+  priorityLeadMs = 300_000,
 }) {
   const isFallbackResult = Boolean(result?.isFallbackResult);
+  const fallbackResult = result?.fallbackResult ?? (isFallbackResult ? result : null);
   const phaseState = resolveMarketPhase({
     market,
     result: isFallbackResult ? null : result,
@@ -198,15 +178,15 @@ export function toLiveMarketCard({
     priorityLeadMs,
   });
   const liveDisplay = phaseState.display;
-  const fallbackDisplay = isFallbackResult
+  const fallbackDisplay = fallbackResult
     ? calculateFromPanels({
-        openPanel: result?.openPanel ?? '',
-        closePanel: result?.closePanel ?? '',
+        openPanel: fallbackResult?.openPanel ?? '',
+        closePanel: fallbackResult?.closePanel ?? '',
       })
     : null;
 
   const visibleOpenPanel =
-    ['open_revealed', 'close_loading', 'closed'].includes(phaseState.phase) && liveDisplay.openPanel
+    ['open_revealed', 'result_waiting', 'close_loading', 'closed'].includes(phaseState.phase) && liveDisplay.openPanel
       ? liveDisplay.openPanel
       : '';
 
@@ -215,18 +195,14 @@ export function toLiveMarketCard({
   const openPartial = formatOpenPartial(liveDisplay);
 
   let resultText = 'Result Coming';
-  if (phaseState.phase === 'before_open' && (liveDisplay.displayResult || fallbackDisplay?.displayResult)) {
-    resultText = liveDisplay.displayResult || fallbackDisplay.displayResult;
+  if (phaseState.phase === 'before_open' && fallbackDisplay?.displayResult) {
+    resultText = fallbackDisplay.displayResult;
   } else if (phaseState.phase === 'open_loading' || phaseState.phase === 'close_loading') {
-    resultText =
-      phaseState.phase === 'close_loading'
-        ? cycleCloseWaitingText({
-            nowMs: Date.now(),
-            openPartial,
-          })
-        : 'Loading...';
+    resultText = 'Loading...';
   } else if (phaseState.phase === 'open_revealed') {
-    resultText = openPartial || visibleOpenPanel || 'Result Coming';
+    resultText = openPartial || visibleOpenPanel || fallbackDisplay?.displayResult || 'Result Coming';
+  } else if (phaseState.phase === 'result_waiting') {
+    resultText = openPartial || visibleOpenPanel || fallbackDisplay?.displayResult || 'Result Coming';
   } else if (phaseState.phase === 'closed') {
     resultText = liveDisplay.displayResult || 'Result Coming';
   }

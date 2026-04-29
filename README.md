@@ -103,6 +103,8 @@ Important:
   - `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`
   - `MATKA_TIMEZONE` (default `Asia/Kolkata`)
   - `MATKA_REVEAL_LOADING_MS` (default `5000`)
+  - `MATKA_PRE_REVEAL_LOADING_MS` (default `300000`, starts the 5-second loading flash 5 minutes before reveal)
+  - `MATKA_PRIORITY_LEAD_MS` (default `300000`, moves the market to the top 5 minutes before reveal)
 - Market content mode:
   - `MARKET_CONTENT_SOURCE=mongo` (default) for DB runtime
   - `MARKET_CONTENT_SOURCE=legacy` for rollback to generated artifacts
