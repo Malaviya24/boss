@@ -90,10 +90,11 @@ export function resolveMarketPhase({
     ? withVisibleWindow(openRevealAt, openResultVisibleMs)
     : null;
   const safePriorityLeadMs = Number.isFinite(priorityLeadMs) && priorityLeadMs > 0 ? priorityLeadMs : safeLeadMs;
+  const priorityTrailMs = 360_000; // 6 minutes after reveal, market stays in live results
   const openPriorityStart = new Date(openRevealAt.getTime() - safePriorityLeadMs);
-  const openPriorityEnd = openVisible?.endAt ?? openRevealAt;
+  const openPriorityEnd = new Date((openVisible?.endAt ?? openRevealAt).getTime() + priorityTrailMs);
   const closePriorityStart = new Date(closeRevealAt.getTime() - safePriorityLeadMs);
-  const closePriorityEnd = closeRevealAt;
+  const closePriorityEnd = new Date(closeRevealAt.getTime() + priorityTrailMs);
 
   let phase = 'before_open';
   let nextTransitionAt = openLoading?.startAt ?? schedule.openAt;

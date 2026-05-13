@@ -92,6 +92,16 @@ function buildHomepageMarketResult(card) {
   return card.resultText || 'Result Coming';
 }
 
+function toAdminLiveResultHtml(card) {
+  const name = normalizeText(card?.name ?? '');
+  if (!name || !card?.slug) {
+    return '';
+  }
+
+  const result = normalizeText(buildHomepageMarketResult(card)) || 'Result Coming';
+  return `<span class="h8">${escapeHtml(name)}</span><span class="h9">${escapeHtml(result)}</span>`;
+}
+
 function toAdminMarketRowHtml(card) {
   const slug = String(card?.slug ?? '').toLowerCase();
   const name = normalizeText(card?.name ?? '');
@@ -294,19 +304,59 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
     return sections;
   }
 
-  const targetId =
-    Object.keys(sections).find((id) => id === 'market-group-0') ||
-    Object.keys(sections).find((id) => id.startsWith('market-group'));
-  if (!targetId) {
-    return sections;
+  // Split cards into priority-live (for live-results hero section) and ALL cards for all-markets section
+  const priorityLiveCards = matkaCards.filter((card) => card?.isPriorityLive === true);
+
+  let nextSections = { ...sections };
+
+  // Inject priority-live cards into the live-results section (hero area)
+  const liveResultsSectionId =
+    Object.keys(nextSections).find((id) => id === 'live-results') ||
+    Object.keys(nextSections).find((id) => id.startsWith('live-results'));
+
+  if (liveResultsSectionId && priorityLiveCards.length > 0) {
+    const sortedPriorityCards = [...priorityLiveCards].sort((left, right) => {
+      const sortDelta = (left.sortOrder ?? 0) - (right.sortOrder ?? 0);
+      if (sortDelta !== 0) {
+        return sortDelta;
+      }
+      return String(left.name ?? '').localeCompare(String(right.name ?? ''));
+    });
+
+    const liveHtml = sortedPriorityCards.map((card) => toAdminLiveResultHtml(card)).filter(Boolean).join('');
+    if (liveHtml) {
+      const liveNodes = parseHomepageFragmentToNodes(liveHtml);
+      if (Array.isArray(liveNodes) && liveNodes.length > 0) {
+        const baseNodes = JSON.parse(JSON.stringify(nextSections[liveResultsSectionId] ?? []));
+        const liveContainer = findFirstByClass(baseNodes, 'lv-mc');
+        if (liveContainer) {
+          liveContainer.children = Array.isArray(liveContainer.children) ? liveContainer.children : [];
+          // Prepend priority-live cards at the beginning of the live results container
+          liveContainer.children.unshift(...liveNodes);
+        } else {
+          // If no .lv-mc container exists, wrap in one and append to section
+          const wrapped = parseHomepageFragmentToNodes(`<div class="lv-mc">${liveHtml}</div>`);
+          baseNodes.push(...wrapped);
+        }
+        nextSections[liveResultsSectionId] = baseNodes;
+      }
+    }
   }
 
-  const sortedCards = [...matkaCards].sort((left, right) => {
-    const priorityDelta = (left.priorityRank ?? 1) - (right.priorityRank ?? 1);
-    if (priorityDelta !== 0) {
-      return priorityDelta;
-    }
+  // Inject ALL cards into market-group-0 (All Markets section) — priority-live markets show in BOTH sections
+  const allCardsForMarketGroup = matkaCards;
+  if (allCardsForMarketGroup.length === 0) {
+    return nextSections;
+  }
 
+  const targetId =
+    Object.keys(nextSections).find((id) => id === 'market-group-0') ||
+    Object.keys(nextSections).find((id) => id.startsWith('market-group'));
+  if (!targetId) {
+    return nextSections;
+  }
+
+  const sortedCards = [...allCardsForMarketGroup].sort((left, right) => {
     const sortDelta = (left.sortOrder ?? 0) - (right.sortOrder ?? 0);
     if (sortDelta !== 0) {
       return sortDelta;
@@ -317,15 +367,14 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
 
   const rowHtml = sortedCards.map((card) => toAdminMarketRowHtml(card)).filter(Boolean).join('');
   if (!rowHtml) {
-    return sections;
+    return nextSections;
   }
 
   const rowNodes = parseHomepageFragmentToNodes(rowHtml);
   if (!Array.isArray(rowNodes) || rowNodes.length === 0) {
-    return sections;
+    return nextSections;
   }
 
-  const nextSections = { ...sections };
   const baseNodes = JSON.parse(JSON.stringify(nextSections[targetId] ?? []));
 
   const marketContainer = findFirstByClass(baseNodes, 'tkt-val');
@@ -349,7 +398,7 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
       return normalizeText(nodeText(titleNode)).toLowerCase() === title;
     });
 
-  rowNodes.forEach((rowNode) => {
+  rowNodes.forEach((rowNode, nodeIndex) => {
     if (rowNode?.type !== 'element' || rowNode.tag !== 'div') {
       return;
     }
@@ -358,25 +407,20 @@ function injectAdminMarketsIntoSections(sections, matkaCards = []) {
       (rowNode.children ?? []).find((node) => node?.type === 'element' && node.tag === 'h4') ?? null;
     const title = normalizeText(nodeText(titleNode)).toLowerCase();
 
-    const isPriorityLive = String(rowNode.attrs?.['data-priority-live'] ?? '') === 'true';
-
     const existingIndex = title ? findExistingMarketIndex(title) : -1;
     if (existingIndex >= 0) {
-      marketContainer.children.splice(existingIndex, 1);
-      if (isPriorityLive) {
-        marketContainer.children.unshift(rowNode);
-      } else {
-        marketContainer.children.splice(existingIndex, 0, rowNode);
-      }
+      marketContainer.children.splice(existingIndex, 1, rowNode);
       return;
     }
 
-    if (isPriorityLive) {
-      marketContainer.children.unshift(rowNode);
-      return;
+    // Insert at the position specified by sortOrder (0-based)
+    const card = sortedCards[nodeIndex];
+    const position = Number(card?.sortOrder ?? 0);
+    if (position >= 0 && position < marketContainer.children.length) {
+      marketContainer.children.splice(position, 0, rowNode);
+    } else {
+      marketContainer.children.push(rowNode);
     }
-
-    marketContainer.children.push(rowNode);
   });
 
   nextSections[targetId] = baseNodes;

@@ -408,6 +408,7 @@ function AdminMarketRow({
   setFeedback,
 }) {
   const [name, setName] = useState(market.name);
+  const [sortOrder, setSortOrder] = useState(market.sortOrder ?? 0);
   const [openTimeParts, setOpenTimeParts] = useState(() => toTimeParts(market.openTime));
   const [closeTimeParts, setCloseTimeParts] = useState(() => toTimeParts(market.closeTime));
   const [openPanel, setOpenPanel] = useState(market.todayResult?.openPanel ?? '');
@@ -422,6 +423,7 @@ function AdminMarketRow({
 
   useEffect(() => {
     setName(market.name);
+    setSortOrder(market.sortOrder ?? 0);
     setOpenTimeParts(toTimeParts(market.openTime));
     setCloseTimeParts(toTimeParts(market.closeTime));
     setOpenPanel(market.todayResult?.openPanel ?? '');
@@ -442,6 +444,7 @@ function AdminMarketRow({
           name,
           openTime: toTime24(openTimeParts),
           closeTime: toTime24(closeTimeParts),
+          sortOrder: Number(sortOrder) || 0,
         },
       });
       setFeedback('Market updated');
@@ -657,6 +660,16 @@ function AdminMarketRow({
               <span>Market Name</span>
               <input value={name} onChange={(event) => setName(event.target.value)} />
             </label>
+            <label className="matka-field-block">
+              <span>Position (Sort Order)</span>
+              <input
+                type="number"
+                min="0"
+                value={sortOrder}
+                onChange={(event) => setSortOrder(event.target.value)}
+                placeholder="0"
+              />
+            </label>
             <TimePickerField
               label="Open Time"
               value={openTimeParts}
@@ -732,14 +745,6 @@ function AdminMarketRow({
           <span>Auto-fill history or add one row manually</span>
         </div>
         <div className="market-row-actions chart-action-row">
-          <ActionButton
-            type="button"
-            onClick={() => onAutoSeed('jodi')}
-            disabled={busy}
-            loading={busyAction === 'seed-jodi'}
-          >
-            Auto Jodi Data (2023+)
-          </ActionButton>
           <ActionButton
             type="button"
             onClick={() => onAutoSeed('panel')}
@@ -844,6 +849,7 @@ export default function AdminDashboardPage() {
 
   const [createForm, setCreateForm] = useState({
     name: '',
+    sortOrder: 0,
     openTimeParts: toTimeParts(DEFAULT_OPEN_TIME),
     closeTimeParts: toTimeParts(DEFAULT_CLOSE_TIME),
   });
@@ -930,6 +936,7 @@ export default function AdminDashboardPage() {
           name: createForm.name,
           openTime: toTime24(createForm.openTimeParts),
           closeTime: toTime24(createForm.closeTimeParts),
+          sortOrder: Number(createForm.sortOrder) || 0,
         },
       });
 
@@ -955,6 +962,7 @@ export default function AdminDashboardPage() {
 
       setCreateForm({
         name: '',
+        sortOrder: 0,
         openTimeParts: toTimeParts(DEFAULT_OPEN_TIME),
         closeTimeParts: toTimeParts(DEFAULT_CLOSE_TIME),
       });
@@ -1080,6 +1088,16 @@ export default function AdminDashboardPage() {
                 value={createForm.name}
                 onChange={(event) => setCreateForm((current) => ({ ...current, name: event.target.value }))}
                 required
+              />
+            </label>
+            <label className="matka-field-block">
+              <span>Position Number</span>
+              <input
+                type="number"
+                min="0"
+                placeholder="0 = first"
+                value={createForm.sortOrder}
+                onChange={(event) => setCreateForm((current) => ({ ...current, sortOrder: event.target.value }))}
               />
             </label>
             <TimePickerField
