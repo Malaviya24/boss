@@ -16,16 +16,8 @@ async function syncCompletedResultToMarketCharts({
     return;
   }
 
-  // Time-gate: Do not sync chart data if reveal times are still in the future.
-  // Results should only appear on chart pages after the scheduled reveal time.
-  const now = new Date();
-  if (updated.openRevealAt && new Date(updated.openRevealAt).getTime() > now.getTime()) {
-    return;
-  }
-  if (updated.closeRevealAt && new Date(updated.closeRevealAt).getTime() > now.getTime()) {
-    return;
-  }
-
+  // Chart sync only happens when BOTH panels are set (complete result).
+  // The phase system on the homepage/live pages handles visibility timing separately.
   const market = await resolveAdminMarket(matkaService, marketId);
   if (!market) {
     return;
