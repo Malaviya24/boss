@@ -314,6 +314,44 @@ export async function bootstrapApp() {
     });
   });
 
+  // Periodic chart sync: check every 30 seconds for results that have passed their
+  // closeRevealAt time but haven't been synced to chart data yet.
+  const chartSyncInterval = setInterval(async () => {
+    try {
+      if (!matkaService.enabled || !marketContentAdminService) {
+        return;
+      }
+      const markets = await matkaService.listAdminMarkets();
+      const now = new Date();
+      for (const market of markets) {
+        const result = market.todayResult;
+        if (!result || !result.openPanel || !result.closePanel) {
+          continue;
+        }
+        // Only sync if closeRevealAt has passed
+        if (result.closeRevealAt && new Date(result.closeRevealAt).getTime() > now.getTime()) {
+          continue;
+        }
+        // Try to sync — addCompletedResultToCharts is idempotent
+        if (marketContentAdminService.addCompletedResultToCharts) {
+          try {
+            const savedChartRows = await marketContentAdminService.addCompletedResultToCharts({
+              market,
+              result,
+            });
+            for (const syncedType of savedChartRows.syncedTypes ?? []) {
+              marketContentService?.clearCache?.({ type: syncedType, slug: market.slug });
+            }
+          } catch {
+            // Ignore individual sync failures
+          }
+        }
+      }
+    } catch {
+      // Ignore periodic sync errors
+    }
+  }, 30_000);
+
   logger.info('server_listening', {
     port: env.port,
     scrapeIntervalMs: env.scrapeIntervalMs,
@@ -324,6 +362,7 @@ export async function bootstrapApp() {
 
   async function shutdown(signal) {
     logger.info('server_shutdown_started', { signal });
+    clearInterval(chartSyncInterval);
     await queueService.close().catch(() => undefined);
     await store.close().catch(() => undefined);
     await disconnectMongo({ logger }).catch(() => undefined);
