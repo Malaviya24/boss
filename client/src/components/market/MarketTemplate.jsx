@@ -445,6 +445,12 @@ export function MarketTemplate({
 
       {footer.counterText ? <p>{footer.counterText}</p> : null}
 
+      {footer.counterNumber ? (
+        <p className="footer-counter" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+          {footer.counterNumber}
+        </p>
+      ) : null}
+
       {(footer.brandTitle || (footer.rightsLines ?? []).length > 0) ? (
         <footer style={{ fontStyle: 'normal' }}>
           {footer.brandTitle ? (

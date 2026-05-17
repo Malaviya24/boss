@@ -254,9 +254,9 @@ export function extractChartTable($, type) {
 }
 
 /**
- * Extracts footer data: blocks, brand title, rights lines, and matka play link.
+ * Extracts footer data: blocks, brand title, rights lines, counter number, and matka play link.
  * @param {cheerio.CheerioAPI} $ - Cheerio instance
- * @returns {{blocks: Array, brandTitle: string, rightsLines: string[], matkaPlay: {label: string, href: string}}}
+ * @returns {{blocks: Array, brandTitle: string, rightsLines: string[], counterNumber: string, matkaPlay: {label: string, href: string}}}
  */
 export function extractFooter($) {
   // Extract footer text blocks
@@ -293,6 +293,43 @@ export function extractFooter($) {
         .filter(Boolean)
     : [];
 
+  // Extract counter number — a small standalone numeric element that appears
+  // between the "Go to Top" button and the footer brand block on dpboss pages
+  // (e.g. "132"). It is a per-page unique identifier that differs between
+  // jodi and panel pages and across markets.
+  let counterNumber = '';
+  const counterCandidates = [
+    '#counter',
+    '.counter',
+    '.market-counter',
+    '.page-counter',
+  ];
+  for (const selector of counterCandidates) {
+    const el = $(selector).first();
+    if (el.length) {
+      const text = normalizeText(el.text());
+      if (/^\d+$/.test(text)) {
+        counterNumber = text;
+        break;
+      }
+    }
+  }
+
+  // Fallback: search the body for a small standalone numeric text node
+  // sitting before the <footer> element. Look at <p>, <div>, <span>, <b>
+  // elements containing only digits.
+  if (!counterNumber) {
+    const numericNodes = $('body p, body div, body span, body b, body strong')
+      .toArray()
+      .map((el) => ({ el, text: normalizeText($(el).text()) }))
+      .filter(({ text }) => /^\d{1,10}$/.test(text));
+
+    // Pick the last numeric node before the <footer> if any
+    if (numericNodes.length > 0) {
+      counterNumber = numericNodes[numericNodes.length - 1].text;
+    }
+  }
+
   // Extract matka play link
   const matkaPlayEl = $('.mp-btn').first();
   const matkaPlay = {
@@ -300,7 +337,7 @@ export function extractFooter($) {
     href: matkaPlayEl.length ? (matkaPlayEl.attr('href') || '') : '',
   };
 
-  return { blocks, brandTitle, rightsLines, matkaPlay };
+  return { blocks, brandTitle, rightsLines, counterNumber, matkaPlay };
 }
 
 /**
