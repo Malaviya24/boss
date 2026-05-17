@@ -50,6 +50,31 @@ function normalizeText(value = '') {
 }
 
 /**
+ * Extracts cell text while preserving line breaks (<br>) as spaces.
+ * The dpboss.boston panel cells use <br> tags to stack 3 digits vertically
+ * (e.g. "<td>1<br>6<br>7</td>" for panel "167") and date cells use
+ * "<td>08/12/2025<br>to<br>14/12/2025</td>". The default cheerio .text()
+ * concatenates without separator, mashing the values together. This helper
+ * inserts a space at every <br> so the client can split parts later.
+ *
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @param {cheerio.Element} el - <td> or <th> element
+ * @returns {string} Normalized text with <br> boundaries preserved as spaces
+ */
+function extractCellText($, el) {
+  if (!el) {
+    return '';
+  }
+
+  // Replace <br> with a marker that survives html serialization, then
+  // strip remaining tags via normalizeText.
+  const $cell = $(el).clone();
+  $cell.find('br').replaceWith(' \u0001 ');
+  const html = $cell.html() ?? '';
+  return normalizeText(html.replace(/\u0001/g, ' '));
+}
+
+/**
  * Extracts safe attributes from an element as a plain object.
  * Only includes string key-value pairs (no HTML content).
  * @param {cheerio.CheerioAPI} $ - Cheerio instance
@@ -196,7 +221,7 @@ export function extractChartTable($, type) {
   // Extract column headers from first <tr> with <th> elements
   const headerRow = tableEl.find('tr').first();
   const columns = headerRow.find('th').toArray()
-    .map((th) => normalizeText($(th).text()));
+    .map((th) => extractCellText($, th));
 
   // Extract data rows (skip header row)
   const dataRows = tableEl.find('tr').toArray().slice(1);
@@ -204,7 +229,7 @@ export function extractChartTable($, type) {
     const cells = $(tr).find('td').toArray().map((td, cellIndex) => ({
       id: String(cellIndex),
       column: columns[cellIndex] || '',
-      text: normalizeText($(td).text()),
+      text: extractCellText($, td),
       isHighlight: $(td).hasClass('r') || false,
       className: $(td).attr('class') || '',
       attrs: extractElementAttrs($, td),
