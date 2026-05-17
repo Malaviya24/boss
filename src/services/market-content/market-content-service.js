@@ -4,6 +4,7 @@ import { MarketContentMarketModel } from '../../models/market-content-market-mod
 import { MarketChartRowModel } from '../../models/market-chart-row-model.js';
 import { MarketMetaModel } from '../../models/market-meta-model.js';
 import { toStructuredMarketContent } from './market-content-transform.js';
+import { scrapeAndParseMarketPage } from './market-page-scraper.js';
 
 const JODI_COLUMNS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const PROTECTED_CHART_SOURCES = new Set(['admin-result', 'manual']);
@@ -299,9 +300,36 @@ export function createMarketContentService({
   logger,
   legacyContentService,
   mongoEnabled = true,
+  scrapeEnabled = false,
+  scrapeTimeoutMs = 15000,
+  scrapeBaseUrl = '',
+  scrapeExcludedSlugs = [],
 } = {}) {
   const sourceMode = normalizeMode(mode);
   const cache = new Map();
+  const inflight = new Map();
+
+  // Validate cacheTtlMs: must be a finite number between 1000 and 86400000
+  const validatedCacheTtlMs =
+    Number.isFinite(cacheTtlMs) && cacheTtlMs >= 1000 && cacheTtlMs <= 86400000
+      ? cacheTtlMs
+      : 300000;
+
+  // Build exclusion Set for O(1) lookup
+  const excludedSlugsSet = new Set(
+    Array.isArray(scrapeExcludedSlugs)
+      ? scrapeExcludedSlugs.map((s) => String(s).trim().toLowerCase()).filter(Boolean)
+      : [],
+  );
+
+  /**
+   * Check if a market slug is in the exclusion list.
+   * @param {string} slug - Normalized market slug
+   * @returns {boolean} True if the slug is excluded from scraping
+   */
+  function isExcludedMarket(slug) {
+    return excludedSlugsSet.has(slug);
+  }
 
   function getCacheKey(type, slug) {
     return `${type}:${slug}`;
@@ -321,11 +349,11 @@ export function createMarketContentService({
     return clonePayload(entry.payload);
   }
 
-  function writeCache(type, slug, payload) {
-    const ttl = Number.isFinite(cacheTtlMs) && cacheTtlMs > 0 ? cacheTtlMs : 300000;
+  function writeCache(type, slug, payload, source) {
     cache.set(getCacheKey(type, slug), {
-      expiresAt: Date.now() + ttl,
+      expiresAt: Date.now() + validatedCacheTtlMs,
       payload: clonePayload(payload),
+      source: source || 'unknown',
     });
   }
 
@@ -503,11 +531,151 @@ export function createMarketContentService({
     };
   }
 
+  /**
+   * Resolve content from available sources with full fallback chain.
+   * Non-excluded + scrapeEnabled: Scrape → MongoDB → Legacy → 503
+   * Excluded: MongoDB → Legacy → 503
+   * scrapeEnabled=false: MongoDB → Legacy → 503
+   */
+  async function resolveContent(normalizedType, normalizedSlug) {
+    const startedAt = Date.now();
+
+    // Excluded markets skip scraping entirely, go directly to MongoDB
+    if (isExcludedMarket(normalizedSlug)) {
+      return resolveFromMongoWithLegacyFallback(normalizedType, normalizedSlug, startedAt);
+    }
+
+    // Attempt on-demand scrape for non-excluded markets when scraping is enabled
+    if (scrapeEnabled) {
+      try {
+        const payload = await scrapeAndParseMarketPage(normalizedType, normalizedSlug, {
+          timeoutMs: scrapeTimeoutMs,
+        });
+        writeCache(normalizedType, normalizedSlug, payload, 'scrape');
+        logger?.info?.('market_content_cache_miss', {
+          type: normalizedType,
+          slug: normalizedSlug,
+          sourceMode: 'scrape',
+          durationMs: Date.now() - startedAt,
+        });
+        return clonePayload(payload);
+      } catch (scrapeError) {
+        // Do NOT cache 404 responses — the page may appear later
+        const is404 =
+          scrapeError?.response?.status === 404 ||
+          String(scrapeError?.message ?? '').includes('404') ||
+          String(scrapeError?.code ?? '') === 'ERR_BAD_REQUEST';
+
+        logger?.warn?.('market_scrape_failed', {
+          type: normalizedType,
+          slug: normalizedSlug,
+          error: scrapeError.message,
+          is404,
+        });
+        // Fall through to MongoDB/legacy
+      }
+    }
+
+    // Fallback to MongoDB → Legacy → 503
+    return resolveFromMongoWithLegacyFallback(normalizedType, normalizedSlug, startedAt);
+  }
+
+  /**
+   * Resolve content from MongoDB with legacy fallback.
+   * If all sources fail, throws AppError with 503.
+   */
+  async function resolveFromMongoWithLegacyFallback(normalizedType, normalizedSlug, startedAt) {
+    // Attempt MongoDB
+    try {
+      const payload = await getFromMongo(normalizedType, normalizedSlug);
+      writeCache(normalizedType, normalizedSlug, payload, 'mongo');
+      logger?.info?.('market_content_cache_miss', {
+        type: normalizedType,
+        slug: normalizedSlug,
+        sourceMode: 'mongo',
+        durationMs: Date.now() - startedAt,
+      });
+      return clonePayload(payload);
+    } catch (mongoError) {
+      if (!legacyContentService || !isRecoverableMongoError(mongoError)) {
+        // Non-recoverable error: throw as-is (e.g., non-mongo errors)
+        // No legacy service available: throw 503 if recoverable, else throw original
+        if (!isRecoverableMongoError(mongoError)) {
+          throw mongoError;
+        }
+        // Recoverable but no legacy fallback available
+        throw new AppError('All content sources failed', {
+          statusCode: 503,
+          code: 'MARKET_CONTENT_ALL_SOURCES_FAILED',
+        });
+      }
+
+      logger?.warn?.('market_content_mongo_fallback_legacy', {
+        type: normalizedType,
+        slug: normalizedSlug,
+        reason: mongoError.code || mongoError.message || 'unknown_error',
+      });
+    }
+
+    // Attempt legacy files
+    try {
+      const payload = await getFromLegacy(normalizedType, normalizedSlug);
+      writeCache(normalizedType, normalizedSlug, payload, 'legacy');
+      logger?.info?.('market_content_cache_miss', {
+        type: normalizedType,
+        slug: normalizedSlug,
+        sourceMode: 'legacy',
+        durationMs: Date.now() - startedAt,
+      });
+      return clonePayload(payload);
+    } catch (legacyError) {
+      throw new AppError('All content sources failed', {
+        statusCode: 503,
+        code: 'MARKET_CONTENT_ALL_SOURCES_FAILED',
+      });
+    }
+  }
+
   async function getMarketContent(type, slug) {
+    // Validate slug length before normalization
+    if (String(slug ?? '').length > 100) {
+      throw new AppError('Market slug exceeds maximum allowed length', {
+        statusCode: 400,
+        code: 'INVALID_MARKET_SLUG',
+      });
+    }
+
+    // Validate type when scraping is enabled — reject invalid types explicitly
+    if (scrapeEnabled) {
+      const rawType = String(type ?? '').toLowerCase();
+      if (rawType !== 'jodi' && rawType !== 'panel') {
+        throw new AppError('Invalid market type', {
+          statusCode: 400,
+          code: 'INVALID_MARKET_TYPE',
+        });
+      }
+    }
+
     const normalizedType = normalizeType(type);
     const normalizedSlug = normalizeMarketSlug(slug);
 
     if (!normalizedSlug) {
+      throw new AppError('Invalid market slug', {
+        statusCode: 400,
+        code: 'INVALID_MARKET_SLUG',
+      });
+    }
+
+    // Reject normalized slugs exceeding 100 characters
+    if (normalizedSlug.length > 100) {
+      throw new AppError('Market slug exceeds maximum allowed length', {
+        statusCode: 400,
+        code: 'INVALID_MARKET_SLUG',
+      });
+    }
+
+    // Reject slugs containing path separators (SSRF prevention)
+    if (normalizedSlug.includes('/') || normalizedSlug.includes('\\')) {
       throw new AppError('Invalid market slug', {
         statusCode: 400,
         code: 'INVALID_MARKET_SLUG',
@@ -524,45 +692,28 @@ export function createMarketContentService({
       return cached;
     }
 
-    const startedAt = Date.now();
-    let payload;
-    let source = sourceMode;
-
-    if (sourceMode === 'legacy') {
-      payload = await getFromLegacy(normalizedType, normalizedSlug);
-    } else {
-      try {
-        payload = await getFromMongo(normalizedType, normalizedSlug);
-      } catch (error) {
-        if (!legacyContentService || !isRecoverableMongoError(error)) {
-          throw error;
-        }
-
-        logger?.warn?.('market_content_mongo_fallback_legacy', {
-          type: normalizedType,
-          slug: normalizedSlug,
-          reason: error.code || error.message || 'unknown_error',
-        });
-
-        payload = await getFromLegacy(normalizedType, normalizedSlug);
-        source = 'legacy_fallback';
-      }
+    // Request coalescing: if a resolution is already in-flight for this key,
+    // await the existing promise instead of starting a new one (thundering herd protection)
+    const inflightKey = `${normalizedType}:${normalizedSlug}`;
+    if (inflight.has(inflightKey)) {
+      return inflight.get(inflightKey);
     }
 
-    writeCache(normalizedType, normalizedSlug, payload);
-    logger?.info?.('market_content_cache_miss', {
-      type: normalizedType,
-      slug: normalizedSlug,
-      sourceMode: source,
-      durationMs: Date.now() - startedAt,
-    });
+    const promise = resolveContent(normalizedType, normalizedSlug);
+    inflight.set(inflightKey, promise);
 
-    return clonePayload(payload);
+    try {
+      const result = await promise;
+      return result;
+    } finally {
+      inflight.delete(inflightKey);
+    }
   }
 
   return {
     mode: sourceMode,
     getMarketContent,
     clearCache,
+    isExcludedMarket,
   };
 }

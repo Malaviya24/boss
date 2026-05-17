@@ -79,5 +79,12 @@ export function loadEnv() {
     matkaPriorityLeadMs: toInt(process.env.MATKA_PRIORITY_LEAD_MS, 300_000),
     marketContentSource: normalizeMarketContentSource(process.env.MARKET_CONTENT_SOURCE),
     marketContentCacheTtlMs: toInt(process.env.MARKET_CONTENT_CACHE_TTL_MS, 300_000),
+
+    // On-demand market scraping
+    marketScrapeEnabled: toBoolean(process.env.MARKET_SCRAPE_ENABLED, true),
+    marketScrapeTimeoutMs: toInt(process.env.MARKET_SCRAPE_TIMEOUT_MS, 15000),
+    marketScrapeCacheTtlMs: toInt(process.env.MARKET_SCRAPE_CACHE_TTL_MS, 300_000),
+    marketScrapeExcludedSlugs: toList(process.env.MARKET_SCRAPE_EXCLUDED_SLUGS, []),
+    marketScrapeBaseUrl: (process.env.MARKET_SCRAPE_BASE_URL ?? 'https://dpboss.boston').replace(/\/$/, ''),
   };
 }

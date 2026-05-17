@@ -1,0 +1,372 @@
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { getHttpAgents } from '../../config/http-agents.js';
+import { loadEnv } from '../../config/env.js';
+
+const USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+function getBaseUrl() {
+  const env = loadEnv();
+  return env.marketScrapeBaseUrl;
+}
+
+function buildScrapeUrl(type, slug, baseUrl) {
+  const pathPrefix = type === 'panel' ? 'panel-chart-record' : 'jodi-chart-record';
+  return `${baseUrl}/${pathPrefix}/${slug}.php`;
+}
+
+/**
+ * Resolves a potentially relative URL to an absolute URL.
+ * @param {string} value - The URL to resolve
+ * @param {string} baseUrl - The base URL for resolution
+ * @returns {string} Absolute URL or empty string
+ */
+export function toAbsoluteUrl(value, baseUrl) {
+  if (!value) {
+    return '';
+  }
+
+  try {
+    return new URL(value, baseUrl).toString();
+  } catch {
+    return value;
+  }
+}
+
+/**
+ * Normalizes text by collapsing whitespace and trimming.
+ * Strips any residual HTML entities or tags for safety (Requirement 10.3).
+ * @param {string} value - Raw text
+ * @returns {string} Normalized plain text
+ */
+function normalizeText(value = '') {
+  return String(value ?? '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&[a-zA-Z0-9#]+;/g, ' ')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Extracts safe attributes from an element as a plain object.
+ * Only includes string key-value pairs (no HTML content).
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @param {cheerio.Element} el - DOM element
+ * @returns {object} Attribute key-value pairs
+ */
+function extractElementAttrs($, el) {
+  if (!el || !el.attribs) {
+    return {};
+  }
+
+  const attrs = {};
+  for (const [key, value] of Object.entries(el.attribs)) {
+    attrs[key] = String(value ?? '');
+  }
+  return attrs;
+}
+
+/**
+ * Extracts <meta> tags with name/property and content attributes from the document head.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @returns {Array<{name: string, content: string}>} Array of meta tag objects
+ */
+export function extractMetaTags($) {
+  return $('head meta[name], head meta[property]').toArray().map((el) => ({
+    name: $(el).attr('name') || $(el).attr('property') || '',
+    content: $(el).attr('content') || '',
+  })).filter((m) => m.name && m.content);
+}
+
+/**
+ * Extracts stylesheet URLs, inline style blocks, and JSON-LD blocks.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @param {string} baseUrl - Base URL for resolving relative stylesheet hrefs
+ * @returns {{urls: string[], blocks: string[], jsonLdBlocks: string[]}}
+ */
+export function extractStyles($, baseUrl) {
+  const urls = $('link[rel="stylesheet"]').toArray()
+    .map((el) => toAbsoluteUrl($(el).attr('href'), baseUrl))
+    .filter(Boolean);
+
+  const blocks = $('style').toArray()
+    .map((el) => $(el).html()?.trim())
+    .filter(Boolean);
+
+  const jsonLdBlocks = $('script[type="application/ld+json"]').toArray()
+    .map((el) => $(el).html()?.trim())
+    .filter(Boolean);
+
+  return { urls, blocks, jsonLdBlocks };
+}
+
+/**
+ * Extracts hero section data: logo, chart title, small heading, intro text.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @returns {{logo: {src: string, alt: string, href: string}, chartTitle: string, smallHeading: string, introText: string}}
+ */
+export function extractHero($) {
+  // Extract logo
+  const logoContainer = $('.logo').first();
+  let logo = { src: '', alt: '', href: '' };
+
+  if (logoContainer.length) {
+    const logoAnchor = logoContainer.find('a').first();
+    const logoImg = logoContainer.find('img, amp-img').first();
+
+    logo = {
+      src: logoImg.attr('src') || '',
+      alt: normalizeText(logoImg.attr('alt') || ''),
+      href: logoAnchor.attr('href') || logoContainer.closest('a').attr('href') || '',
+    };
+  }
+
+  // Extract chart title (h1 with class chart-h1)
+  const chartTitle = normalizeText($('.chart-h1').first().text());
+
+  // Extract small heading
+  const smallHeading = normalizeText($('.small-heading').first().text());
+
+  // Extract intro text (paragraph with class para3)
+  const introText = normalizeText($('.para3').first().text());
+
+  return { logo, chartTitle, smallHeading, introText };
+}
+
+/**
+ * Extracts the result display section with market name, value, and refresh link.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @param {'jodi' | 'panel'} type - Chart type
+ * @param {string} slug - Market slug
+ * @returns {{className: string, marketName: string, value: string, refreshLabel: string, refreshHref: string}}
+ */
+export function extractResult($, type, slug) {
+  const resultEl = $('.chart-result').first();
+
+  if (!resultEl.length) {
+    return { className: '', marketName: '', value: '', refreshLabel: '', refreshHref: '' };
+  }
+
+  const className = resultEl.attr('class') || '';
+
+  // Market name from element with data-live-result-name attribute or first div/span
+  const nameEl = resultEl.find('[data-live-result-name]').first();
+  const marketName = nameEl.length
+    ? normalizeText(nameEl.text())
+    : normalizeText(resultEl.find('div').first().text());
+
+  // Value from element with data-live-result-value attribute or span
+  const valueEl = resultEl.find('[data-live-result-value]').first();
+  const value = valueEl.length
+    ? normalizeText(valueEl.text())
+    : normalizeText(resultEl.find('span').first().text());
+
+  // Refresh link
+  const refreshEl = resultEl.find('[data-refresh-button]').first();
+  const refreshAnchor = refreshEl.length ? refreshEl : resultEl.find('a').first();
+
+  const refreshLabel = refreshAnchor.length
+    ? normalizeText(refreshAnchor.text()) || 'Refresh Result'
+    : '';
+  const refreshHref = refreshAnchor.length
+    ? (refreshAnchor.attr('href') || '')
+    : '';
+
+  return { className, marketName, value, refreshLabel, refreshHref };
+}
+
+/**
+ * Extracts chart table data: title, column headers, and data rows with cell details.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @param {'jodi' | 'panel'} type - Chart type
+ * @returns {{title: string, columns: string[], rows: Array, attrs: object, headingAttrs: object, titleAttrs: object}}
+ */
+export function extractChartTable($, type) {
+  const tableEl = $('table.panel-chart, table.chart-table').first();
+
+  if (!tableEl.length) {
+    return { title: '', columns: [], rows: [], attrs: {}, headingAttrs: {}, titleAttrs: {} };
+  }
+
+  // Extract table attributes
+  const attrs = extractElementAttrs($, tableEl[0]);
+
+  // Extract column headers from first <tr> with <th> elements
+  const headerRow = tableEl.find('tr').first();
+  const columns = headerRow.find('th').toArray()
+    .map((th) => normalizeText($(th).text()));
+
+  // Extract data rows (skip header row)
+  const dataRows = tableEl.find('tr').toArray().slice(1);
+  const rows = dataRows.map((tr, rowIndex) => {
+    const cells = $(tr).find('td').toArray().map((td, cellIndex) => ({
+      id: String(cellIndex),
+      column: columns[cellIndex] || '',
+      text: normalizeText($(td).text()),
+      isHighlight: $(td).hasClass('r') || false,
+      className: $(td).attr('class') || '',
+      attrs: extractElementAttrs($, td),
+    }));
+
+    return { id: String(rowIndex), rowIndex, cells };
+  });
+
+  // Extract table title from panel-heading above or inside the table's parent
+  const panelHeading = tableEl.closest('.panel, .panel-info').find('.panel-heading').first();
+  const prevHeading = tableEl.prev('.panel-heading');
+  const headingEl = panelHeading.length ? panelHeading : prevHeading;
+
+  const title = normalizeText(headingEl.text());
+  const headingAttrs = headingEl.length ? extractElementAttrs($, headingEl[0]) : {};
+
+  // Extract title attrs from h1 inside heading
+  const titleH1 = headingEl.find('h1').first();
+  const titleAttrs = titleH1.length ? extractElementAttrs($, titleH1[0]) : {};
+
+  return { title, columns, rows, attrs, headingAttrs, titleAttrs };
+}
+
+/**
+ * Extracts footer data: blocks, brand title, rights lines, and matka play link.
+ * @param {cheerio.CheerioAPI} $ - Cheerio instance
+ * @returns {{blocks: Array, brandTitle: string, rightsLines: string[], matkaPlay: {label: string, href: string}}}
+ */
+export function extractFooter($) {
+  // Extract footer text blocks
+  const footerTextDiv = $('.footer-text-div').first();
+  const blocks = [];
+
+  if (footerTextDiv.length) {
+    footerTextDiv.children().each((_, child) => {
+      const el = $(child);
+      const tag = child.tagName || child.name || '';
+      if (tag === 'br') return;
+
+      const text = normalizeText(el.text());
+      if (!text) return;
+
+      blocks.push({
+        tag: String(tag || 'p'),
+        className: el.attr('class') || '',
+        text,
+      });
+    });
+  }
+
+  // Extract brand title from footer .ftr-icon
+  const footerEl = $('footer').first();
+  const brandTitle = normalizeText(footerEl.find('.ftr-icon').first().text());
+
+  // Extract rights lines from footer paragraph
+  const footerParagraph = footerEl.find('p').first();
+  const rightsLines = footerParagraph.length
+    ? String(footerParagraph.text() || '')
+        .split(/\n+/)
+        .map((line) => normalizeText(line))
+        .filter(Boolean)
+    : [];
+
+  // Extract matka play link
+  const matkaPlayEl = $('.mp-btn').first();
+  const matkaPlay = {
+    label: matkaPlayEl.length ? normalizeText(matkaPlayEl.text()) : '',
+    href: matkaPlayEl.length ? (matkaPlayEl.attr('href') || '') : '',
+  };
+
+  return { blocks, brandTitle, rightsLines, matkaPlay };
+}
+
+/**
+ * Scrapes a market page from dpboss.boston and parses it with cheerio.
+ *
+ * @param {'jodi' | 'panel'} type - Chart type
+ * @param {string} slug - Market slug (e.g., 'kalyan', 'milan-day')
+ * @param {object} options
+ * @param {number} options.timeoutMs - HTTP request timeout (default 15000)
+ * @returns {Promise<{ $: cheerio.CheerioAPI, html: string, url: string }>} Parsed cheerio instance and metadata
+ * @throws {Error} On network failure, empty response, or non-2xx status
+ */
+export async function scrapeMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
+  const baseUrl = getBaseUrl();
+  const url = buildScrapeUrl(type, slug, baseUrl);
+  const { httpAgent, httpsAgent } = getHttpAgents();
+
+  const response = await axios.get(url, {
+    timeout: timeoutMs,
+    httpAgent,
+    httpsAgent,
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+    },
+  });
+
+  const html = response.data;
+
+  if (!html || typeof html !== 'string') {
+    throw new Error(`Empty response from ${url}`);
+  }
+
+  const $ = cheerio.load(html, { decodeEntities: false });
+
+  return { $, html, url };
+}
+
+/**
+ * Scrapes a market page and parses it into a StructuredMarketContent object (version 2).
+ * The output shape matches what `getFromMongo()` produces so the client renders identically
+ * regardless of content source.
+ *
+ * @param {'jodi' | 'panel'} type - Chart type
+ * @param {string} slug - Market slug (e.g., 'kalyan', 'milan-day')
+ * @param {object} options
+ * @param {number} options.timeoutMs - HTTP request timeout (default 15000)
+ * @returns {Promise<object>} StructuredMarketContent object
+ * @throws {Error} On network failure, empty response, or non-2xx status
+ */
+export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
+  const { $, url } = await scrapeMarketPage(type, slug, { timeoutMs });
+
+  // Extract page title from <title> tag
+  const title = normalizeText($('title').text());
+
+  // Extract all structured sections
+  const meta = extractMetaTags($);
+  const styles = extractStyles($, url);
+  const hero = extractHero($);
+  const result = extractResult($, type, slug);
+  const table = extractChartTable($, type);
+  const footer = extractFooter($);
+
+  // Derive description from meta description tag
+  const descriptionMeta = meta.find((m) => m.name === 'description');
+  const description = descriptionMeta ? descriptionMeta.content : '';
+
+  // Assemble StructuredMarketContent (version 2)
+  return {
+    version: 2,
+    type,
+    slug,
+    title,
+    description,
+    seo: {
+      meta,
+    },
+    styles,
+    hero,
+    result,
+    controls: {
+      topAnchorId: 'market-top',
+      bottomAnchorId: 'market-bottom',
+      goBottomLabel: 'Go to Bottom',
+      goTopLabel: 'Go to Top',
+    },
+    table,
+    footer,
+    importedAt: null,
+    updatedAt: new Date().toISOString(),
+  };
+}

@@ -169,10 +169,14 @@ export async function bootstrapApp() {
   contentService.ensureArtifacts();
   const marketContentService = createMarketContentService({
     mode: env.marketContentSource,
-    cacheTtlMs: env.marketContentCacheTtlMs,
+    cacheTtlMs: env.marketScrapeCacheTtlMs,
     logger,
     legacyContentService: contentService,
     mongoEnabled: mongoState.enabled,
+    scrapeEnabled: env.marketScrapeEnabled,
+    scrapeTimeoutMs: env.marketScrapeTimeoutMs,
+    scrapeBaseUrl: env.marketScrapeBaseUrl,
+    scrapeExcludedSlugs: env.marketScrapeExcludedSlugs,
   });
   const marketContentAdminService = createMarketContentAdminService({
     logger,
@@ -358,6 +362,14 @@ export async function bootstrapApp() {
     scrapeTargets: env.scrapeTargets,
     corsOrigins: env.corsOrigins,
     marketContentSource: marketContentService.mode,
+  });
+
+  logger.info('market_scrape_config', {
+    enabled: env.marketScrapeEnabled,
+    timeoutMs: env.marketScrapeTimeoutMs,
+    cacheTtlMs: env.marketScrapeCacheTtlMs,
+    baseUrl: env.marketScrapeBaseUrl,
+    excludedSlugs: env.marketScrapeExcludedSlugs,
   });
 
   async function shutdown(signal) {

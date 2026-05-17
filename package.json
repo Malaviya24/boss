@@ -10,6 +10,8 @@
     "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "nodemon server.js",
     "dev:client": "npm run dev --workspace client",
+    "test": "vitest --run",
+    "test:watch": "vitest",
     "content:extract": "node scripts/extract-content.mjs",
     "market:import": "node scripts/import-market-content-to-mongo.mjs",
     "market:import:dry": "node scripts/import-market-content-to-mongo.mjs --dry",
@@ -42,8 +44,10 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
+    "fast-check": "^4.8.0",
     "nodemon": "^3.1.10",
-    "pm2": "^6.0.8"
+    "pm2": "^6.0.8",
+    "vitest": "^4.1.6"
   },
   "overrides": {
     "follow-redirects": "^1.16.0"
