@@ -1,0 +1,277 @@
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background-color: #FFF5E6;
+            color: #333;
+            line-height: 1.8;
+        }
+        header {
+            background: linear-gradient(to bottom, #B22222, #8B0000);
+            color: #FFF;
+            text-align: center;
+            padding: 3rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        section {
+            padding: 3rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h2 {
+            color: #B22222;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        h2::after {
+            content: '';
+            width: 50px;
+            height: 3px;
+            background-color: #FF1493;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .intro-text {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature-card {
+  text-align: center;
+}
+        .feature-card {
+            background-color: #FFF;
+            border: 2px solid #FF1493;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #B22222;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            color: #0000FF;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .pricing-card {
+            background-color: #FFF;
+            border: 3px solid #B22222;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-card h3 {
+            color: #0000FF;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-card .label {
+            position: absolute;
+            top: 20px;
+            right: -60px;
+            background-color: #FF1493;
+            color: #FFF;
+            padding: 0.5rem 4rem;
+            transform: rotate(45deg);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        .pricing-card ul li {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        .pricing-card ul li i {
+            color: #B22222;
+            margin-right: 0.5rem;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #FF1493;
+            color: #FFF;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 1rem 0;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #B22222;
+        }
+        .contact p {
+            font-size: 1.1rem;
+        }
+        .contact a {
+            color: #0000FF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact a:hover {
+            text-decoration: underline;
+        }
+        .contact i {
+            color: #B22222;
+            margin-right: 0.5rem;
+        }
+        footer {
+            background-color: #B22222;
+            color: #FFF;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+        @media (min-width: 768px) {
+            .features, .pricing {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .feature-card, .pricing-card {
+                width: 45%;
+            }
+        }
+    </style>
+
+    <header>
+        <h1>DPBOSS - SATTA MATKA RESULT API</h1>
+        <p>The Ultimate Solution for Real-Time Satta Matka Results</p>
+    </header>
+
+    <section id="intro">
+    <h2>🚀 Show Fast Satta Matka Results on Your Website with DPBOSS API</h2>
+        <div class="intro-text">
+            <p>DPBOSS, the undisputed leader in Satta Matka results, proudly presents our cutting-edge API service. As the No. 1 trusted platform in the industry, we’ve been delivering the fastest and most reliable Satta Matka results to millions of users across India and beyond.</p>
+            <p>Now, with the DPBOSS API, you can seamlessly integrate our lightning-fast results into your own website. Whether you run a Matka portal, a gaming platform, or a results aggregator, our API ensures your users get the most accurate and up-to-date information directly from the source—10X faster than any other provider in the market.</p>
+            <a href="#pricing" class="btn">Explore Plans Now</a>
+            <a href="dpboss-result-api-documentation.html" class="btn" style="background-color:#0000FF;">View API Documentation</a>
+        </div>
+    </section>
+
+    <section id="features">
+    <h2>Why Choose DPBOSS API</h2>
+    <div class="features">
+
+        <div class="feature-card">
+            <i class="fas fa-rocket"></i>
+            <h3>Fastest Real-Time Results</h3>
+            <p>Get instant updates without any delay. Our API delivers results in real time, so your users always see the latest data as it happens.</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Trusted & Reliable</h3>
+            <p>DPBOSS is a well-known and trusted name. Our API provides accurate and consistent results that you can rely on every day.</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-headset"></i>
+            <h3>24/7 Support</h3>
+            <p>Need help? Our support team is available anytime to assist you with setup, issues, or any questions you may have.</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-tachometer-alt"></i>
+            <h3>Premium Real-Time API</h3>
+            <p>We offer only premium real-time access, ensuring the fastest and most accurate results for your website or app.</p>
+        </div>
+
+    </div>
+</section>
+
+    <section id="pricing">
+    <h2>Simple & Transparent API Pricing</h2>
+    <p>Choose a plan that matches your platform needs. Whether you're targeting specific markets or require complete coverage, our API ensures fast, reliable, and accurate Satta Matka results.</p>
+
+    <div class="pricing">
+
+        <!-- Limited Markets Plan -->
+        <div class="pricing-card">
+            <h3>Limited Markets Plan</h3>
+            <div class="label">Limited Markets</div>
+            <p>Best suited for platforms focusing on specific markets. Get accurate and timely results with optimized performance.</p>
+            <ul>
+                <li><i class="fas fa-check"></i>1 Month: ₹20,000</li>
+                <li><i class="fas fa-check"></i>3 Months: ₹42,000</li>
+                <li><i class="fas fa-check"></i>12 Months: Contact Admin</li>
+            </ul>
+        </div>
+
+        <!-- All Markets Plan -->
+        <div class="pricing-card">
+            <h3>All Markets Plan</h3>
+            <div class="label">All Markets</div>
+            <p>Perfect for high-traffic websites requiring full market access. Deliver real-time results across all markets without limitations.</p>
+            <ul>
+                <li><i class="fas fa-check"></i>1 Month: ₹25,000</li>
+                <li><i class="fas fa-check"></i>3 Months: ₹45,000</li>
+                <li><i class="fas fa-check"></i>12 Months: Contact Admin</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <a href="/cdn-cgi/l/email-protection#37444247475845437753475558444419595243" class="btn">Get Started with API Access</a>
+</section>
+
+
+
+    <section id="contact" class="contact">
+        <h2>Ready to Integrate? Contact Us!</h2>
+        <p>We’re here to help you every step of the way. Reach out to us for more details or to begin your API integration journey.</p>
+        <p><i class="fas fa-envelope"></i>Email: <a href="/cdn-cgi/l/email-protection#e3909693938c9197a38793818c9090cd8d8697"><span class="__cf_email__" data-cfemail="71020401011e0305311501131e02025f1f1405">[email&#160;protected]</span></a></p>
+
+    </section>
+    <footer>
+        <p>© 2025 DPBOSS. All Rights Reserved. | Trusted Leader in Satta Matka Results</p>
+        <p><a href="dpboss-result-api-documentation.html" style="color: #FFF; text-decoration: underline;">API Documentation</a></p>
+    </footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>

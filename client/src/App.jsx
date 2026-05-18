@@ -13,6 +13,48 @@ const MarketPage = lazy(() => import('./features/market/MarketPage.jsx'));
 const AdminLoginPage = lazy(() => import('./features/matka/admin/AdminLoginPage.jsx'));
 const AdminDashboardPage = lazy(() => import('./features/matka/admin/AdminDashboardPage.jsx'));
 
+const AboutPage = lazy(() => import('./features/static-pages/AboutPage.jsx'));
+const PrivacyPage = lazy(() => import('./features/static-pages/PrivacyPage.jsx'));
+const TosPage = lazy(() => import('./features/static-pages/TosPage.jsx'));
+const MatkaJodiCountChartPage = lazy(
+  () => import('./features/static-pages/MatkaJodiCountChartPage.jsx'),
+);
+const JodiChartFamilyMatkaPage = lazy(
+  () => import('./features/static-pages/JodiChartFamilyMatkaPage.jsx'),
+);
+const PenalCountChartPage = lazy(
+  () => import('./features/static-pages/PenalCountChartPage.jsx'),
+);
+const PenalTotalChartPage = lazy(
+  () => import('./features/static-pages/PenalTotalChartPage.jsx'),
+);
+const AllCardPattiChartPage = lazy(
+  () => import('./features/static-pages/AllCardPattiChartPage.jsx'),
+);
+const FixOpenToCloseByDatePage = lazy(
+  () => import('./features/static-pages/FixOpenToCloseByDatePage.jsx'),
+);
+const DpbossResultApiPage = lazy(
+  () => import('./features/static-pages/DpbossResultApiPage.jsx'),
+);
+const DpbossResultApiDocumentationPage = lazy(
+  () => import('./features/static-pages/DpbossResultApiDocumentationPage.jsx'),
+);
+
+const STATIC_PAGE_ROUTES = new Set([
+  '/about',
+  '/privacy',
+  '/tos',
+  '/matka-jodi-count-chart',
+  '/jodi-chart-family-matka',
+  '/penal-count-chart',
+  '/penal-total-chart',
+  '/all-22-card-panna-penal-patti-chart',
+  '/fix-open-to-close-by-date',
+  '/dpboss-result-api',
+  '/dpboss-result-api-documentation',
+]);
+
 function RouteFallback() {
   return (
     <div className="clone-loading">
@@ -75,7 +117,8 @@ function NavigationInterceptor() {
         nextPathname === '/' ||
         nextPathname.startsWith('/jodi-chart-record/') ||
         nextPathname.startsWith('/panel-chart-record/') ||
-        nextPathname.startsWith('/admin-x-secure-portal');
+        nextPathname.startsWith('/admin-x-secure-portal') ||
+        STATIC_PAGE_ROUTES.has(nextPathname);
       if (!isHandledRoute) {
         return;
       }
@@ -109,6 +152,23 @@ export default function App() {
           <Route path="/panel-chart-record/:slug.php" element={<MarketPage routeType="panel" />} />
           <Route path="/admin-x-secure-portal" element={<AdminLoginPage />} />
           <Route path="/admin-x-secure-portal/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/tos" element={<TosPage />} />
+          <Route path="/matka-jodi-count-chart" element={<MatkaJodiCountChartPage />} />
+          <Route path="/jodi-chart-family-matka" element={<JodiChartFamilyMatkaPage />} />
+          <Route path="/penal-count-chart" element={<PenalCountChartPage />} />
+          <Route path="/penal-total-chart" element={<PenalTotalChartPage />} />
+          <Route
+            path="/all-22-card-panna-penal-patti-chart"
+            element={<AllCardPattiChartPage />}
+          />
+          <Route path="/fix-open-to-close-by-date" element={<FixOpenToCloseByDatePage />} />
+          <Route path="/dpboss-result-api" element={<DpbossResultApiPage />} />
+          <Route
+            path="/dpboss-result-api-documentation"
+            element={<DpbossResultApiDocumentationPage />}
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

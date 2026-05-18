@@ -1,0 +1,2991 @@
+<!DOCTYPE html><html lang="en-in"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DPBOSS PRIVACY POLICY CHECKOUT NOW</title>
+<meta name="Description" content="We only share information with your consent, to comply with laws, to provide you with services, to protect your rights dpboss app dpboss netdpboss final anksatta matta matkadpboss 143 guessing dpboss whatsapp group" />
+<link rel="canonical" href="https://dpbossss.boston/privacy.php"/> 
+<meta http-equiv="refresh" content="900" />
+<meta name="google" content="notranslate" />
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="yes" name="apple-touch-fullscreen">
+<meta name="Robots" content="index, follow">
+<meta name="author" content="dpboss">
+<meta name="copyright" content="dpboss net satta matka" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="Satta Matka">
+<meta property="og:description" content="SattaMatka">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" sizes="57x57" href="https://dpbossss.boston/newfev/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://dpbossss.boston/newfev/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://dpbossss.boston/newfev/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://dpbossss.boston/newfev/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://dpbossss.boston/newfev/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://dpbossss.boston/newfev/apple-icon-120x120.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://dpbossss.boston/newfev/favicon-96x96.png">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html{overflow-x:hidden;scroll-behavior:smooth}.dp-topbox{border:2px solid #eb008b;border-radius:10px 0 10px 10px;margin-bottom:2px}.dp-topbox h1{font-size:16px;color:#1a237e;padding-bottom:3px}.dp-topbox p{color:#444;font-size:14px}body{background-color:#fc9;text-align:center;padding:3px 10px;margin:0;scroll-behavior:smooth;font-style:italic;font-family:Helvetica,sans-serif;font-weight:700}*{margin:0;padding:0;box-sizing:border-box}a,a:hover{text-decoration:none}.about-us a,.about-us b,.about-us p,.disclamer h2,.disclamer p,.faq a,.faq h4,.faq p,.ftr-sm h2,.ftr-sm p,.pby-us{font-style:normal}.about-us,.blue-div,.cm-patti,.conta,.disclamer,.faq,.ftr-sm,.matka-result,.mrque-div,.paid-gm,.pby-us,.purpel-header,.red-list>div,.satta-result,.satta-text,.slash-text{color:#000;text-align:center;margin-bottom:8px;margin-top:-2px;display:block;font-size:20px;outline:4px #fff;outline-offset:-9px;border:2px solid #ff182c!important;border-style:outset;border-radius:10px;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%)}.logo{background:#fc9;padding:0 10px;display:block;color:#fff8f8!important;margin-bottom:20px;letter-spacing:1px;font-weight:700;border:3px solid #ff0016;border-radius:.75em;transform-style:preserve-3d;transition:transform 150ms cubic-bezier(0,0,.58,1),background 150ms cubic-bezier(0,0,.58,1)}
+
+.para1{margin-bottom:5px;display:flex;padding:5px;align-items:center;justify-content:space-between;border-radius:10px;border:2px solid #ff182c;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%)}p{color:#000b65;text-shadow:1px 1px 2px #fff}.para2{border-width:3px;border:2px solid #0014e2;margin-bottom:5px;border-style:outset;border-radius:10px;border:2px solid #ff182c;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%)}.para2 h1{background:-webkit-linear-gradient(#ff019c,#72000a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.para2 h5{color:#061699!important;text-shadow:1px 1px 2px #fff}.para3{background:linear-gradient(187deg,#fc9 50%,#ffc387 50%);border:2px solid #ff0016;border-style:outset;border-radius:10px;margin-bottom:5px;line-height:1.4;font-size:14px;padding:4px 10px;color:#00094d;text-shadow:1px 1px 2px #fff;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%)}table{box-shadow:0 0 20px 0 rgb(0 0 0 / 40%);margin:5px 0}.paid-gm p,.satta-result div{border-bottom:1px solid #ff0018}.logo img{height:73px;padding:6px 0 0}.mrque-div{display:flex;padding:5px;align-items:center}.mrque-div img{width:90px;height:auto;border-radius:5px}.mrque-div marquee{color:red;font-size:15px;height:21px;display:inline-block}.mrque-div p{padding:0 20px;color:red}.satta-text{padding:5px;height:100px}@media only screen and (max-width:500px){.satta-text{height:150px}}.satta-text h1{font-size:16px;color:#1a237e;padding-bottom:3px}.satta-text p{color:#444;font-size:14px}.cm-patti{border-color:#ff0016}.cm-patti .row{display:-webkit-flex;display:-moz-flex;display:-ms-flex;display:-o-flex;display:flex}.cm-patti .row>div{width:50%}.cm-patti h4{font-size:24px;color:#001699;text-shadow:1px 1px 2px #fff}.cm-patti p{font-size:22px;text-shadow:none}.cm-patti .aa55{border-right:1px solid #ff0016}.cm-patti .bb55{border-left:1px solid #000ff4}.a-27-title,.banner,.cm-patti h3,.fg-div h4,.matka-result h4,.my-table.mumraj-sl h4{background:#ff00a2;padding:5px 10px;text-shadow:1px 1px 2px #000;display:block;color:#fff8f8!important;margin-bottom:20px;letter-spacing:1px;font-weight:700;border:2px solid #fff;border-radius:.75em;transform-style:preserve-3d;transition:transform 150ms cubic-bezier(0,0,.58,1),background 150ms cubic-bezier(0,0,.58,1)}.a-27-title::before,.banner::before,.cm-patti h3::before,.fg-div h4::before,.matka-result h4::before,.my-table.mumraj-sl h4::before{position:absolute;content:"";width:100%;height:100%;top:0;left:0;right:0;bottom:0;background:#ff182c;border-radius:inherit;transform:translate3d(0,.75em,-1em);transition:transform 150ms cubic-bezier(0,0,.58,1),box-shadow 150ms cubic-bezier(0,0,.58,1)}.matka-card h6{font-size:22px;color:#00094d;text-shadow:1px 1px 2px #fff}.matka-card h6:not(:first-child){border-top:1px solid #ff0020;margin-top:5px}.matka-card h5{color:#880e4f;text-shadow:1px 1px 2px #ffe2c6;font-size:21px;line-height:1;margin:3px 0}.matka-card a,.refresh-btn{border:1px solid #e6e6e6;background:#522f92;color:#fff;padding:5px 7px;border-radius:8px;font-size:12px;margin:2px 0 -1px;display:inline-block;transition:all .3s}.matka-card a:hover,.refresh-btn:hover{box-shadow:0 0 13px 3px #00000033;cursor:pointer}.conta{padding-top:4px;padding-bottom:7px;background-color:#fbe7ff;display:-webkit-flex;display:-moz-flex;display:-ms-flex;display:-o-flex;display:flex;-ms-align-items:center;align-items:center;justify-content:center}.conta p{font-size:22px;color:#ed143d;display:flex;flex-direction:column;justify-content:center;margin-right:12px}.conta a:hover{box-shadow:0 0 10px 0 #000}.slash-text{color:#000;line-height:1.4;font-size:14px;padding:4px 10px;text-shadow:1px 1px #f4e1e1}.satta-result h4{font-size:22px;color:#00094d;text-shadow:1px 1px 2px #fff}.satta-result h5{margin:0;font-size:22px;line-height:1;background:-webkit-linear-gradient(#4500bf,#670009);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.satta-result h6{font-size:15px;padding:2px 0;margin-bottom:0;color:#000;text-shadow:1px 1px 2px #ffd9d9}.satta-result div{padding:3px}.satta-result div:last-child{border-bottom-width:0}.yellowbg{background-color:#ff0;border-bottom:1px solid #ff9800!important}.paid-gm{border-color:#085e58}.paid-gm h4{background-color:#085e58;color:#fff;font-size:28px;padding:3px 0 4px}.paid-gm img{border:2px solid #085e58;border-radius:10px 0 10px 10px;width:250px;height:auto;margin-top:4px}.paid-gm p{padding:6px 20px;text-shadow:1px 1px 2px #eee}.paid-gm .aa,.paid-gm .bb{color:#000;font-size:18px}.paid-gm .bb,.paid-gm .cc,.paid-gm .dd{color:#085e58}.paid-gm .cc{font-size:19px}.paid-gm .dd{font-size:20px}.paid-gm .ee{color:#e91e63;padding-bottom:3px;font-size:21px}.paid-gm .ff{color:#e91e63;font-size:15px}.paid-gm .telegram1{border:2px solid #ff006c;background-color:#ff006c;color:#fff;padding:3px 7px;border-radius:8px 0;box-shadow:0 0 1px #000000d6;font-size:12px;margin:2px 0 -1px;display:inline-block;transition:all .3s;top:auto;position:fixed;left:10px;right:auto}.btn-hide{display:none!important}.gg{color:#000;font-size:32px}.paid-gm span{display:block}.my-table{margin-bottom:2px}.my-table h4{border:solid 2px #ff002b;border-bottom-width:0;padding:3px 5px 2px;font-size:24px}.my-table table{border-collapse:collapse;width:100%}.my-table thead{background-color:#fff;font-size:16px}.my-table tbody{font-size:16px}.my-table td,.my-table th{border:1px solid #ff0016}.my-table td,.my-table th{padding:2px 0;font-size:15px;text-shadow:1px 1px 2px #fff}.my-table th{color:#e91e63}.my-table tr td:nth-child(2),.my-table tr td:nth-child(4){color:#0808b2}.my-table.cm-sl h4,.my-table.mr-sl h4{background:#ffd902;padding:5px 10px;text-shadow:1px 1px 2px #fff;display:block;color:#000!important;margin-bottom:20px;margin-top:10px;letter-spacing:1px;font-weight:700;border:2px solid #000;border-radius:.75em;transform-style:preserve-3d;transition:transform 150ms cubic-bezier(0,0,.58,1),background 150ms cubic-bezier(0,0,.58,1)}.my-table.cm-sl h4::before,.my-table.mr-sl h4::before{position:absolute;content:"";width:100%;height:100%;top:0;left:0;right:0;bottom:0;background:#ffb002;border-radius:inherit;transform:translate3d(0,.75em,-1em);transition:transform 150ms cubic-bezier(0,0,.58,1),box-shadow 150ms cubic-bezier(0,0,.58,1)}.blue-div{border:2px solid #1f3092}.blue-div h4{background:#ff1731;color:#fff;border-radius:10px;font-size:30px;padding:3px 5px;text-shadow:1px 1px 2px #000;clip-path:polygon(0 0,97% 0,100% 48%,100% 80%,100% 100%,3% 100%,0 46%,0 20%)}.blue-div a:last-child{border-bottom-width:0}.blue-div a{background-image:linear-gradient(-225deg,#231557 0,#44107a 29%,#ff1361 67%,#ff0025 100%);background-size:200% auto;color:#fff;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:textclip 2s linear infinite;font-size:22px;display:block;border-bottom:2px solid #ff0026;padding:5px}@keyframes textclip{to{background-position:200% center}}.red-list>div{border-color:#e71d36}.red-list h4{animation:changeBackgroundColor 5s infinite;border-radius:10px;color:#fff;line-height:1.1;padding:4px 10px 3px;text-shadow:1px 1px 2px #000;font-size:24px}.red-list p{font-size:18px;text-align:center;line-height:1.3}.purpel-header h4{color:#fff;padding:5px 10px 3px;font-size:24px}.purpel-header a{display:block;font-size:22px;padding:5px 7px 4px}.ab1 a{border-bottom:2px solid #00189f;color:#1a237e;text-shadow:1px 1px #d9d9d9}.purpel-header a:last-child{border-bottom-width:0}.ab1{border-color:#00189f!important}.ab2 a{border-bottom:2px solid #b9005e;color:#880e4f;text-shadow:1px 1px 2px #ffe2c6}.ab2{border-color:#b9005e!important}.faq h4{color:#d70544;font-size:22px;padding:5px 5px 6px;border-top:1.5px solid #e0557f;margin-top:5px}.faq h4:first-child{border-top-width:0;margin-top:0}.faq p{font-size:12px;padding:0 5px 15px;line-height:1.4;color:#1a1a1a}.faq a{color:#d70544;text-decoration:underline}.ftr-sm h2{color:#bb2833;text-shadow:1px 1px 2px #fff}@media only screen and (max-width:768px){.faq h4{font-size:15px}}.about-us span{border:1px solid #e6e6e6;background:#522f92;color:#fff;padding:5px 7px;border-radius:8px;font-size:12px;margin:2px 0 -1px;display:inline-block}.disclamer h4{font-size:18px;margin-bottom:15px;padding-top:4px;text-shadow:1px 1px 3px #000}.disclamer p{font-size:13px;color:#340d7a;padding:2px 5px 5px;line-height:1.2}.about-us{padding:5px}.about-us p{font-size:13px;margin-bottom:0;color:#000;padding-bottom:15px}.about-us b{color:#0013a5;text-transform:uppercase}.about-us a{background-color:#e91e63;color:#fff;padding:4px 6px;display:inline-block;text-shadow:1px 1px 2px #2f2f2f;border-radius:4px}.ftr-sm{padding:5px}.ftr-sm h4{font-size:18px;margin-bottom:4px;color:#d3003f}.ftr-sm p{color:#a50031;font-size:12px;line-height:1.4}.pby-us{text-shadow:1px 1px #f4e1e1;color:#000;padding-top:2px;padding-bottom:1px}.refresh-btn{position:fixed;bottom:10px;right:10px}.bdr-b-0{border-width:0!important}.p-0{padding:0!important}@media only screen and (max-width:500px){body{padding:2px 5px}.faq h4{font-size:15px}}.result_timing,.result_timing_right{position:absolute;color:#7a028d;font-size:15px;padding:2px 0;transform:translateY(-158%);border-bottom:none!important}.result_timing{left:14px;right:auto}.result_timing_right{right:14px;left:auto}.btn_chart{color:#fff;padding:5px 7px;border-radius:8px;font-size:12px;margin:2px -5px -1px;display:block;transition:all .3s;text-shadow:1px 1px 2px #222;margin-top:5px;border:1px solid #e6e6e6;background:#522f92}@media(max-width:500px){.btn_chart{margin:2px -9px -1px}}.mb-1{margin-bottom:5px}.p-1{padding:5px 10px 8px}.bdr{border:2px solid #ff001d;border-radius:10px;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%)}.fg-div h6{font-size:22px;background-color:transparent;color:#1a237e;text-shadow:1px 1px 2px #fff}.fg-div h5{font-size:22px;color:#000;text-shadow:1px 1px 2px #fff}.fg-div .fg-p1{font-size:22px}.fg-div .fg-c1>div{border:2px solid #008906;border-radius:10px;margin:5px 0;padding:5px}.fg-div .fg-c1 .fg-p2{text-shadow:1px 1px 0 #fff;letter-spacing:1px}.fg-div .fg-c1 .fg-p3{font-size:22px;color:#080808;text-shadow:1px 1px 2px #ffe2c6}.fg-div .fg-c1 .fg-p4{font-size:20px}.login-div{margin:0 0 0;padding:6px 30px;margin-bottom:10px}.login-div a{border-radius:5px;font-size:14px}.login-div a:nth-child(2),.nnb8{margin:0 10px}@media only screen and (max-width:500px){.login-div{display:block}.login-div a{display:block;margin:10px 0!important}.conta p{display:block;font-size:17px}.conta{display:block}.conta a{margin-top:5px}}.fg-c1{width:50%;display:inline-block;padding:5px;border-color:#009206;border-style:solid}.fg-div .fg-c1 .fg-p2{background:linear-gradient(#00d309,#004503);font-size:22px!important;margin-bottom:5px;padding:7px 0 7px;border-radius:10px;clip-path:polygon(0 0,97% 0,100% 48%,100% 80%,100% 100%,3% 100%,0 46%,0 20%);color:#fff;text-shadow:1px 1px 2px red}.fg-div .fg-c1 .fg-p4{font-size:20px!important;line-height:24px}p.time{text-align:left;color:#444;margin-left:10px}p.betting{color:#ff0;font-size:12px;text-shadow:1px 1px 2px #000}.paa3{border-radius:10px;border:2px solid #ff001e;border-style:outset;margin:10px 0;box-shadow:0 0 20px 0 rgb(0 0 0 / 40%);text-shadow:1px 1px 2px #fff;padding:10px}.btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:3px 10px;margin:4px 0 1px;font-size:1rem;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;cursor:pointer}.btn-primary{color:#fff;background-color:#0d6efd;border-color:#0d6efd}.btn-danger{color:#fff;background-color:#dc3545;border-color:#dc3545}.fg-main.para-1.bdr.mb-1.p-1{padding:0}.fg-main.para-1.bdr.mb-1.p-1 *{font-style:normal!important}.fgzoc-time{border:2px solid #ff019e;margin:5px 5px 0;border-radius:10px}@media only screen and (max-width:600px){.fg-div .fg-c1 .fg-p2{font-size:14px!important}.fg-div .fg-c1 .fg-p4{font-size:9px!important;line-height:20px}}.card-1212{display:flex;flex-wrap:wrap;margin:5px;border-radius:10px;overflow:hidden}.fg-c1:nth-child(odd){border-width:0 1px 2px 2px!important;margin:0;border-radius:0}.fg-c1:nth-child(even){border-width:0 2px 2px 1px!important;margin:0;border-radius:0}.card-1212 .fg-c1:nth-child(1),.card-1212 .fg-c1:nth-child(2){border-top-width:2px!important}.faq{border:2px solid #003db6;border-radius:10px;width:calc(100% - 8px);padding:3px 0;margin:5px auto 5px;width:auto;display:block}.faq p{color:#000;font-weight:700;text-transform:uppercase;margin:0;font-size:12px;font-style:normal;padding:0 10px 5px;text-transform:capitalize;opacity:.9}.faq a{color:#d70544;font-weight:700;text-transform:capitalize;text-decoration:none}.my-checkbox{position:fixed;top:0;left:-9999px;visibility:hidden}.faq label{cursor:pointer;text-transform:uppercase;color:#0013a5;text-shadow:1px 1px 2px #fff;font-weight:800;font-size:17px;padding:3px 0;display:block}.faq label+div{height:0;overflow:hidden;transition:all .3s;padding:0!important}.faq label+div{height:auto}.faq .faq-card{border-top:1.5px solid #e0557f}.faq .faq-card.aabbcc{border-top:0 solid #dc1f44}@media only screen and (max-width:500px){.faq label{font-size:15px}}@media only screen and (max-width:375px){.faq label{font-size:13px}}@media only screen and (max-width:320px){.faq label{font-size:11px}}.mp-btn{position:fixed;bottom:9px;left:5px;padding:5px 8px;font-size:15px;border:1px solid #fff;text-decoration:none;background-color:#039;color:#fff;border-radius:5px}.btm-btn-f{background:linear-gradient(45deg,navy,#005780);border:1px solid #fff;font-size:14px;border-radius:5px;padding:6px 11px 5px;transition:all .3s ease-in}.btm-btn-f:hover{border:1px solid #011481;background:#fff;box-shadow:0 0 13px 3px #00000033;cursor:pointer;color:navy;background:linear-gradient(45deg,#fff,#dbdbdb)}.let-rock{border:2px solid #ff0020;border-radius:10px;font-style:normal;padding:3px 0;margin:5px auto 5px;width:auto;display:block;font-weight:600;font-family:roboto,sans-serif;height:200px;overflow-y:scroll}.let-rock .t-rock{cursor:pointer;text-transform:uppercase;color:#0013a5;text-shadow:1px 1px 2px #fff;font-weight:800;font-size:17px;padding:4px 0 3px;border-top:1.5px solid #e0557f;margin-top:8px;font-style:italic;font-weight:700}.let-rock p{padding:0 10px;font-size:14px;margin-bottom:0;color:#000;padding-bottom:0}.let-rock a{color:#e91e63}.let-rock i{margin:5px 0;display:block;padding:0 10px;font-size:14px;margin-bottom:7px;color:#000;padding-bottom:0;text-shadow:1px 1px #f4e1e1}.let-rock ul{text-align:left;padding:0 10px;list-style:none;font-size:13px;margin-bottom:0;margin:0 10px 0;color:#000;text-shadow:1px 1px #f4e1e1;border:1px solid #e91e63;border-radius:5px;margin-bottom:12px}.let-rock li{margin:7px 0}.t-0{margin-top:0!important;border-top:0!important}@keyframes changeBackgroundColor{0%{background-color:#ff019e}25%{background-color:#ff001d}50%{background-color:#009a07}75%{background-color:#001fad}100%{background-color:#ff019e}}
+
+.red-list-bg-change{
+  animation: changeBackgroundColor 5s infinite;
+  border-radius: 10px;
+  color: #fff;
+  line-height: 1.1;
+  padding: 4px 10px 3px;
+  text-shadow: 1px 1px 2px #000;
+  font-size: 24px;
+}
+
+.red-list-bg-change h3{
+  font-size: 22px;
+}
+
+.red-list-bg-change a{
+  color:white; 
+}
+
+.form-group label {
+  text-align: left !important;
+  display: block;
+  color: #373737;
+  font-size: 15px;
+}
+
+.form-group {
+  padding: 0px 9px;
+}
+
+.address div {
+  text-align: left;
+  font-size: 12px;
+}
+.address {
+  margin-top: 34px;
+  padding-left: 79px;
+}
+
+.conta h4 {
+  background: #ff00a2;
+  padding: 5px 10px;
+    padding-top: 5px;
+  padding-top: 5px;
+  text-shadow: 1px 1px 2px #000;
+  display: block;
+  color: #fff8f8 !important;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  border: 2px solid #fff;
+  border-radius: .75em;
+  transform-style: preserve-3d;
+  transition: transform 150ms cubic-bezier(0,0,.58,1),background 150ms cubic-bezier(0,0,.58,1);
+}
+
+.conta h4::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ff182c;
+  border-radius: inherit;
+  transform: translate3d(0,.75em,-1em);
+  transition: transform 150ms cubic-bezier(0,0,.58,1),box-shadow 150ms cubic-bezier(0,0,.58,1);
+}
+</style>
+
+</head>
+<body>
+<style>.B1{background-color:#FFCC99;color:black;border-width:3px;border-color:#FF006C;border-style:solid;border-top-left-radius:10px;border-top-right-radius:2px;border-bottom-left-radius:2px;margin-top:1px;margin-bottom:1px;font-weight:bold;font-size:x-large;font-style:none;text-shadow:1px 1px navy;padding-top:1px;padding-bottom:1px;padding-left:2px;padding-right:2px;}
+.button2 {
+  background-color: #fff0; /* Green */
+  border: none;
+  color: navy;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border-radius:5px;
+  border: lime 2px solid;
+font-weight: 800;
+text-shadow: 1px 1px aqua;
+cursor: pointer;
+}
+
+.button2 {
+  box-shadow: 0 8px 10px 0 rgba(0,0,0,0.2), 0 6px 8px 0 rgba(0,0,0,0.19);
+}
+
+</style>
+<div class="B1" align="center" style="box-shadow: 0 8px 0px -3px #ff9628;">
+<a href="https://dpbossss.boston/">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhsAAABpCAMAAACkjBFsAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAf5QTFRFAAAACAgI7ACM6wCM/wCg6wCMBwcH7gCR6wCN7ACN6wCN6wCM7ACN9wCZ6wCN8ACR7QCO6wCN7ACN6wCN7ACN7ACO9ACTAAAA7gCP7ACN7gCP7ACN7ACNBwcH7ACN7ACNBwcHBwcH7ACOBgYG6wCN7QCN7ACNBwcH7QCO6wCNBwcHBgYGAAAABAQEAAAABwcHBwcHBgYGAAAAAAAAAAAABgYGBQUFBwcHBwcHBwcHBwcHBAQEBQUFBwcHBwcHBwcHAAAABwcHBwcHBwcHBQUFBwcHBgYGBgYGBwcHAAAABwcHBAQEAAAABwcHBwcHBwcHBgYGBwcHBwcHBgYGBgYGBwcHBgYGBwcHBQUFBgYGCAgIBgYGAAAABgYGBgYGBwcHAAAABgYGBgYGBgYGAAAABgYGBgYGBwcHBwcHAAAABAQEBgYGBwcHBwcHBwcHBwcHBgYGBgYGBQUFAAAABAQEBwcHAAAAAAAABwcHAAAABwcHBQUFBQUFBgYGBwcHBgYGAAAABwcHBwcHBgYGBwcHBgYGBwcHAAAABwcHBwcHBgYGBwcHBgYGBwcHBQUFBwcHBwcHBQUFBwcHBwcHBwcHBwcHBwcHBwcHBwcHBAQEBwcHBwcHBwcHBwcHBgYGBwcHBwcHCAgIBgYGBwcHBQUFBgYGBgYGCAgIBwcHAAAAR9c49AAAAKp0Uk5TAP//+wX2gB7x49PqpgzcET/KgLeSNxcGJ8AvZHSBsIrAQEZMa01c1lWc/FACOw1ExrsIGwd0W/hp/fI4WPqM4wvo0EUx/ie5YQP3NgEhtYN472tzT4jdpDCUv1URkknUEkp8KR5weqKlGDRvY7DBj56WXBo+6wUV6heQLl69xCUQ9sqb2r7wDqtldYV3iy3hqVZB9NHLocgjPImzzuV+ZGhfckYrmdzf7TEh3GezAAAQMElEQVR4nO1dh5vbRBZ3pFHUZTVrLdnYYGzHTiMXQhLSgByEJBBqCBdq6L13Qu9HuQbcwR1c4e64u//yNH0kr73s4mT92fP7PsgUefR29NObN2/ejCoVCQkJCQkJCQkJifnB0noLIDGjkMyQWA6gqvv9MI4s24CwTSsKG50sAestmMT6AhKj0Y4Cy7RtTYFQNcP2gtawn+nueksnsY6o+l0nMA1V4VDVPKcattUKO5Iciwu3F1umJjJDgGE5visNkYUE0PuOZyxDDC0HKtasoe9Ks2MBUW+0PE3kBKGJaltp6plwbNG8OKtKciwcQJgaBWZAMkB6qFa75jfCAKkU2/Gr6y2pxPkFSPpecTixo8hDFMlTOgD6ILY0qERi35X+j4VC0ohUzg3V8JxGLwyIveH19dxOzZoRHHKsuA4kNRYJmSNQQzHS2Nf12KRMiWsAkqMB7RHD6lYlNxYISaMworT6OliqRdQyVSMfGqBAb9lQjUQ1aY4uEGpDboeqZpzlJgXoWyqZrWjDnA1QV/QDZI+G+nrLK3H+gB86ti7SEBkU9Tb1dWhmnyym6DFUHErQkYpjcdDEOgIqCS/M0ADiR9RBqqUZ4YLehVMXxezKeezioG1StWHmWgOWJF2TqhKzTangdgJkgzjS4lgcMG54bUyNfOJC1Ybh9OhlIItQYdCUq24Lgu2VkExTbKeGi0DPYmqjwUxPUMeMsYf19ZJV4vxiaalrobFCC7pksEhCOnFRA58ricRB1xlRZ51ElTjv6LTwMw8znKeDB+TLUJixVoeYQ9ZgXEsASFNkvqA3kcGR0ugdd+BR49TqC5OSaoy4odpdzoC6X9MJIYBe63VqulyqnSeAmpNPS4xQJ081azNfmFMXnjTlhhoywmRhqxV20EXVWtgKgmgYDnxd0mNu4Pptz47I+vsSaKTEX656oi8DJDEpj+lAU23mGsZO45pbAZ0YzXsNGH3ckeyYFwA3C+NGQnJsmS2frvrCMwa6o1FtQkpqLahhDK89qPtDC2sbVTUCp1GX5JgbCFZkJ6WWqD0Un7Cb0fW3FjZagd60yYWpk7NEVUwcnq4qllx1mSfQpXfAJrBK0BQvcGt0rEmxHwT4aD6D/oNhYnbQbLZsFJqumF2pOOYPeotPYH2xotqBHjFYmeJyvVlY27fjnlvtE6WjRXLPwrwBVHoWe9jNwsDAAwcJN/whVRvo6qiTwCkPyXpNaXLMGUBV8Il2CiuuCbIuoOrA3ACNgOkMVdWcAeSC3qYB6k5PcmO+kL/4bEhxivZknbo91AjZG3rsUbWhKhpeeAHc3W5110N+iXOHZMCGFK9ftBhqcAqLRhE0TwGd1GZqQzEdHSmZJKSxhGYo9cZ8gftE1ai03NpL2XABa9wumrCSWUrUIMFhbY2yJf6pxugr9/364b1bHlym5sqLjj58y+8fP2fl50q+tbQ18xBsCLNderZNi1IB+UX1mJAAcsMjZiuox5wb2FrZuIFiz493PLLxkpdLt9z99DW4+utbthYqdr3x1mZcs2nvleegnGIFAVcj33UblsUjE9u6AJW8zhu+DBVcvIyo64oq84mq6aA4JoC8isQOwlAw0IsESzQiDlRQH6oiN/4ndj3Gq5cdE1o9cYdQdfhXvGLrQ1cJNVdsmXY5x0QBVyffZG6MaQtzY/NZ1vSMcgM7wdHDbZU8m9XUpmoCBn4locfVRtAlDnfQaTELBOqdF0a7fsOGp7ezRr+9uVBz/CSt2Hp76Ue3TrdcwCQBVynfRG6MawtzY8N7TKAZ5UaDB3y1S2qjbmlEb9jQtshabGt1Pn8lAWMVl49JHrRFP2Z/uohDtNH9m8tVd5Ka0Qe2ZarlAiYIuFr5JnFjbFv0/v+gAs0kN0DVYWoj7Rfr3J5J9ITqwRDSAVMbOQ3Y8FOlsacqc7jjXnxk48aNh978L+6Fg6/hqitPoey+22+956FnX0Xpmy9FNW/jcfnpv1298+on70Xp3x6bYrmI8QKuWr4XNhLgH95IclsmtkW58RLVVjPJjUqW0rfeiGvFKj0kM1jFCPycKiFVMKpitJgLtO7Qea0aEXLhrr8EZ3ZjvXoLzn2BMh+cQJlXdqDcJyhzI0r/Dl+2/TDKPT/FchHjBVy9fBS/QCXi7tDxbTG9dTe5dCa54fbZ6rzXLZobuelJN7qZ+RTWzZiLTFEt5skAfkBNUYMuxuA//ZfkiidR7jmUvus4TO85QaruugLVHYHpp1CSTvW2odyjUywXMVbANchHMcKNCW0xblBzdCa5ocfMhkhLu9cSNoNVrDCpuMxFpiqq06GdoHcZuWyy1aX4Wla+EV6YW1H6M3aPN/hjQe/VNbTi+oMwe8cUy0WMFXAN8lGMcGNCW9zeIeboLHID9PiQUtpnADIygcnZAd1cWdtmY4rVYyomi5m9YvXJ1KXY9Zei3LMofS1KP8BusmsPzJ+Cyb+gqqtpzbaLcjw+xXIRYwVcg3wUI9yY0JZgCx9FdbPIjaTJ3nqrWdzY6PYCpCJgnZMPFgM+S7FbGVMxPlvfVwO6vl/s+i0o9wNMbv0SJr8X7vImqsznvWQ8v0LwJ2BMq1zEOAHXIh9FmRuT2sL3Rwbtq8gcnUVu1Nhbr0WlIUUP2dqJ1nUrIGSR6Iot0KhJZ7Cq2qbKpND1u76GmX3vwPQJVHGDcJdDqOSfeeqFfSh5+elLiyJOq1zEOAHXIh9FmRuT2sL33/IS/D8yR2eQG6DPtqXYcckS9SON6g2rB11kTG1oAY8bBhHzqhoNWor/9FtzpXvfTU/hWQD2+mBngOArruxFJbthcjfRsptv+OsDwhVTKxcwTsA1yUdQ5saktgg3j8L/XwPN0RnkRrXNlIHXKDm+uh5TCE6WZ9lirWLGnBo6P2rQY3vfRlxLBw/givtQ7kbhNrjDH0Jpwbl0+E7hmmmVc4wTcG3yYZS5MaktOk96D/4DzdHZ4waoO8JOx2KdDquQ2lDNpp6zSFAbfJOb3rOpvUpCPCBKHsTjz9JB+gDK3y/cBo/1G3Hm6Lv8Rzt+wy+aVjnDOAHXKB9CmRuT2qLcOIv8aUdnkRv0CAWFLsJz4EhRzIXUB5UaX2YzeQAQqPEpsM3MjVHv8uX/3okqxvXXBST32DP7+G/ufoddNa3ylQRcq3wQP5UbsC3mXzkN/33pnRnkRpVHBpvFWUr+0A2VWBtGbomABht81KjPhpSEjzSqx/dK4q7/6sIcO0hnHkZ9fzFKfybcCOvZT1l+5y2bWO9v4gt0UyufLODa5RvlxqS2GDe2I3P0udnjBtCHzN1dOrap2gjoOYL5EALo3kcIo800jHDWT65d+PkthWnAWewYQGtZ2Jso2md/RyVPivfef+gK0vm3V85F+QQBf458ZW5Maov7ZYk5Onvc8OnuE8WIskKNPkSRG/hk4joA9RYbUgT9UOUOd3gZ+3nRfbD0H5j7CMbPPIAqnhLudBsqOVkpYOudH+DOv+7clI8V8OfIV+bGpLYEnz02R7EP9b7KzKDaEI5xKsxgdXhmIN190HUr1QFbh9cifjxHh5myueLp8pixYteTeT30KO5ErsGrhDt9iOreLou28wZU/sw5Kh8n4M+Rr8yNSW0J9z+Lkl/NmN4Ade7uThvi2cOgF9EVWEUL87Ei434wm6+yJXwXLT52kqLU9T/wlwJ3z3525V0owuHVPPU5HPwvZH6l19CFF06vvICxAq5ePoYRn/n4tgprfac3MMwON1yfHTarDUs7pG2FmBtq0MuHkIHDSGA2qH5IfI8fUuqxfdeVka7HPfEtTH6Kks+yK/E4+36FKtxtrOYjmL13euUFjBVw9fIxjHBjfFsFbmBzdNa4IRzxVdjOlvQ8sjgPj+iogwoIhekIPSgun8owZaIohbOLS13/HcqiV+7MuzC5+QipuesqVAW9C9is/zP9zS6U/dP0ygsYK+Dq5WMY4cb4tooxAkdnkBsJX10PBsIM1h3wQA0tqLns1C/EDWq0gnqbUat8dHFxueJ1lPsR555DmVPfoMyZt1AOrXS/jFzXB+mL+QSqeXR65Tm23vP5yaUVBFy1fAyjsT1j2yrFj7w3e9yocyOiJbz18EgfqjU0swkrfL7T0aDTEb0pfJhHTcUxSQi523jowy/x3/0ErnoFvz37vvjDRRfdhNPH/4Vq7keZPbe9uOv6Iwfex5GWJ6dYXlmCBt+pM5MFXL18FKPcGN9WkRtnr5k5bvj8TPOYGwtwqGD6wIxhtA7gCkYxcCw60JvcpaqoZpiILY9G3W64l/qJth0sV5GA2uuvHfnRjq1TLCfuhRtXEHDV8lGMcmN8W0VuMHN0drgxoKaoqvGTMxK/RY81z/9Bm59BvSV8oAkdxAFqhbMWjLRW+MTKaNdveo1V7n+pULPnAK24ckf5R5dOtRxbk4+sJOCq5SNYhhtj2ypxg5qjs8ONLj3vnq2uL1WSwZDGlsNnjiNI/YCPHprVTdykF6YCNdQgTAp9Ul7m3HOBWP2g+AJuEtxH209fLv7qjx9PtxwvZ+xdUcBVy4exHDfGtVXiBjVHZ4cbIbUlVZMsrCb1bip8+NGO4LczKi7/1oqmqUbUbDQjW6CGooVZ8ctMwmt58PvDn+w+U7rzgTdJJ3/3RHF3wJGbrj1O+vHuF6de/lxuJDx67CcIuGr5IJblxpi2ytwg5ujscIPHbphhpid61uu2TOGR204Hf2EnZnyxUi+3T02z8HlIw6qt+sNMZ+6B+4dPLFNzbP/zN+2957FzUr79uo9HrpuWfGtpa3bBvZpG4AyHTivwmKMcEsbB57RUfRZurLR7bfK9Pz6gaEFTnj07bxA93oZh2wb8ZDB/6inxdOp95viy+onvGIo4nqgq+f6KxDyBjynsQQvagDnBa23qBtFgbGDNsTV+pSo/AzmXGDjC1FQcJtCAwlbi+2zVxYNTXZC1A42NPZrV0CU15g96w8IqwrbMwmfpVTsNfebM4msp5OuP9QE8Cx2FdljDvvxe/Twi1wDQ7a1aTjNOLZu5vGyr1chYMEaVxYYp5OMZIKnFkeWZXtASKCQxX9AHjmU5PTd/3Fm/3YrSIE0jp+snwuqKcJw1P7LYTeqdTq2uy2+nzC1A4vcbNcQE4Op1vzMYdPx6VXzioMk/rMK3HgAAXBfIz+rMM/JHzH0ToJAjcJnBajhZRUKCASTsI8NeLL9zICHA7TFLVAwWlpAQPv+oOL60LiQ4XGH3fFsOKRICqj1mbhj96srXSywOdHasj9rypWtcQkAmhJTKIUVCRI8d62M05ZAiIaLB1tnMhpylSAgAQxb+k9ZWvlxicQBcFrqhlI71kVhwuDo//y2UTlEJAdUOOyrQbqy3MBIzhaTBIkWt3sqXSywQ2BdAFTuSpqiEAJCxoxXMoTRFJQQAvphiNaUpKiGgyg8PTfvS8yUhwOVeUcdf+XKJBYI7YBthQ7nQJiEC1On59tpADikSBbg1ckKHJ4cUiSKAG6ITe7SW3H0gUQKooc2whozrkRgByJppYDm+9G5IjKKawV2Q6y2FhISEhISExHnH/wGxHqy8TnHQYQAAAABJRU5ErkJggg==" alt="Image of dpbossss.boston" height="57" width="292">
+
+</a></div>
+<div class="ftr-sm" style="font-size: 12px;text-align: left;font-size: 12px;
+text-align: left;
+font-style: normal;
+font-weight: lighter;
+padding: 5px 25px;">
+	<div data-custom-class="body">
+   <div>
+      <strong>
+         <span style="font-size: 26px;">
+            <span data-custom-class="title">
+               <h1>PRIVACY NOTICE</h1>
+            </span>
+         </span>
+      </strong>
+   </div>
+   <div><br></div>
+   <div>
+      <span >
+         <strong>
+            <span style="font-size: 15px;">
+               <span data-custom-class="subtitle">
+                  Last updated 
+                  <bdt class="question">Aug 01, 2022</bdt>
+               </span>
+            </span>
+         </strong>
+      </span>
+   </div>
+   <div><br></div>
+   <div><br></div>
+   <div><br></div>
+   <div style="line-height: 1.5;">
+      <span >
+         <span style=" font-size: 15px;">
+            <span data-custom-class="body_text">
+               Thank you for choosing to be part of our community at 
+               <bdt class="question">Satta Matka</bdt>
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+               ("
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+               <strong>Company</strong>
+            </span>
+            <span >
+               <span >
+                  <span data-custom-class="body_text">
+                     <span >
+                        <span data-custom-class="body_text">
+                           <bdt class="statement-end-if-in-editor"><span data-custom-class="body_text"></span></bdt>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+            <span data-custom-class="body_text">
+               ", "<strong>we</strong>", "<strong>us</strong>", "<strong>our</strong>"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at 
+               <bdt class="question"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a2a4a1a1bea3a591b5a1b3bea2a2a2a2ffb3bea2a5bebf">[email&#160;protected]</a></bdt>
+               .
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><br></span></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <span >
+            <span data-custom-class="body_text">
+               When you 
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+               visit our website 
+               <bdt class="question"><a href="https://dpbossss.boston" target="_blank" data-custom-class="link">https://dpbossss.boston</a></bdt>
+               (the "<strong>Website</strong>"), 
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+               use our mobile application, 
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+               as the case may be (the "<strong>App</strong>")
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                  </span>
+               </span>
+               and more generally, use any of our services (the "<strong>Services</strong>", which include the&nbsp;
+            </span>
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <span data-custom-class="body_text">
+                        <bdt class="block-component"><span data-custom-class="body_text"></span></bdt>
+                        Website
+                        <span >
+                           <span data-custom-class="body_text">
+                              <bdt class="statement-end-if-in-editor"></bdt>
+                           </span>
+                        </span>
+                        <bdt class="block-component"></bdt>
+                        and 
+                        <bdt class="statement-end-if-in-editor"></bdt>
+                     </span>
+                  </span>
+               </span>
+               <span data-custom-class="body_text">
+                  <span >
+                     <span data-custom-class="body_text">
+                        <bdt class="block-component"></bdt>
+                        App
+                        <bdt class="statement-end-if-in-editor"><span data-custom-class="body_text"></span></bdt>
+                     </span>
+                  </span>
+               </span>
+            </span>
+            <span data-custom-class="body_text">), we appreciate that you are trusting us with your personal information. We take your privacy very seriously. In this privacy notice, we seek to explain to you in the clearest way possible what information we collect, how we use it and what rights you have in relation to it. We hope you take some time to read through it carefully, as it is important. If there are any terms in this privacy notice that you do not agree with, please discontinue use of our Services immediately.</span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><br></span></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <span >
+            <span >
+               <span data-custom-class="body_text">This privacy notice applies to all information collected through our Services (which, as described above, includes our&nbsp;</span>
+               <span >
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"><span data-custom-class="body_text"></span></bdt>
+                     Website
+                     <span >
+                        <span data-custom-class="body_text">
+                           <bdt class="statement-end-if-in-editor"></bdt>
+                        </span>
+                     </span>
+                     <bdt class="block-component"></bdt>
+                     and 
+                     <bdt class="statement-end-if-in-editor">
+                        <bdt class="block-component"></bdt>
+                     </bdt>
+                  </span>
+                  <span data-custom-class="body_text">
+                     App
+                     <span >
+                        <span data-custom-class="body_text">
+                           <bdt class="statement-end-if-in-editor"><span data-custom-class="body_text"></span></bdt>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+               <span data-custom-class="body_text">), as well as, any related services, sales, marketing or events.</span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><br></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><span ><span ><span data-custom-class="body_text"><strong>Please read this privacy notice carefully as it will help you understand what we do with the information that we collect.</strong></span></span></span></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><br></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><span ><span style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">TABLE OF CONTENTS</span></strong></span></span></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><br></span></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#infocollect"><span >1. WHAT INFORMATION DO WE COLLECT?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#infouse"><span >2. HOW DO WE USE YOUR INFORMATION?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <span >
+                        <bdt class="statement-end-if-in-editor"></bdt>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <span ><a data-custom-class="link" href="#infoshare">3. WILL YOUR INFORMATION BE SHARED WITH ANYONE?</a></span>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="block-component"></bdt>
+                  </span>
+                  <bdt class="block-component"></bdt>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#cookies"><span >4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <span >
+                        <bdt class="block-component"></bdt>
+                        <bdt class="block-component"></bdt>
+                     </span>
+                  </span>
+                  <bdt class="block-component"></bdt>
+                  <bdt class="block-component"></bdt>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#3pwebsites"><span >5. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#inforetain"><span >6. HOW LONG DO WE KEEP YOUR INFORMATION?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <span >
+                        <bdt class="block-component"></bdt>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#infosafe"><span >7. HOW DO WE KEEP YOUR INFORMATION SAFE?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px;">
+         <a data-custom-class="link" href="#infominors"><span >8. DO WE COLLECT INFORMATION FROM MINORS?</span></a>
+         <span >
+            <span >
+               <span data-custom-class="body_text">
+                  <span >
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><span ><a data-custom-class="link" href="#privacyrights">9. WHAT ARE YOUR PRIVACY RIGHTS?</a></span></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><a data-custom-class="link" href="#DNT"><span >10. CONTROLS FOR DO-NOT-TRACK FEATURES</span></a></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><a data-custom-class="link" href="#caresidents"><span >11. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</span></a></span></div>
+   <div style="line-height: 1.5;"><span style="font-size: 15px;"><a data-custom-class="link" href="#policyupdates"><span >12. DO WE MAKE UPDATES TO THIS NOTICE?</span></a></span></div>
+   <div style="line-height: 1.5;"><a data-custom-class="link" href="#contact"><span style=" font-size: 15px;">13. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</span></a></div>
+   <div style="line-height: 1.5;"><a data-custom-class="link" href="#request"><span >14. HOW CAN YOU REVIEW, UPDATE OR DELETE THE DATA WE COLLECT FROM YOU?</span></a></div>
+   <div style="line-height: 1.5;"><br></div>
+   <div id="infocollect" style="line-height: 1.5;">
+      <span >
+         <span style=" font-size: 15px;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span id="control" style="color: rgb(0, 0, 0);">
+                     <strong><span data-custom-class="heading_1">1. WHAT INFORMATION DO WE COLLECT?</span></strong>
+                     <span data-custom-class="heading_1">
+                        <bdt class="block-component"><span data-custom-class="body_text"></span></bdt>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span data-custom-class="heading_2" style="color: rgb(0, 0, 0);"><span style="font-size: 15px;"><strong><u><br></u></strong><strong>Personal information you disclose to us</strong></span></span></div>
+   <div>
+      <div><br></div>
+      <div style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span data-custom-class="body_text"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong></span></span></span></span><span data-custom-class="body_text"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em></em></strong><em>We collect personal information that you provide to us.</em></span></span></span></span></span></span></div>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               We collect personal information that you voluntarily provide to us when you 
+               <span style="font-size: 15px;">
+                  <bdt class="block-component"></bdt>
+               </span>
+               register on the&nbsp;
+            </span>
+            <span style="font-size: 15px;">
+               <span data-custom-class="body_text">
+                  <bdt class="block-component"></bdt>
+                  <bdt class="block-component"></bdt>
+                  Services, 
+                  <bdt class="statement-end-if-in-editor"></bdt>
+                  <bdt class="block-component"></bdt>
+               </span>
+               <span data-custom-class="body_text">
+                  <span style="font-size: 15px;">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                  </span>
+               </span>
+               <span data-custom-class="body_text">
+                  express an interest in obtaining information about us or our products and Services, when you participate in activities on the 
+                  <span style="font-size: 15px;">
+                     <bdt class="block-component"></bdt>
+                     <bdt class="block-component"></bdt>
+                     Services
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+                  <bdt class="block-component"></bdt>
+                  (such as by posting messages in our online forums or entering competitions, contests or giveaways)
+                  <bdt class="statement-end-if-in-editor"></bdt>
+               </span>
+            </span>
+            <span data-custom-class="body_text">&nbsp;or otherwise when you contact us.</span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               The personal information that we collect depends on the context of your interactions with us and the 
+               <span style="font-size: 15px;">
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                     <bdt class="block-component"></bdt>
+                     Services
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+                  , the choices you make and the products and features you use. The personal information we collect may include the following:
+                  <bdt class="block-component"></bdt>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               <strong>Personal Information Provided by You.</strong> We collect 
+               <span style="font-size: 15px;">
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">names</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">phone numbers</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">email addresses</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">mailing addresses</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">usernames</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">passwords</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">contact preferences</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">contact or authentication data</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     <bdt class="question">debit/credit card numbers</bdt>
+                     ;&nbsp;
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="forloop-component"></bdt>
+                     and other similar information.
+                  </span>
+                  <span data-custom-class="body_text">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               <strong>Payment Data.</strong> We may collect data necessary to process your payment if you make purchases, such as your payment instrument number (such as a credit card number), and the security code associated with your payment instrument. All payment data is stored by
+               <bdt class="forloop-component"></bdt>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px;">
+                           <span data-custom-class="body_text">
+                              <bdt class="block-component"></bdt>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+               <bdt class="question">__________</bdt>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span data-custom-class="body_text">
+                                       <bdt class="block-component"></bdt>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px;">
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <span >
+                                                      <span style="font-size: 15px;">
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="forloop-component"></bdt>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                        . You may find their privacy notice link(s) here:
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="forloop-component"></bdt>
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px;">
+                                             <span data-custom-class="body_text">
+                                                <bdt class="block-component"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                        <bdt class="question">__________</bdt>
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px; ">
+                                             <span style="font-size: 15px; ">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span data-custom-class="body_text">
+                                                         <bdt class="block-component"></bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                                 <bdt class="forloop-component"></bdt>
+                                 <span style="font-size: 15px;">
+                                    <span data-custom-class="body_text">.</span>
+                                    <span data-custom-class="body_text">
+                                       <bdt class="statement-end-if-in-editor">
+                                          <bdt class="block-component"></bdt>
+                                       </bdt>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               All personal information that you provide to us must be true, complete and accurate, and you must notify us of any changes to such personal information.
+               <span style="font-size: 15px;">
+                  <bdt class="statement-end-if-in-editor">
+                     <bdt class="statement-end-if-in-editor"></bdt>
+                  </bdt>
+               </span>
+               <bdt class="block-component"></bdt>
+               <span data-custom-class="body_text">
+                  <span style="font-size: 15px;">
+                     <bdt class="statement-end-if-in-editor">
+                        <bdt class="statement-end-if-in-editor">
+                           <span style="font-size: 15px;">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span data-custom-class="body_text">
+                                       <bdt class="statement-end-if-in-editor">
+                                          <bdt class="statement-end-if-in-editor">
+                                             <bdt class="block-component"></bdt>
+                                          </bdt>
+                                       </bdt>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </bdt>
+                     </bdt>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </span>
+   </div>
+   <div style="line-height: 1.5;"><span data-custom-class="heading_2" style="color: rgb(0, 0, 0);"><span style="font-size: 15px;"><strong><u><br></u></strong><strong>Information collected through our App</strong></span></span></div>
+   <div>
+      <div><br></div>
+      <div style="line-height: 1.5;">
+         <span >
+            <span style=" font-size: 15px;">
+               <span data-custom-class="body_text"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong></span></span></span></span>
+               <span data-custom-class="body_text">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong><em>&nbsp;</em></strong>
+                           <em>
+                              We collect information regarding your 
+                              <span data-custom-class="body_text" style="font-size: 15px;">
+                                 <bdt class="block-component"></bdt>
+                                 geo-location,
+                                 <bdt class="statement-end-if-in-editor"></bdt>
+                                 <bdt class="block-component"></bdt>
+                                 mobile device,
+                                 <bdt class="statement-end-if-in-editor"></bdt>
+                                 <bdt class="block-component"></bdt>
+                                 push notifications,
+                                 <bdt class="statement-end-if-in-editor"></bdt>
+                                 <bdt class="forloop-component"></bdt>
+                                 <bdt class="block-component"></bdt>
+                                 <bdt class="forloop-component"></bdt>
+                              </span>
+                              when you use our App.
+                           </em>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </div>
+   </div>
+   <div style="line-height: 1.5;"><br></div>
+   <div style="line-height: 1.5;">
+      <span style="font-size: 15px; ">
+         <span style="font-size: 15px; ">
+            <span data-custom-class="body_text">
+               If you use our App, we also collect the following information:
+               <bdt class="block-component"></bdt>
+            </span>
+         </span>
+      </span>
+   </div>
+   <ul>
+      <li style="line-height: 1.5;">
+         <span style="font-size: 15px; ">
+            <span style="font-size: 15px; ">
+               <span data-custom-class="body_text">
+                  <em>Geo-Location Information.</em> We may request access or permission to and track location-based information from your mobile device, either continuously or while you are using our App, to provide certain location-based services. If you wish to change our access or permissions, you may do so in your device's settings.
+                  <span style="font-size: 15px;">
+                     <span >
+                        <span data-custom-class="body_text">
+                           <span style="font-size: 15px;">
+                              <span >
+                                 <bdt class="statement-end-if-in-editor"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </span>
+      </li>
+   </ul>
+   <div>
+      <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+      <div>
+         <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+      </div>
+      <ul>
+         <li style="line-height: 1.5;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <em>Mobile Device Data.&nbsp;</em>We automatically collect device information (such as your mobile device ID, model and manufacturer), operating system, version information and system configuration information, device and application identification numbers, browser type and version, hardware model Internet service provider and/or mobile carrier, and Internet Protocol (IP) address (or proxy server). If you are using our App, we may also collect information about the phone network associated with your mobile device, your mobile device’s operating system or platform, the type of mobile device you use, your mobile device’s unique device ID and information about the features of our App you accessed.
+                     <span style="font-size: 15px;">
+                        <span >
+                           <span data-custom-class="body_text">
+                              <span style="font-size: 15px;">
+                                 <span >
+                                    <bdt class="statement-end-if-in-editor"></bdt>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </li>
+      </ul>
+      <div>
+         <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+      </div>
+      <ul>
+         <li style="line-height: 1.5;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <em>Push Notifications.</em>We may request to send you push notifications regarding your account or certain features of the App. If you wish to opt-out from receiving these types of communications, you may turn them off in your device's settings.
+                     <span style="font-size: 15px;">
+                        <span >
+                           <span data-custom-class="body_text">
+                              <span style="font-size: 15px;">
+                                 <span >
+                                    <bdt class="statement-end-if-in-editor"></bdt>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </span>
+         </li>
+      </ul>
+      <div>
+         <bdt class="block-component">
+            <bdt class="forloop-component"><span style="font-size: 15px;"></span></bdt>
+            <span style="font-size: 15px;"></span>
+         </bdt>
+         <bdt class="forloop-component"></bdt>
+         <div style="line-height: 1.5;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     This information is primarily needed to maintain the security and operation of our App, for troubleshooting and for our internal analytics and reporting purposes.
+                     <span style="font-size: 15px;">
+                        <span data-custom-class="body_text">
+                           <span style="font-size: 15px;">
+                              <span data-custom-class="body_text">
+                                 <bdt class="statement-end-if-in-editor">
+                                    <bdt class="statement-end-if-in-editor"></bdt>
+                                 </bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                     <span style=" font-size: 15px;">
+                        <span data-custom-class="body_text">
+                           <span style=" font-size: 15px;">
+                              <span data-custom-class="body_text">
+                                 <bdt class="statement-end-if-in-editor">
+                                    <bdt class="block-component"></bdt>
+                                 </bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+               <bdt class="block-component"></bdt>
+            </span>
+         </div>
+         <div style="line-height: 1.5;"><br></div>
+         <div id="infouse" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">2. HOW DO WE USE YOUR INFORMATION?</span></strong></span></span></span></span></span></div>
+         <div>
+            <div style="line-height: 1.5;"><br></div>
+            <div style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span data-custom-class="body_text"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short: </em></strong><em>We process your information for purposes based on legitimate business interests, the fulfillment of our contract with you, compliance with our legal obligations, and/or your consent.</em></span></span></span></span></span></span></div>
+         </div>
+         <div style="line-height: 1.5;"><br></div>
+         <div style="line-height: 1.5;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     We use personal information collected via our 
+                     <span style="font-size: 15px;">
+                        <span data-custom-class="body_text">
+                           <bdt class="block-component"></bdt>
+                           <bdt class="block-component"></bdt>
+                           Services
+                           <bdt class="statement-end-if-in-editor"></bdt>
+                           <bdt class="block-component"></bdt>
+                        </span>
+                     </span>
+                     for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations. We indicate the specific processing grounds we rely on next to each purpose listed below.
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <div style="line-height: 1.5;"><br></div>
+         <div style="line-height: 1.5;">
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     We use the information we collect or receive:
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To facilitate account creation and logon process.</strong> If you choose to link your account with us to a third-party account (such as your Google or Facebook account), we use the information you allowed us to collect from those third parties to facilitate account creation and logon process for the performance of the contract.
+                        <span style=" font-size: 15px;">
+                           <span style="font-size: 15px;">
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <bdt class="block-component">
+                                       <span style="font-size: 15px; ">
+                                          <span style="font-size: 15px; ">
+                                             <span data-custom-class="body_text">
+                                                <span style="font-size: 15px; ">
+                                                   <span style="font-size: 15px; ">
+                                                      <span data-custom-class="body_text">
+                                                         <span style="font-size: 15px;">
+                                                            <span >
+                                                               <span data-custom-class="body_text">
+                                                                  <span style="font-size: 15px;">
+                                                                     <span >
+                                                                        <span data-custom-class="body_text">
+                                                                           <bdt class="statement-end-if-in-editor"></bdt>
+                                                                        </span>
+                                                                     </span>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </bdt>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To post testimonials.</strong> We post testimonials on our 
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                          Services
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                        that may contain personal information. Prior to posting a testimonial, we will obtain your consent to use your name and the content of the testimonial. If you wish to update, or delete your testimonial, please contact us at 
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <bdt class="block-component"></bdt>
+                                 <bdt class="question">__________</bdt>
+                                 <bdt class="else-block"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                        and be sure to include your name, testimonial location, and contact information.
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px;">
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="statement-end-if-in-editor"></bdt>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>Request feedback.&nbsp;</strong>We may use your information to request feedback and to contact you about your use of our 
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                          Services
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                                 .
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px; ">
+                                             <span style="font-size: 15px; ">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px; ">
+                                                      <span style="font-size: 15px; ">
+                                                         <span data-custom-class="body_text">
+                                                            <span style="font-size: 15px;">
+                                                               <span >
+                                                                  <span data-custom-class="body_text">
+                                                                     <span style="font-size: 15px;">
+                                                                        <span >
+                                                                           <span data-custom-class="body_text">
+                                                                              <bdt class="statement-end-if-in-editor"></bdt>
+                                                                           </span>
+                                                                        </span>
+                                                                     </span>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To enable user-to-user communications.</strong> We may use your information in order to enable user-to-user communications with each user's consent.
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px;">
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <bdt class="statement-end-if-in-editor"></bdt>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <span style="font-size: 15px; ">
+               <span style="font-size: 15px; ">
+                  <span data-custom-class="body_text">
+                     <bdt class="block-component"></bdt>
+                  </span>
+               </span>
+            </span>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To manage user accounts.&nbsp;</strong>We may use your information for the purposes of managing our account and keeping it in working order.
+                        <bdt class="statement-end-if-in-editor"></bdt>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To send administrative information to you.&nbsp;</strong>We may use your personal information to send you product, service and new feature information and/or information about changes to our terms, conditions, and policies. pp
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="statement-end-if-in-editor"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To protect our Services.&nbsp;</strong>We may use your information as part of our efforts to keep our 
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                          Services
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                        safe and secure (for example, for fraud monitoring and prevention).
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>
+                           To enforce our terms, conditions and policies for business purposes, to comply with legal and regulatory requirements or in connection with our contract.
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px; ">
+                                                <span style="font-size: 15px; ">
+                                                   <span data-custom-class="body_text">
+                                                      <bdt class="statement-end-if-in-editor"></bdt>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </strong>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px;">
+                  <span >
+                     <span >
+                        <span data-custom-class="body_text">
+                           <strong>To respond to legal requests and prevent harm.</strong>If we receive a subpoena or other legal request, we may need to inspect the data we hold to determine how to respond.
+                           <span >
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <p style="font-size: 15px;">
+            <bdt class="block-component"></bdt>
+         </p>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px;">
+                  <span >
+                     <span >
+                        <span data-custom-class="body_text">
+                           <strong>Fulfill and manage your orders.&nbsp;</strong>We may use your information to fulfill and manage your orders, payments, returns, and exchanges made through the 
+                           <span style="font-size: 15px;">
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px;">
+                                       <span >
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                             <bdt class="block-component"></bdt>
+                                             Services
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                             <bdt class="block-component">.</bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                           <span >
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <p style="font-size: 15px;">
+            <bdt class="block-component"></bdt>
+         </p>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px;">
+                  <span >
+                     <span >
+                        <span data-custom-class="body_text">
+                           <strong>Administer prize draws and competitions.</strong> We may use your information to administer prize draws and competitions when you elect to participate in our competitions.
+                           <span >
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <p style="font-size: 15px;">
+            <bdt class="block-component"></bdt>
+         </p>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px;">
+                  <span >
+                     <span >
+                        <span data-custom-class="body_text">
+                           <strong>To deliver and facilitate delivery of services to the user.</strong> We may use your information to provide you with the requested service.
+                           <span >
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <p style="font-size: 15px;">
+            <bdt class="block-component"></bdt>
+         </p>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px;">
+                  <span >
+                     <span >
+                        <span data-custom-class="body_text">
+                           <strong>To respond to user inquiries/offer support to users.</strong> We may use your information to respond to your inquiries and solve any potential issues you might have with the use of our Services.
+                           <span >
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <strong>To send you marketing and promotional communications.</strong> We and/or our third-party marketing partners may use the personal information you send to us for our marketing purposes, if this is in accordance with your marketing preferences. For example, when expressing an interest in obtaining information about us or our 
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                          Services
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                        , subscribing to marketing or otherwise contacting us, we will collect personal information from you. You can opt-out of our marketing emails at any time (see the "<a data-custom-class="link" href="#privacyrights"><span style="font-size: 15px;"><span >WHAT ARE YOUR PRIVACY RIGHTS</span></span></a>" below).
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px;">
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <bdt class="statement-end-if-in-editor"></bdt>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+         </div>
+         <ul>
+            <li style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text"><strong>Deliver targeted advertising to you.</strong></span>
+                     <span data-custom-class="body_text">
+                        &nbsp;We may use your information to develop and display personalized content and advertising (and work with third parties who do so) tailored to your interests and/or location and to measure its effectiveness.
+                        <span >
+                           <span data-custom-class="body_text">
+                              <bdt class="block-component"></bdt>
+                           </span>
+                        </span>
+                        <bdt class="statement-end-if-in-editor"></bdt>
+                     </span>
+                  </span>
+               </span>
+            </li>
+         </ul>
+         <div>
+            <bdt class="block-component"><span style="font-size: 15px;"></span></bdt>
+            <div>
+               <span style="font-size: 15px;">
+                  <bdt class="block-component"></bdt>
+               </span>
+               <bdt class="statement-end-if-in-editor"><span style="font-size: 15px;"></span></bdt>
+            </div>
+            <div style="line-height: 1.5;"><br></div>
+            <div id="infoshare" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">3. WILL YOUR INFORMATION BE SHARED WITH ANYONE?</span></strong></span></span></span></span></span></div>
+            <div style="line-height: 1.5;"><br></div>
+            <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:</em></strong><em>&nbsp; We only share information with your consent, to comply with laws, to provide you with services, to protect your rights, or to fulfill business obligations.</em></span></span></span></div>
+            <div style="line-height: 1.5;"><br></div>
+            <div style="line-height: 1.5;">
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        We may process or share your data that we hold based on the following legal basis:
+                        <bdt class="block-component"></bdt>
+                     </span>
+                  </span>
+               </span>
+            </div>
+            <ul>
+               <li style="line-height: 1.5;">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong>Consent:</strong> We may process your data if you have given us specific consent to use your personal information for a specific purpose.
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <bdt class="statement-end-if-in-editor"></bdt>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </li>
+            </ul>
+            <div>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="statement-end-if-in-editor">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </div>
+            <ul>
+               <li style="line-height: 1.5;">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong>Legitimate Interests:</strong> We may process your data when it is reasonably necessary to achieve our legitimate business interests.
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </li>
+            </ul>
+            <div>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="block-component"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </div>
+            <ul>
+               <li style="line-height: 1.5;">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong>Performance of a Contract:</strong> Where we have entered into a contract with you, we may process your personal information to fulfill the terms of our contract.
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </li>
+            </ul>
+            <div>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="block-component"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </div>
+            <ul>
+               <li style="line-height: 1.5;">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong>Legal Obligations:</strong> We may disclose your information where we are legally required to do so in order to comply with applicable law, governmental requests, a judicial proceeding, court order, or legal process, such as in response to a court order or a subpoena (including in response to public authorities to meet national security or law enforcement requirements).
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </li>
+            </ul>
+            <div>
+               <span style="font-size: 15px; ">
+                  <span style="font-size: 15px; ">
+                     <span data-custom-class="body_text">
+                        <span style="font-size: 15px; ">
+                           <span style="font-size: 15px; ">
+                              <span data-custom-class="body_text">
+                                 <bdt class="block-component"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </span>
+            </div>
+            <ul>
+               <li style="line-height: 1.5;">
+                  <span style="font-size: 15px; ">
+                     <span style="font-size: 15px; ">
+                        <span data-custom-class="body_text">
+                           <strong>Vital Interests:</strong> We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our policies pp, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved.
+                           <span style="font-size: 15px; ">
+                              <span style="font-size: 15px; ">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px; ">
+                                       <span style="font-size: 15px; ">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                  </span>
+               </li>
+            </ul>
+            <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">More specifically, we may need to process your data or share your personal information in the following situations:</span></span></span></div>
+            <ul>
+               <li style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong>Business Transfers.</strong> We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.</span></span></span></li>
+            </ul>
+            <div>
+               <span style="font-size: 15px;">
+                  <span >
+                     <span data-custom-class="body_text">
+                        <bdt class="block-component"></bdt>
+                     </span>
+                  </span>
+               </span>
+               <div>
+                  <span style="font-size: 15px;">
+                     <span >
+                        <span data-custom-class="body_text">
+                           <bdt class="block-component"></bdt>
+                        </span>
+                     </span>
+                  </span>
+                  <div>
+                     <span style="font-size: 15px;">
+                        <span >
+                           <span style="font-size: 15px;">
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <bdt class="block-component"></bdt>
+                                 </span>
+                              </span>
+                           </span>
+                        </span>
+                     </span>
+                     <div>
+                        <span style="font-size: 15px;">
+                           <span >
+                              <span data-custom-class="body_text">
+                                 <bdt class="block-component"></bdt>
+                              </span>
+                           </span>
+                        </span>
+                        <div>
+                           <span style="font-size: 15px;">
+                              <span >
+                                 <span data-custom-class="body_text">
+                                    <bdt class="block-component"></bdt>
+                                 </span>
+                              </span>
+                           </span>
+                           <div>
+                              <span style="font-size: 15px;">
+                                 <span >
+                                    <span style="font-size: 15px;">
+                                       <span data-custom-class="body_text">
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                       <span >
+                                          <bdt class="block-component"><span data-custom-class="body_text"></span></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <ul>
+                              <li style="line-height: 1.5;">
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          <strong>Offer Wall.</strong> Our App may display a third-party hosted "offer wall." Such an offer wall allows third-party advertisers to offer virtual currency, gifts, or other items to users in return for the acceptance and completion of an advertisement offer. Such an offer wall may appear in our App and be displayed to you based on certain data, such as your geographic area or demographic information. When you click on an offer wall, you will be brought to an external website belonging to other persons and will leave our App. A unique identifier, such as your user ID, will be shared with the offer wall provider in order to prevent fraud and properly credit your account with the relevant reward. Please note that we do not control third-party websites and have no responsibility in relation to the content of such websites. The inclusion of a link towards a third-party website does not imply an endorsement by us of such website. Accordingly, we do not make any warranty regarding such third-party websites and we will not be liable for any loss or damage caused by the use of such websites. In addition, when you access any third-party website, please understand that your rights while accessing and using those websites will be governed by the privacy notice and terms of service relating to the use of those websites.
+                                          <span style="font-size: 15px; ">
+                                             <span style="font-size: 15px; ">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <span style="font-size: 15px;">
+                                                               <span >
+                                                                  <span data-custom-class="body_text">
+                                                                     <bdt class="statement-end-if-in-editor"></bdt>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <span style="font-size: 15px;">
+                                                               <span >
+                                                                  <span data-custom-class="body_text">
+                                                                     <bdt class="statement-end-if-in-editor"></bdt>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </li>
+                           </ul>
+                           <div style="line-height: 1.5;">
+                              <span >
+                                 <bdt class="block-component"></bdt>
+                              </span>
+                           </div>
+                           <div>
+                              <span style=" font-size: 15px;">
+                                 <span style="font-size: 15px;">
+                                    <span >
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <bdt class="block-component"><span data-custom-class="heading_1"></span></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="cookies" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong><em>We may use cookies and other tracking technologies to collect and store your information.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       We may use cookies and similar tracking technologies (like web beacons and pixels) to access or store information. Specific information about how we use such technologies and how you can refuse certain cookies is set out in our Cookie Notice
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                             .
+                                          </span>
+                                          <span style=" font-size: 15px;">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="statement-end-if-in-editor"></bdt>
+                                                         </span>
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="block-component"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                         </span>
+                                                         <bdt class="block-component">
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component">
+                                                                  <span style=" font-size: 15px;">
+                                                                     <span style=" font-size: 15px;">
+                                                                        <span style=" font-size: 15px;">
+                                                                           <span style=" font-size: 15px;">
+                                                                              <span style=" font-size: 15px;">
+                                                                                 <span style="font-size: 15px;">
+                                                                                    <span >
+                                                                                       <span style="font-size: 15px;">
+                                                                                          <span >
+                                                                                             <span data-custom-class="body_text">
+                                                                                                <bdt class="block-component"></bdt>
+                                                                                             </span>
+                                                                                          </span>
+                                                                                       </span>
+                                                                                    </span>
+                                                                                 </span>
+                                                                              </span>
+                                                                           </span>
+                                                                        </span>
+                                                                     </span>
+                                                                  </span>
+                                                               </bdt>
+                                                            </span>
+                                                         </bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; ">&nbsp;</span></span></div>
+                           <div><span id="3pwebsites" ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">5. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:</em></strong><em>&nbsp;We are not responsible for the safety of any information that you share with third-party providers who advertise, but are not affiliated with, our Website.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       The 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       may contain advertisements from third parties that are not affiliated with us and which may link to other websites, online services or mobile applications. We cannot guarantee the safety and privacy of data you provide to any third parties. Any data collected by third parties is not covered by this privacy notice. We are not responsible for the content or privacy and security practices and policies pp of any third parties, including other websites, services or applications that may be linked to or from the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       . You should review the policies of such third parties and contact them directly to respond to your questions.
+                                       <span style=" font-size: 15px;">
+                                          <span style=" font-size: 15px;">
+                                             <span style=" font-size: 15px;">
+                                                <span style=" font-size: 15px;">
+                                                   <span style=" font-size: 15px;">
+                                                      <span >
+                                                         <span >
+                                                            <span >
+                                                               <bdt class="statement-end-if-in-editor"><span data-custom-class="body_text"></span></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="inforetain" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">6. HOW LONG DO WE KEEP YOUR INFORMATION?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong><em>We keep your information for as long as necessary to fulfill the purposes outlined in this privacy notice unless otherwise required by law.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       We will only keep your personal information for as long as it is necessary for the purposes set out in this privacy notice, unless a longer retention period is required or permitted by law (such as tax, accounting or other legal requirements). No purpose in this notice will require us keeping your personal information for longer than 
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="block-component"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       <bdt class="block-component"></bdt>
+                                       the period of time in which users have an account with us
+                                       <bdt class="block-component"></bdt>
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="else-block"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       .
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       When we have no ongoing legitimate business need to process your personal information, we will either delete or anonymize such information, or, if this is not possible (for example, because your personal information has been stored in backup archives), then we will securely store your personal information and isolate it from any further processing until deletion is possible.
+                                       <span >
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="infosafe" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">7. HOW DO WE KEEP YOUR INFORMATION SAFE?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong><em>&nbsp;We aim to protect your personal information through a system of organizational and technical security measures.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorized third parties will not be able to defeat our security, and improperly collect, access, steal, or modify your information. Although we will do our best to protect your personal information, transmission of personal information to and from our 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       is at your own risk. You should only access the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       within a secure environment.
+                                       <span >
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                       </span>
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="infominors" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">8. DO WE COLLECT INFORMATION FROM MINORS?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:</em></strong><em>&nbsp; We do not knowingly collect data from or market to children under 18 years of age.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       We do not knowingly solicit data from or market to children under 18 years of age. By using the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       , you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependents use of the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px;">
+                                                <span >
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <bdt class="block-component"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                               Services
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       . If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we may have collected from children under age 18, please contact us at 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                             <bdt class="question">__________</bdt>
+                                             <bdt class="else-block"></bdt>
+                                          </span>
+                                       </span>
+                                       .
+                                       <span style=" font-size: 15px;">
+                                          <span style=" font-size: 15px;">
+                                             <span data-custom-class="body_text">
+                                                <bdt class="statement-end-if-in-editor"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="privacyrights" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">9. WHAT ARE YOUR PRIVACY RIGHTS?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       <strong><em>In Short:</em></strong>
+                                       <em>
+                                          &nbsp; 
+                                          <span >
+                                             <span style="font-size: 15px;">
+                                                <span data-custom-class="body_text">
+                                                   <em>
+                                                      <bdt class="block-component"></bdt>
+                                                   </em>
+                                                </span>
+                                             </span>
+                                          </span>
+                                          You may review, change, or terminate your account at any time.
+                                       </em>
+                                       <span >
+                                          <span style="font-size: 15px;">
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; ">&nbsp;</span></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">If you are a resident in the European Economic Area and you believe we are unlawfully processing your personal information, you also have the right to complain to your local data protection supervisory authority. You can find their contact details here: <span style="font-size: 15px;"><span ><span data-custom-class="body_text"><span style="color: rgb(48, 48, 241);"><span data-custom-class="body_text">
+                              </span></span></span></span></span>.</span></span></span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       If you are a resident in Switzerland, the contact details for the data protection authorities are available here: <span style="font-size: 15px;"><span ><span data-custom-class="body_text"><span style="color: rgb(48, 48, 241);"><span data-custom-class="body_text"><span style="font-size: 15px;"> </span></span></span></span></span></span>.
+                                       <bdt class="block-component"></bdt>
+                                       <bdt class="block-component"></bdt>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       If you have questions or comments about your privacy rights, you may email us at 
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="question"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cbb8bebbbba4b9bf8bafbba9a4b8b8b8b8e5a9a4b8bfa4a5">[email&#160;protected]</a></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       .
+                                       <span style="font-size: 15px; ">
+                                          <span style="font-size: 15px; ">
+                                             <span data-custom-class="body_text">
+                                                <span style="font-size: 15px;">
+                                                   <span >
+                                                      <span data-custom-class="body_text">
+                                                         <span >
+                                                            <span style="font-size: 15px;">
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><span data-custom-class="heading_2" style="color: rgb(0, 0, 0);"><span style="font-size: 15px;"><strong><u><br></u></strong><strong>Account Information</strong></span></span></div>
+                           <div>
+                              <div><br></div>
+                              <div style="line-height: 1.5;">
+                                 <span >
+                                    <span style=" font-size: 15px;">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px; ">
+                                             <span style="font-size: 15px; ">
+                                                <span data-custom-class="body_text">
+                                                   If you would at any time like to review or change the information in your account or terminate your account, you can:
+                                                   <bdt class="forloop-component"></bdt>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </div>
+                              <ul>
+                                 <li style="line-height: 1.5;">
+                                    <span >
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style="font-size: 15px; ">
+                                                <span style="font-size: 15px; ">
+                                                   <span data-custom-class="body_text">
+                                                      <bdt class="question">Log in to your account settings and update your user account.</bdt>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </li>
+                              </ul>
+                              <div>
+                                 <span >
+                                    <span style=" font-size: 15px;">
+                                       <span data-custom-class="body_text">
+                                          <span style="font-size: 15px; ">
+                                             <span style="font-size: 15px; ">
+                                                <span data-custom-class="body_text">
+                                                   <bdt class="forloop-component"></bdt>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </div>
+                              <div style="line-height: 1.5;">
+                                 <span style="font-size: 15px; ">
+                                    <span style="font-size: 15px; ">
+                                       <span data-custom-class="body_text">
+                                          Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, we may retain some information in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with applicable legal requirements.
+                                          <span style="font-size: 15px;">
+                                             <span >
+                                                <span style="font-size: 15px;">
+                                                   <span >
+                                                      <span data-custom-class="body_text">
+                                                         <span style="font-size: 15px;">
+                                                            <span >
+                                                               <bdt class="statement-end-if-in-editor"></bdt>
+                                                               <bdt class="block-component"></bdt>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </div>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       <strong><u>Cookies and similar technologies:</u></strong> Most Web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to remove cookies or reject cookies, this could affect certain features or services of our 
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <span style=" font-size: 15px;">
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <span style="font-size: 15px;">
+                                                                  <span >
+                                                                     <span data-custom-class="body_text">
+                                                                        <bdt class="block-component"></bdt>
+                                                                        <bdt class="block-component"></bdt>
+                                                                        Services
+                                                                        <bdt class="statement-end-if-in-editor"></bdt>
+                                                                        <bdt class="block-component"></bdt>
+                                                                     </span>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       . To opt-out of interest-based advertising by advertisers on our 
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <span style=" font-size: 15px;">
+                                                   <span data-custom-class="body_text">
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span data-custom-class="body_text">
+                                                               <span style="font-size: 15px;">
+                                                                  <span >
+                                                                     <span data-custom-class="body_text">
+                                                                        <bdt class="block-component"></bdt>
+                                                                        <bdt class="block-component"></bdt>
+                                                                        Services
+                                                                        <bdt class="statement-end-if-in-editor"></bdt>
+                                                                        <bdt class="block-component"></bdt>
+                                                                     </span>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       visit <span style="color: rgb(48, 48, 241);"><span data-custom-class="body_text">
+                                       </span></span>. 
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span data-custom-class="body_text">
+                                                <bdt class="block-component"></bdt>
+                                                <span style="font-size: 15px;">
+                                                   <span >
+                                                      <span style="font-size: 15px;">
+                                                         <span >
+                                                            <span style="font-size: 15px;">
+                                                               <span >
+                                                                  <bdt class="statement-end-if-in-editor"></bdt>
+                                                               </span>
+                                                            </span>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                             <span data-custom-class="body_text">
+                                                <bdt class="block-component"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       <strong><u>Opting out of email marketing:</u></strong> You can unsubscribe from our marketing email list at any time by clicking on the unsubscribe link in the emails that we send or by contacting us using the details provided below. You will then be removed from the marketing email list however, we may still communicate with you, for example to send you service-related emails that are necessary for the administration and use of your account, to respond to service requests, or for other non-marketing purposes. To otherwise opt-out, you may:
+                                       <span >
+                                          <span style="font-size: 15px;">
+                                             <span data-custom-class="body_text">
+                                                <bdt class="forloop-component"></bdt>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <ul>
+                              <li style="line-height: 1.5;">
+                                 <bdt class="question"><span data-custom-class="body_text">Access your account settings and update your preferences.</span></bdt>
+                              </li>
+                           </ul>
+                           <div>
+                              <bdt class="forloop-component">
+                                 <span data-custom-class="body_text">
+                                    <span >
+                                       <span style="font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span style="font-size: 15px;">
+                                                         <bdt class="statement-end-if-in-editor"></bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </bdt>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="DNT" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">10. CONTROLS FOR DO-NOT-TRACK FEATURES</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">Most web browsers and some mobile operating systems and mobile applications include a Do-Not-Track ("DNT") feature or setting you can activate to signal your privacy preference not to have data about your online browsing activities monitored and collected. At this stage no uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals or any other mechanism that automatically communicates your choice not to be tracked online. If a standard for online tracking is adopted that we must follow in the future, we will inform you about that practice in a revised version of this privacy notice.</span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="caresidents" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">11. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</span></strong></span></span></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong><em>&nbsp;Yes, if you are a resident of California, you are granted specific rights regarding access to your personal information.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">California Civil Code Section 1798.83, also known as the "Shine The Light" law, permits our users who are California residents to request and obtain from us, once a year and free of charge, information about categories of personal information (if any) we disclosed to third parties for direct marketing purposes and the names and addresses of all third parties with which we shared personal information in the immediately preceding calendar year. If you are a California resident and would like to make such a request, please submit your request in writing to us using the contact information provided below.</span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       If you are under 18 years of age, reside in California, and have a registered account with 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style=" font-size: 15px;">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="block-component"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                            a Service
+                                                            <bdt class="statement-end-if-in-editor"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       , you have the right to request removal of unwanted data that you publicly post on the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style=" font-size: 15px;">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="block-component"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                            Services
+                                                            <bdt class="statement-end-if-in-editor"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       . To request removal of such data, please contact us using the contact information provided below, and include the email address associated with your account and a statement that you reside in California. We will make sure the data is not publicly displayed on the 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <span style=" font-size: 15px;">
+                                                <span data-custom-class="body_text">
+                                                   <span style="font-size: 15px;">
+                                                      <span >
+                                                         <span data-custom-class="body_text">
+                                                            <bdt class="block-component"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                            Services
+                                                            <bdt class="statement-end-if-in-editor"></bdt>
+                                                            <bdt class="block-component"></bdt>
+                                                         </span>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                       , but please be aware that the data may not be completely or comprehensively removed from all our systems (e.g. backups, etc.).
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="policyupdates" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">12. DO WE MAKE UPDATES TO THIS NOTICE?</span></strong></span>&nbsp;</span>&nbsp;</span></span>&nbsp;</span></div>
+                           <div style="line-height: 1.5;"><em><br></em></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text"><em><strong>In Short:&nbsp;</strong> Yes, we will update this notice as necessary to stay compliant with relevant laws.</em></span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">We may update this privacy notice from time to time. The updated version will be indicated by an updated "Revised" date and the updated version will be effective as soon as it is accessible. If we make material changes to this privacy notice, we may notify you either by prominently posting a notice of such changes or by directly sending you a notification. We encourage you to review this privacy notice frequently to be informed of how we are protecting your information.</span></span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="contact" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">13. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</span></strong>&nbsp;</span></span>&nbsp;</span>&nbsp;</span>&nbsp;</span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       If you have questions or comments about this notice, you may 
+                                       <span style=" font-size: 15px;">
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                             email us at 
+                                             <bdt class="question">__________</bdt>
+                                             <bdt class="statement-end-if-in-editor"></bdt>
+                                          </span>
+                                       </span>
+                                       <span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">or by post to:</span></span></span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px; ">
+                                 <span style="font-size: 15px; ">
+                                    <span data-custom-class="body_text">
+                                       <span style="font-size: 15px;">
+                                          <span >
+                                             <span >
+                                                <span data-custom-class="body_text">
+                                                   <bdt class="question">Matka HeadOffice</bdt>
+                                                </span>
+                                             </span>
+                                          </span>
+                                       </span>
+                                    </span>
+                                    <span data-custom-class="body_text">
+                                       <span >
+                                          <span data-custom-class="body_text">
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px;">
+                                 <span data-custom-class="body_text">
+                                    <bdt class="question">Kalyan,Mumbai,</bdt>
+                                    <span >
+                                       <span style="font-size: 15px;">
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px;">
+                                 <span data-custom-class="body_text">
+                                    <bdt class="question">Mumbai</bdt>
+                                    <span >
+                                       <span style="font-size: 15px;">
+                                          <bdt class="block-component"></bdt>
+                                          , 
+                                          <bdt class="question">Maharashtra</bdt>
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="question">420002</bdt>
+                                          <bdt class="statement-end-if-in-editor"></bdt>
+                                       </span>
+                                       <span style="font-size: 15px;">
+                                          <bdt class="block-component"></bdt>
+                                          <bdt class="block-component"></bdt>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;">
+                              <span style="font-size: 15px;">
+                                 <span data-custom-class="body_text">
+                                    <span style="font-size: 15px;">
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <bdt class="block-component"></bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                    <bdt class="question">India</bdt>
+                                    <span style="font-size: 15px;">
+                                       <span data-custom-class="body_text">
+                                          <span >
+                                             <bdt class="statement-end-if-in-editor">
+                                                <span style="font-size: 15px;">
+                                                   <span data-custom-class="body_text">
+                                                      <span >
+                                                         <bdt class="statement-end-if-in-editor">
+                                                            <span style="font-size: 15px;">
+                                                               <span data-custom-class="body_text">
+                                                                  <span >
+                                                                     <bdt class="statement-end-if-in-editor"></bdt>
+                                                                  </span>
+                                                               </span>
+                                                            </span>
+                                                         </bdt>
+                                                         <bdt class="statement-end-if-in-editor"></bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                                <span data-custom-class="body_text">
+                                                   <span >
+                                                      <span style="font-size: 15px;">
+                                                         <bdt class="statement-end-if-in-editor"></bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                                <span >
+                                                   <span style="font-size: 15px;">
+                                                      <span data-custom-class="body_text">
+                                                         <bdt class="block-component">
+                                                            <bdt class="block-component"></bdt>
+                                                         </bdt>
+                                                      </span>
+                                                   </span>
+                                                </span>
+                                             </bdt>
+                                          </span>
+                                       </span>
+                                    </span>
+                                 </span>
+                              </span>
+                           </div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div id="request" style="line-height: 1.5;"><span ><span style=" font-size: 15px;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">14. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</span></strong>&nbsp;</span></span>&nbsp;</span>&nbsp;</span></span></div>
+                           <div style="line-height: 1.5;"><br></div>
+                           <div style="line-height: 1.5;"><span style="font-size: 15px; "><span style="font-size: 15px; "><span data-custom-class="body_text">Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. </span></span></span></div>
+                           <style>
+                              ul {
+                              list-style: none;
+                              }
+                              ul > li > ul {
+                              list-style: none;
+                              }
+                              ul > li > ul > li > ul {
+                              list-style: none;
+                              }
+                              ol li {
+                              font-family: Arial ;
+                              }
+                           </style>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+</div>
+
+
+<style>
+.button2 {
+  background-color: #a0d5ff;
+  color: #220c82;
+  padding: 10px 30px;
+  font-size: 16px;
+  margin: 20px auto;
+  border-radius: 10px;
+  border: 2px solid #0000005c;
+  font-weight: 800;
+  text-shadow: 1px 1px #00bcd4;
+  box-shadow: 0 8px 10px 0 rgba(0,0,0,.2) , 0 6px 8px 0 rgba(0,0,0,.19);
+  display: inline-block;
+  transition: all .3s;
+}
+
+.chart-list.ab1 {
+  border-color: #003c6c;
+}
+
+.chart-list {
+  border: 2px solid #eb008b;
+    border-top-color: rgb(235, 0, 139);
+    border-right-color: rgb(235, 0, 139);
+    border-bottom-color: rgb(235, 0, 139);
+    border-left-color: rgb(235, 0, 139);
+  border-radius: 10px 0 10px 10px;
+  margin-bottom: 2px;
+  width: 50%;
+  margin: 0 auto 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+footer {
+  background-color: #fff;
+  color: red;
+  font-weight: bold;
+  font-size: 25px;
+  text-decoration: none;
+  border: 4px groove purple;
+  border-radius: 10px 0 0 0;
+  text-shadow: 1px 1px gold;
+  margin: 3px;
+}
+footer > div {
+  border-bottom: 2px solid #b2ddff;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+footer > div a {
+  text-decoration: none;
+}
+footer p {
+  margin: 10px 0 10px;
+  line-height: 35px;
+  color: red;
+font-weight: bold;
+font-size: 25px;
+text-shadow: 1px 1px gold;
+}
+footer .ftr-icon {
+  text-decoration: none;
+  font-size: 35px;
+  text-transform: uppercase;
+  color: #007bff;
+}
+.chart-list.ab1 h4 {
+  background-color: #024c88;
+} 
+.chart-list h4 {
+  color: #fff;
+  padding: 5px 10px 3px;
+  font-size: 24px;
+  border-top-left-radius: 7px;
+  margin: 0;
+}
+.chart-list {
+  text-align: center;
+  font-weight: 600;
+}
+.chart-list a {
+  display: block;
+  font-size: 22px;
+  padding: 5px 7px 4px;
+  text-decoration: none;
+}
+.chart-list.ab1 a {
+  border-bottom: 2px solid #024c88;
+  color: #003c6c;
+}
+.chart-list.ab1 h4 {
+  background-color: #024c88;
+  border-radius: 7px 0px 0px;
+  border: none;
+}
+footer p span {
+  color: #36f;
+}.chart-list.ab1 h4::before {
+  content: none;
+}
+
+
+@media only screen and (max-width:500px) {
+ .chart-list {
+  width:95%;
+ }
+}
+.mp-btn {
+  position: fixed;
+  bottom: 9px;
+  left: 5px;
+  padding: 5px 8px;
+  font-size: 15px;
+  border: 1px solid #fff;
+  text-decoration: none;
+  background-color: #039;
+  color: #fff;
+  border-radius: 5px;
+}
+</style>
+
+<center>
+	<div id="bottom"></div>
+	<a href="#top" class="button2"> Go to Top </a>
+</center>
+
+<style>
+
+html{overflow-x:hidden;scroll-behavior:smooth}body{background-color:#fc9;color:#000;font-weight:700;text-align:center!important;margin-bottom:0;margin-top:4px;font-family:Helvetica,sans-serif!important}*{transition:all .3s}a{text-decoration:none!important;color:inherit}.my-header{border-radius:10px 0 10px 10px;margin-bottom:3px!important;border:2px solid #eb008b;box-shadow:0 0 9px -1px #ffeddc;padding:1px 2px}.my-header img{height:160px;width:auto;margin:-28px 0 -34px}.open-close{border-radius:10px 0 10px 10px;margin-bottom:2px!important;border:2px solid #eb008b;box-shadow:0 0 9px -1px #ffeddc;padding:20px 5px 22px}.open-close h2{color:#fff;font-size:32px;background-image:linear-gradient(45deg,#9c27b0,#e91e63,#9c27b0);display:inline-block;padding:10px 20px 10px;margin:0;border-radius:10px}.open-close h3{color:#1a237e;font-size:29px;margin:0 0 20px}.my-card{border-radius:10px 0 10px 10px;margin-bottom:2px!important;border:2px solid #9c27b0;box-shadow:0 0 9px -1px #ffeddc;padding:0 0 2px;overflow:hidden}.my-card h3{color:#fff;font-size:32px;margin:0;padding:2px 0 1px}.headering-1 h3{background-color:#50005b}.headering-2 h3{background-color:#ff0;color:#000}.headering-3 h3{background-color:#0f005b}.my-card h2{color:#232323;margin:10px 0;font-size:22px}.my-footer{border-radius:10px 0 10px 10px;margin-bottom:2px!important;border:2px solid #eb008b;box-shadow:0 0 9px -1px #ffeddc;padding:0 5px 22px}.my-footer .top-div{z-index:81}.my-footer .top-div a{z-index:41;cursor:pointer}.my-footer .my-img{z-index:-10}.my-footer .my-img img{height:160px;width:auto;margin:-28px 0 -34px;z-index:-9}.my-footer .two-btn a{border:2px solid #e91e63;padding:3px 8px 4px;border-radius:5px;font-size:18px;color:#fff;background-color:#e91e63;font-weight:500;display:inline-block}.my-footer .last-para{margin:20px 0 0}.my-footer .last-para p{margin:6px 0 0;font-size:20px;font-weight:400;color:#151515}@media only screen and (max-width:500px){.my-header img{height:90px;width:auto;margin:-16px 0 -19px}.open-close{padding:8px 0 10px}.open-close h3{font-size:20px;margin-bottom:10px}.open-close h2{font-size:22px}.my-card h3{font-size:24px}.my-card h2{font-size:17px}.my-footer{padding-bottom:10px}.my-footer .my-img img{height:100px;width:auto;margin:-16px 0 -19px}.my-footer .two-btn a{font-size:14px;padding:5px 5px 6px}.my-footer .last-para p{font-size:16px}}@media only screen and (max-width:320px){.my-footer .two-btn a{font-size:12px;padding:3px}}
+
+
+.logo {
+border: 2px solid #eb008b;
+border-radius: 10px 0 10px 10px;
+margin: 2px;
+overflow: hidden;
+}
+.logo amp-img {
+width: 220px;
+height: auto;
+padding: 6px 0 0;
+}
+.button2 {
+background-color: #a0d5ff;
+color: #220c82;
+padding: 10px 30px;
+font-size: 16px;
+margin: 20px auto;
+border-radius: 10px;
+border: 2px solid #0000005c;
+font-weight: 800;
+text-shadow: 1px 1px #00bcd4;
+box-shadow: 0 8px 10px 0 rgb(0 0 0 / 20%), 0 6px 8px 0 rgb(0 0 0 / 19%);
+display: inline-block;
+transition: all .3s;
+}.ad-div11 {
+text-align: center;
+margin: 0 0 10px;
+}
+.chart-list {
+border: 2px solid #eb008b;
+border-radius: 10px 0 10px 10px;
+margin-bottom: 2px;
+width: 50%;
+margin: 0 auto 10px;
+text-align: center;
+font-weight: 600;
+}
+.chart-list.ab1 {
+border-color: #003c6c;
+}
+.chart-list h4 {
+color: #fff;
+padding: 5px 10px 3px;
+font-size: 24px;
+border-top-left-radius: 7px;
+margin: 0;
+}
+.chart-list.ab1 h4 {
+background-color: #024c88;
+}
+.chart-list a {
+display: block;
+font-size: 22px;
+padding: 5px 7px 4px;
+text-decoration: none;
+}
+.chart-list.ab1 a {
+border-bottom: 2px solid #024c88;
+color: #003c6c;
+}
+footer {
+background-color: #fff;
+color: red;
+font-weight: bold;
+font-size: 25px;
+text-decoration: none;
+border: 4px groove purple;
+border-radius: 10px 0 0 0;
+text-shadow: 1px 1px gold;
+margin: 3px;
+}
+footer > div {
+border-bottom: 2px solid #b2ddff;
+padding: 10px 0;
+margin-bottom: 10px;
+}
+footer > div a {
+text-decoration: none;
+}
+footer > div a:hover {
+text-decoration: none;
+}
+footer .ftr-icon {
+text-decoration: none;
+font-size: 35px;
+text-transform: uppercase;
+color: #007bff;
+}
+footer p {
+margin: 10px 0 10px;
+line-height: 35px;
+}
+footer p span {
+color: #36f;
+}
+
+body {
+  background-color: #fc9;
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: 'Roboto',sans-serif;
+}
+
+@media only screen and (max-width:500px) {
+ .chart-list {
+  width:95%;
+ }
+}
+</style>
+
+ 
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body></html> 

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dpboss Result API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        pre {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .tab {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .tab.active {
+            border-bottom: 2px solid #3b82f6;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold">Dpboss Result API Documentation</h1>
+            <p class="mt-2">A beginner-friendly guide to using the Dpboss Result API</p>
+        </div>
+    </header>
+
+    <nav class="bg-white shadow py-4">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-wrap space-x-6">
+                <li><a href="#introduction" class="text-blue-600 hover:underline">Introduction</a></li>
+                <li><a href="#hostname" class="text-blue-600 hover:underline">API Hostname</a></li>
+                <li><a href="#authentication" class="text-blue-600 hover:underline">Authentication</a></li>
+                <li><a href="#signature" class="text-blue-600 hover:underline">Signature Generation</a></li>
+                <li><a href="#requests" class="text-blue-600 hover:underline">Making Requests</a></li>
+                <li><a href="#example" class="text-blue-600 hover:underline">Example Use Case</a></li>
+                <li><a href="#errors" class="text-blue-600 hover:underline">Error Handling</a></li>
+                <li><a href="#code-examples" class="text-blue-600 hover:underline">Code Examples</a></li>
+                <li><a href="#contact" class="text-blue-600 hover:underline">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <section id="introduction" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+            <p class="text-gray-700">
+                Welcome to the Dpboss Result API! This guide is designed to be easy for beginners to understand. It will show you how to make secure requests to our API to fetch data. We'll cover:
+            </p>
+            <ul class="list-disc ml-6 mt-2 text-gray-700">
+                <li>Adding special headers to keep your requests secure.</li>
+                <li>Sending requests to get the data you need.</li>
+                <li>Understanding what the API sends back.</li>
+            </ul>
+            <p class="text-gray-700 mt-2">
+                The API uses a simple system to check that only authorized users can access it, keeping your data safe.
+            </p>
+        </section>
+
+        <section id="hostname" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">API Hostname</h2>
+            <p class="text-gray-700">
+                All requests start with this base URL:
+            </p>
+            <pre class="mt-2"><code>https://dpbossresultapi.com</code></pre>
+            <p class="text-gray-700 mt-2">
+                To use an endpoint, add its path to this URL. For example, to get data, use <code>https://dpbossresultapi.com/api/data</code>.
+            </p>
+        </section>
+
+        <section id="authentication" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Authentication</h2>
+            <p class="text-gray-700">
+                Every request needs three headers to prove it's from you:
+            </p>
+            <table class="w-full border-collapse border border-gray-300 mt-4">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border border-gray-300 p-2">Header Name</th>
+                        <th class="border border-gray-300 p-2">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 p-2"><code>X-API-Key</code></td>
+                        <td class="border border-gray-300 p-2">Your unique API key (like a username).</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2"><code>X-Timestamp</code></td>
+                        <td class="border border-gray-300 p-2">The current time in RFC3339 format (e.g., <code>2025-06-03T15:01:00Z</code>).</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2"><code>X-Signature</code></td>
+                        <td class="border border-gray-300 p-2">A secure code (HMAC-SHA256) to prove your request is safe.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="signature" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Signature Generation</h2>
+            <p class="text-gray-700">
+                The <code>X-Signature</code> header is like a password for your request. Here's how to make it:
+            </p>
+            <ol class="list-decimal ml-6 mt-2 text-gray-700">
+                <li>Combine these in order: <code>API_KEY + HTTP_METHOD + REQUEST_PATH + TIMESTAMP</code>.</li>
+                <li>Use your API Secret to create an HMAC-SHA256 hash of the combined string.</li>
+                <li>Turn the hash into a hexadecimal string.</li>
+                <li>Use this as the <code>X-Signature</code> header.</li>
+            </ol>
+            <p class="text-gray-700 mt-2">
+                This keeps your request secure. Check the code examples below to see how it's done.
+            </p>
+        </section>
+
+        <section id="requests" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Making Requests</h2>
+            <p class="text-gray-700">
+                To call the API:
+            </p>
+            <ul class="list-disc ml-6 mt-2 text-gray-700">
+                <li>Build the full URL: <code>https://dpbossresultapi.com/<endpoint></code>.</li>
+                <li>Add the three headers (<code>X-API-Key</code>, <code>X-Timestamp</code>, <code>X-Signature</code>).</li>
+                <li>Send the request using a tool like cURL, Fetch, or Axios.</li>
+                <li>Check the JSON response you get back.</li>
+            </ul>
+        </section>
+
+        <section id="example" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Example Use Case</h2>
+            <p class="text-gray-700">
+                Want to fetch all available data? Here's how:
+            </p>
+            <ul class="list-disc ml-6 mt-2 text-gray-700">
+                <li><strong>Method</strong>: GET</li>
+                <li><strong>Endpoint Path</strong>: <code>/api/data</code></li>
+                <li><strong>Full URL</strong>: <code>https://dpbossresultapi.com/api/data</code></li>
+                <li><strong>Response</strong>: A JSON object or array with the data.</li>
+            </ul>
+        </section>
+
+        <section id="errors" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Error Handling</h2>
+            <p class="text-gray-700">
+                If something goes wrong, here's what might happen:
+            </p>
+            <ul class="list-disc ml-6 mt-2 text-gray-700">
+                <li><strong>HTTP Errors</strong>:
+                    <ul class="list-circle ml-6">
+                        <li><code>400</code>: Something's wrong with your request (e.g., missing headers).</li>
+                        <li><code>401</code>: Wrong API key or signature.</li>
+                        <li><code>500</code>: Server issue (try again later).</li>
+                    </ul>
+                </li>
+                <li><strong>Timeouts</strong>: If the server takes too long, you'll get an error.</li>
+                <li><strong>No Response</strong>: Network issues will show in your logs.</li>
+                <li><strong>Other Issues</strong>: Check your console for error details.</li>
+            </ul>
+        </section>
+
+        <section id="code-examples" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Code Examples</h2>
+            <p class="text-gray-700">
+                Below are examples in different programming languages to help you get started. Use the tabs to switch between them.
+            </p>
+            <div class="mt-4">
+                <div class="flex border-b border-gray-300">
+                    <div class="tab active" onclick="switchTab('php')">PHP</div>
+                    <div class="tab" onclick="switchTab('js-fetch')">JavaScript (Fetch)</div>
+                    <div class="tab" onclick="switchTab('node-axios')">Node.js (Axios)</div>
+                    <div class="tab" onclick="switchTab('react-axios')">React (Axios)</div>
+                </div>
+                <div id="php" class="tab-content active">
+                    <pre><code>&lt?php
+$apiKey = "YOUR_API_KEY";
+$apiSecret = "YOUR_API_SECRET";
+$baseUrl = "https://dpbossresultapi.com";
+$path = "/api/data";
+$method = "GET";
+
+// Get the current time in RFC3339 format (e.g., 2025-06-03T15:01:00Z)
+$timestamp = gmdate("Y-m-d\TH:i:s\Z");
+
+// Combine the values to create the message
+$message = $apiKey . $method . $path . $timestamp;
+
+// Create the signature using HMAC-SHA256
+$signature = hash_hmac('sha256', $message, $apiSecret);
+
+// Set up the headers
+$headers = [
+    "X-API-Key: $apiKey",
+    "X-Timestamp: $timestamp",
+    "X-Signature: $signature"
+];
+
+// Set up the cURL request
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $baseUrl . $path);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_ENCODING, '');
+
+// Send the request and get the response
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+// Check for errors
+if (curl_errno($ch)) {
+    echo "Error: " . curl_error($ch);
+} else {
+    echo "HTTP Status: $httpCode\n";
+    echo "Response:\n$response";
+}
+
+curl_close($ch);
+?&gt</code></pre>
+                </div>
+                <div id="js-fetch" class="tab-content">
+                    <pre><code>const crypto = require('crypto');
+
+const apiKey = 'YOUR_API_KEY';
+const apiSecret = 'YOUR_API_SECRET';
+const baseUrl = 'https://dpbossresultapi.com';
+const path = '/api/data';
+const method = 'GET';
+
+// Get the current time in RFC3339 format
+const timestamp = new Date().toISOString();
+
+// Combine the values to create the message
+const message = apiKey + method + path + timestamp;
+
+// Create the signature using HMAC-SHA256
+const signature = crypto.createHmac('sha256', apiSecret)
+    .update(message)
+    .digest('hex');
+
+// Set up the headers
+const headers = {
+    'X-API-Key': apiKey,
+    'X-Timestamp': timestamp,
+    'X-Signature': signature
+};
+
+// Send the request using Fetch
+fetch(baseUrl + path, {
+    method: method,
+    headers: headers
+})
+.then(response => {
+    console.log('HTTP Status:', response.status);
+    return response.json();
+})
+.then(data => {
+    console.log('Response:', JSON.stringify(data, null, 2));
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+</code></pre>
+                </div>
+                <div id="node-axios" class="tab-content">
+                    <pre><code>const axios = require('axios');
+const crypto = require('crypto');
+
+const apiKey = 'YOUR_API_KEY';
+const apiSecret = 'YOUR_API_SECRET';
+const baseUrl = 'https://dpbossresultapi.com';
+const path = '/api/data';
+const method = 'GET';
+
+// Get the current time in RFC3339 format
+const timestamp = new Date().toISOString();
+
+// Combine the values to create the message
+const message = apiKey + method + path + timestamp;
+
+// Create the signature using HMAC-SHA256
+const signature = crypto.createHmac('sha256', apiSecret)
+    .update(message)
+    .digest('hex');
+
+// Set up the headers
+const headers = {
+    'X-API-Key': apiKey,
+    'X-Timestamp': timestamp,
+    'X-Signature': signature
+};
+
+// Send the request using Axios
+axios.get(baseUrl + path, { headers })
+    .then(response => {
+        console.log('HTTP Status:', response.status);
+        console.log('Response:', JSON.stringify(response.data, null, 2));
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+</code></pre>
+                </div>
+                <div id="react-axios" class="tab-content">
+                    <pre><code>import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import crypto from 'crypto-js';
+
+const ApiComponent = () => {
+  const [responseData, setResponseData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const apiKey = 'YOUR_API_KEY';
+  const apiSecret = 'YOUR_API_SECRET';
+  const baseUrl = 'https://dpbossresultapi.com';
+  const path = '/api/data';
+  const method = 'GET';
+
+  useEffect(() => {
+    // Get the current time in RFC3339 format
+    const timestamp = new Date().toISOString();
+
+    // Combine the values to create the message
+    const message = apiKey + method + path + timestamp;
+
+    // Create the signature using HMAC-SHA256
+    const signature = crypto.HmacSHA256(message, apiSecret).toString(crypto.enc.Hex);
+
+    // Set up the headers
+    const headers = {
+      'X-API-Key': apiKey,
+      'X-Timestamp': timestamp,
+      'X-Signature': signature
+    };
+
+    // Send the request using Axios
+    axios.get(baseUrl + path, { headers })
+      .then(response => {
+        setResponseData(response.data);
+      })
+      .catch(err => {
+        setError(err.message);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h2>Dpboss Result API Data</h2>
+      {error && <p>Error: {error}</p>}
+      {responseData ? (
+        <pre>{JSON.stringify(responseData, null, 2)}</pre>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+  );
+};
+
+export default ApiComponent;
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Contact</h2>
+            <p class="text-gray-700">
+                Need help? Reach out to our support team at:
+                <a href="/cdn-cgi/l/email-protection#8dfef8fdfde2fff9cde9fdefe2fefea3e3e8f9" class="text-blue-600 hover:underline"><span class="__cf_email__" data-cfemail="3f4c4a4f4f504d4b7f5b4f5d504c4c11515a4b">[email&#160;protected]</span></a>.
+            </p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Dpboss Result API. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function switchTab(tabId) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to selected tab and content
+            document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

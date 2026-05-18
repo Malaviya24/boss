@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html amp lang="en-in">
+<head>
+<title>Matka Jodi Count Chart | Matka Jodi Count Record</title>
+<script async src="https://cdn.ampproject.org/v0.js"></script>
+<script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Get the live matka jodi count chart online in India at dpbossss.boston. Explore the authentic matka jodi count satta chart and enhance your gaming experience.
+">
+<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+<link rel="canonical" href="https://dpbossss.boston/matka-jodi-count-chart.php">
+<style amp-custom>
+body{
+background-color:#fc9;
+text-align: center;
+padding-left: 10px;
+padding-right: 10px;
+font-family: 'Roboto', sans-serif;
+}
+.pink-border {
+border: 4px solid #ff006c;
+border-top-left-radius: 10px;
+}
+.logo{
+height: 120px;
+}
+.h3-header {
+font-family: 'Gelasio', serif;
+}
+.mfnc-ul {
+list-style: none;
+}
+.mfnc-ul li {
+text-decoration: none;
+padding: 20px ;
+}
+.mfnc-ul li a {
+text-decoration: none;
+}
+.violet-border{
+border-top-left-radius: 10px;
+border: 4px solid #000080;
+}
+.border-b-v {
+border-bottom: 2px solid #000080;
+}
+.violet-bg{
+background: #810069;
+}
+.mfnc-ul h2 span{
+color: #222;
+font-size: 30px;
+font-weight: bolder;
+font-style: italic;
+font-family: 'Gelasio', serif;
+}
+.mfnc-ul h1{
+color: red;
+font-size: 25px;
+font-family: 'Montserrat', sans-serif;
+}
+.logo {
+border: 2px solid #eb008b;
+border-radius: 10px 0 10px 10px;
+margin: 2px;
+overflow: hidden;
+}
+.logo amp-img {
+width: 220px;
+height: auto;
+padding: 6px 0 0;
+}
+.button2 {
+background-color: #a0d5ff;
+color: #220c82;
+padding: 10px 30px;
+font-size: 16px;
+margin: 20px auto;
+border-radius: 10px;
+border: 2px solid #0000005c;
+font-weight: 800;
+text-shadow: 1px 1px #00bcd4;
+box-shadow: 0 8px 10px 0 rgb(0 0 0 / 20%), 0 6px 8px 0 rgb(0 0 0 / 19%);
+display: inline-block;
+transition: all .3s;
+}.ad-div11 {
+text-align: center;
+margin: 0 0 10px;
+}
+.chart-list {
+border: 2px solid #eb008b;
+border-radius: 10px 0 10px 10px;
+margin-bottom: 2px;
+width: 50%;
+margin: 0 auto 10px;
+text-align: center;
+font-weight: 600;
+}
+.chart-list.ab1 {
+border-color: #003c6c;
+}
+.chart-list h4 {
+color: #fff;
+padding: 5px 10px 3px;
+font-size: 24px;
+border-top-left-radius: 7px;
+margin: 0;
+}
+
+
+.chart-list.ab1 h4 {
+background-color: #024c88;
+}
+.chart-list a {
+display: block;
+font-size: 22px;
+padding: 5px 7px 4px;
+text-decoration: none;
+}
+.chart-list.ab1 a {
+border-bottom: 2px solid #024c88;
+color: #003c6c;
+}
+footer {
+background-color: #fff;
+color: red;
+font-weight: bold;
+font-size: 25px;
+text-decoration: none;
+border: 4px groove purple;
+border-radius: 10px 0 0 0;
+text-shadow: 1px 1px gold;
+margin: 3px;
+}
+footer > div {
+border-bottom: 2px solid #b2ddff;
+padding: 10px 0;
+margin-bottom: 10px;
+}
+footer > div a {
+text-decoration: none;
+}
+footer > div a:hover {
+text-decoration: none;
+}
+footer .ftr-icon {
+text-decoration: none;
+font-size: 35px;
+text-transform: uppercase;
+color: #007bff;
+}
+footer p {
+margin: 10px 0 10px;
+line-height: 35px;
+}
+footer p span {
+color: #36f;
+}
+
+.mp-btn {
+  position: fixed;
+  bottom: 9px;
+  left: 5px;
+  padding: 5px 8px;
+  font-size: 15px;
+  border: 1px solid #fff;
+  text-decoration: none;
+  background-color: #039;
+  color: #fff;
+  border-radius: 5px;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div class="page">
+<div class="page-content">
+<div class="logo" style="box-shadow: 0 8px 0px -3px #ff9628;">
+<a href="https://dpbossss.boston/">
+<img src="data:image/png;base64,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" alt="Image of dpbossss.boston" height="57" width="292">
+
+</a>
+</div>
+</header>
+<div class="">
+<div class="mt-2">
+<div class="">
+<div class="">
+<div class=""></div>
+<div class="">
+<div class="text-center">
+<div class="pink-border">
+<b>
+<h4 class="">मटका जोड़ी काउंट चार्ट </h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h1 class="violet-bg mt-2 text-light pt-2 pb-2 ml-2 mr-2" style="color: white;">MATKA JODI COUNT CHART</h1>
+<ul class="mfnc-ul violet-border text-center pl-0 mt-2">
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 0 :</span></h2>
+<big><big>00</big></big>
+</div>
+</a>
+</li>
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 1 :</span></h2>
+<big><big>01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 2 :</span></h2>
+<big><big>02, 11, 20, 29, 38, 47, 56, 65, 74, 83, 92</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 3 :</span></h2>
+<big><big>03, 12, 21, 30, 39, 48, 57, 66, 75, 84, 93</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 4 :</span></h2>
+<big><big>04, 13, 22, 31, 40, 49, 58, 67, 76, 85, 94</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 5 :</span></h2>
+<big><big>06, 15, 24, 33, 42, 51, 60, 69, 78, 87, 96</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 6 :</span></h2>
+<big><big>07, 16, 25, 34, 43, 52, 61, 70, 79, 88, 97</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 7 :</span></h2>
+<big><big>07, 16, 25, 34, 43, 52, 61, 70, 79, 88, 97</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 8 :</span></h2>
+<big><big>08, 17, 26, 35, 44, 53, 62, 71, 80, 87, 98</big></big>
+</div>
+</a>
+</li> 
+<li class="list-group-item bg-transparent border-b-v">
+<a href="#" class="">
+<div class="">
+<h2 class=""><span class="">COUNT 9 :</span></h2>
+<big><big>09, 18, 27, 36, 45, 54, 63, 72, 81, 88, 99</big></big>
+</div>
+</a>
+</li> 
+</ul>
+</div>
+
+<div class="para3">
+<p style="margin: 0;font-size: 12px;line-height: 14px;"> 
+Hello everyone, welcome to our platform Dpboss.Services and today we will shed light on the Matka Jodi count chart. So this is a very simple count chart, but a very important one, and it will help you understand the concept of the count chart in the Satta Matka language. So we have several entries here on this page for the Matka Jodi count chart. 
+<br>
+<br>
+First, we have count 0 and the figure for it is 00. Then we have count 1 and here we have some figures. Mostly figures are starting from the 0, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, and 11. Then we have count 2 in which we have 02, 11, 20, 29, 38, 47, 56, 65, 74, 83, 92. These are fixed numbers and they are used for the Matka Jodi count. 
+<br>
+<br>
+So, we have several counts here starting from count 0, then count 1, count 2, count 3, count 4, count 5, count 6, count 7, count 8, and count 9. So all these numbers have several figures of two-digit numbers and they cover almost every two-digit number and some of them can be repeated in more than one count category. So you need to take care of this thing and please visit this page and try to understand the concept of the Matka Jodi count, and try to understand how these counts work. 
+<br>
+<br>
+When you visit and put some time into these charts, and observe the data in different count categories, then surely you will be able to draw useful information and insights from this page and it will help you a lot when you play your game practically, and you will be able to win and predict the perfect Jodi for your next game that will make you win a lot of money. Thank you. I wish you the best of luck, and may you always win! </p>
+</div>
+
+<center>
+	<div id="bottom"></div>
+	<a href="#top" class="button2"> Go to Top </a>
+</center>
+<p>
+141</p>
+	
+	
+<!-- adv & links -->
+<!-- footer -->
+<footer style="font-style: normal;">
+
+  
+  <a class="ftr-icon" href="https://dpbossss.boston">dpbossss.boston</a>
+  <p>
+    All Rights Reseved®
+    <br>
+    (1998-2024)
+    <br>
+    Contact (Astrologer-<span>Dpboss</span>)
+  </p>
+</footer>
+
+<!--<a class="mp-btn" href="https://dpbossss.boston/dpbossplay-matka-online.php"><i>Matka Play</i></a> -->
+<a class="mp-btn" href="https://kalyanmorning.mobi/apk/KalyanMorning_V107.apk" target="_blank" rel="noreferrer"><i>Matka Play</i></a>
+
+ 
+
+
+</body>
+</html>
