@@ -499,7 +499,13 @@ export function createGeneratedContentService({
     const homepage = readCachedJson(homepagePath);
     const sections = {};
 
+    // Sections to exclude from the homepage (promotional content from dpboss.boston)
+    const EXCLUDED_SECTIONS = new Set(['free-game-zone']);
+
     for (const sectionId of homepage.sectionOrder ?? []) {
+      if (EXCLUDED_SECTIONS.has(sectionId)) {
+        continue;
+      }
       const liveHtml = htmlBySectionId?.[sectionId];
       if (liveHtml && String(liveHtml).trim()) {
         sections[sectionId] = parseHomepageFragmentToNodes(liveHtml);
@@ -513,6 +519,7 @@ export function createGeneratedContentService({
 
     return {
       ...homepage,
+      sectionOrder: (homepage.sectionOrder ?? []).filter((id) => !EXCLUDED_SECTIONS.has(id)),
       sections: nextSections,
       updatedAt,
       lastScrapeAt,
