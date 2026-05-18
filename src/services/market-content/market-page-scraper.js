@@ -272,6 +272,19 @@ export function extractFooter($) {
       const text = normalizeText(el.text());
       if (!text) return;
 
+      // Skip promotional/forum links from dpboss.boston that shouldn't appear on our site
+      const lowerText = text.toLowerCase();
+      if (
+        lowerText.includes('game zone') ||
+        lowerText.includes('guessing forum') ||
+        lowerText.includes('expert forum') ||
+        lowerText.includes('trick forum') ||
+        lowerText.includes('special game') ||
+        lowerText.includes('dpboss forum')
+      ) {
+        return;
+      }
+
       blocks.push({
         tag: String(tag || 'p'),
         className: el.attr('class') || '',
