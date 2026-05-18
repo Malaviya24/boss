@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
-import { buildLocalMarketPath, normalizeMarketSlug, toLocalMarketPath } from '../../utils/market-links.js';
+import { buildLocalMarketPath, isExternalDpbossHomepage, normalizeMarketSlug, toLocalMarketPath, toLocalStaticPagePath } from '../../utils/market-links.js';
 
 export const CONTENT_ARTIFACTS_DIR = path.join('generated', 'content');
 
@@ -131,6 +131,17 @@ function sanitizeHomepageHref(rawValue = '') {
   const localMarketPath = toLocalMarketPath(raw);
   if (localMarketPath) {
     return localMarketPath;
+  }
+
+  // Rewrite legacy .php / .html static page links to internal React routes
+  const localStaticPagePath = toLocalStaticPagePath(raw);
+  if (localStaticPagePath) {
+    return localStaticPagePath;
+  }
+
+  // Bare https://dpbossss.boston/ -> internal homepage
+  if (isExternalDpbossHomepage(raw)) {
+    return '/';
   }
 
   if (isAllowedProtocol(raw)) {
