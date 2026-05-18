@@ -88,6 +88,54 @@ function toReactProps(attrs = {}, key) {
   return props;
 }
 
+// Promotional content from dpboss.boston that should be hidden on our site.
+// We match against the lowercase text content of section header / cell text.
+const EXCLUDED_TEXT_PATTERNS = [
+  'dpboss special game zone',
+  'dpboss guessing forum',
+  'dpboss expert forum',
+  'dpboss kalyan trick forum',
+  'dpboss forum',
+  'all market free fix game',
+  'ratan khatri fix panel chart',
+  'matka final number trick chart',
+  'evergreen trick zone',
+];
+
+function getNodeText(node) {
+  if (!node) return '';
+  if (node.type === 'text') return String(node.text ?? '');
+  if (Array.isArray(node.children)) {
+    return node.children.map(getNodeText).join(' ');
+  }
+  return '';
+}
+
+function shouldExcludeNode(node) {
+  if (!node || node.type === 'text') {
+    return false;
+  }
+
+  const tag = String(node.tag ?? '').toLowerCase();
+  // Only consider container-like tags — we don't want to strip inline elements
+  if (!['table', 'div', 'section', 'tr', 'td', 'th', 'p', 'h1', 'h2', 'h3'].includes(tag)) {
+    return false;
+  }
+
+  const text = getNodeText(node).toLowerCase().replace(/\s+/g, ' ').trim();
+  if (!text) {
+    return false;
+  }
+
+  // Match short/header text only — we don't want to nuke a long article that
+  // happens to mention one of these phrases. Use a length cutoff.
+  if (text.length > 200) {
+    return false;
+  }
+
+  return EXCLUDED_TEXT_PATTERNS.some((pattern) => text.includes(pattern));
+}
+
 function renderNodes(nodes = [], options = {}, path = 'n') {
   return nodes.map((node, index) => {
     const nodePath = `${path}-${index}`;
@@ -101,6 +149,13 @@ function renderNodes(nodes = [], options = {}, path = 'n') {
 
     const tag = String(node.tag ?? '').toLowerCase();
     if (!tag) {
+      return null;
+    }
+
+    // Filter out promotional sections from dpboss.boston that should not appear on our site.
+    // This catches "Dpboss Special Game Zone" and similar promotional tables/sections
+    // regardless of their selector or section ID.
+    if (shouldExcludeNode(node)) {
       return null;
     }
 
