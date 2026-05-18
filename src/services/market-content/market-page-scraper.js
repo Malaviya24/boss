@@ -264,6 +264,23 @@ export function extractFooter($) {
   const blocks = [];
 
   if (footerTextDiv.length) {
+    // Remove the entire "Dpboss Special Game Zone" section before extracting blocks.
+    // This section contains promotional links (guessing forum, trick charts, etc.)
+    // that we don't want on our site. It's typically a table or div with links to
+    // dpboss subpages.
+    footerTextDiv.find('table').each((_, table) => {
+      const tableText = normalizeText($(table).text()).toLowerCase();
+      if (
+        tableText.includes('game zone') ||
+        tableText.includes('guessing forum') ||
+        tableText.includes('trick') ||
+        tableText.includes('fix game') ||
+        tableText.includes('expert forum')
+      ) {
+        $(table).remove();
+      }
+    });
+
     footerTextDiv.children().each((_, child) => {
       const el = $(child);
       const tag = child.tagName || child.name || '';
@@ -272,7 +289,7 @@ export function extractFooter($) {
       const text = normalizeText(el.text());
       if (!text) return;
 
-      // Skip promotional/forum links from dpboss.boston that shouldn't appear on our site
+      // Skip any remaining promotional/forum links from dpboss.boston
       const lowerText = text.toLowerCase();
       if (
         lowerText.includes('game zone') ||
@@ -280,7 +297,17 @@ export function extractFooter($) {
         lowerText.includes('expert forum') ||
         lowerText.includes('trick forum') ||
         lowerText.includes('special game') ||
-        lowerText.includes('dpboss forum')
+        lowerText.includes('dpboss forum') ||
+        lowerText.includes('free fix game') ||
+        lowerText.includes('fix panel chart') ||
+        lowerText.includes('final number trick') ||
+        lowerText.includes('trick zone') ||
+        lowerText.includes('matka tricks') ||
+        lowerText.includes('ratan khatri') ||
+        lowerText.includes('evergreen trick') ||
+        lowerText.includes('all market free') ||
+        lowerText.includes('fix game') ||
+        lowerText.includes('trick chart')
       ) {
         return;
       }
