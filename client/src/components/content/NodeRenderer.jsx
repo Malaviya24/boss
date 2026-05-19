@@ -117,6 +117,19 @@ function shouldExcludeNode(node) {
   }
 
   const tag = String(node.tag ?? '').toLowerCase();
+
+  // Hide the rotating "Fix Ank" / "Kalyan Fix" / "Milan Fix" button
+  const nodeId = String(node.attrs?.id ?? '').toLowerCase();
+  if (nodeId === 'rotatingtext') {
+    return true;
+  }
+
+  // Hide the fixed-position "Fix Ank" button (class mp-clk1)
+  const nodeClass = String(node.attrs?.class ?? '').toLowerCase();
+  if (nodeClass.includes('mp-clk1')) {
+    return true;
+  }
+
   // Only consider container-like tags — we don't want to strip inline elements
   if (!['table', 'div', 'section', 'tr', 'td', 'th', 'p', 'h1', 'h2', 'h3'].includes(tag)) {
     return false;

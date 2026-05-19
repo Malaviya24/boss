@@ -2,15 +2,6 @@ import { useEffect, useMemo } from 'react';
 import { NodeRenderer } from '../../components/content/NodeRenderer.jsx';
 import { useHomepageContent } from '../../hooks/content/useHomepageContent.js';
 
-const ROTATING_PHRASES = [
-  'Fix Ank',
-  'Kalyan Fix',
-  'Milan Fix',
-  'Fix open',
-  'Fix close',
-  'Fix jodi',
-];
-
 function StyleRefs({ styleUrls = [], styleBlocks = [] }) {
   return (
     <>
@@ -26,24 +17,6 @@ function StyleRefs({ styleUrls = [], styleBlocks = [] }) {
 
 export default function HomePage() {
   const { content, status, error, connectionStatus, refresh } = useHomepageContent();
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      const rotatingElement = document.getElementById('rotatingText');
-      if (!rotatingElement) {
-        return;
-      }
-
-      const currentIndex = Number(rotatingElement.dataset.index ?? '0');
-      const nextIndex = (currentIndex + 1) % ROTATING_PHRASES.length;
-      rotatingElement.textContent = ROTATING_PHRASES[nextIndex];
-      rotatingElement.dataset.index = String(nextIndex);
-    }, 1000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, []);
 
   useEffect(() => {
     const savedScrollPosition = window.localStorage.getItem('scrollPosition');
@@ -71,16 +44,25 @@ export default function HomePage() {
       return;
     }
 
+    // Check for explicit data-refresh-button attribute
     const refreshControl = target.closest('[data-refresh-button="true"]');
-    if (!refreshControl) {
+    if (refreshControl) {
+      event.preventDefault();
+      if (refreshControl.getAttribute('data-save-scroll') === 'true') {
+        window.localStorage.setItem('scrollPosition', String(window.scrollY));
+      }
+      window.location.reload();
       return;
     }
 
-    event.preventDefault();
-    if (refreshControl.getAttribute('data-save-scroll') === 'true') {
+    // Also catch any element with "REFRESH" text or refresh-related class
+    const clickedText = String(target.textContent ?? '').trim().toLowerCase();
+    const clickedClass = String(target.className ?? '').toLowerCase();
+    if (clickedText === 'refresh' || clickedClass.includes('refresh')) {
+      event.preventDefault();
       window.localStorage.setItem('scrollPosition', String(window.scrollY));
+      window.location.reload();
     }
-    window.location.reload();
   };
 
   if (status === 'loading') {
