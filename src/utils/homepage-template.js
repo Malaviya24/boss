@@ -353,7 +353,31 @@ export function sanitizeFragmentHtml(html, baseUrl) {
   });
   const $root = $('#__root__');
   sanitizeDom($, $root, baseUrl);
-  return $root.html() ?? '';
+  let result = $root.html() ?? '';
+
+  // Replace scraped branding with our own brand name.
+  // The source site uses "DPBOSS" / "dpboss" / "Dpboss" — we rebrand to "MATKAKING" / "matkaking" / "Matkaking".
+  result = replaceBranding(result);
+
+  return result;
+}
+
+/**
+ * Replaces all occurrences of the source site's brand name with our brand.
+ * Handles various casings. Does NOT touch URLs (those are handled by sanitizeUrl).
+ */
+function replaceBranding(html) {
+  return html
+    .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/dpbossss\.boston/gi, 'matkaking.cc')
+    .replace(/dpboss\.boston/gi, 'matkaking.cc')
+    .replace(/DPBOSSSS/g, 'MATKAKING')
+    .replace(/DPBOSS/g, 'MATKAKING')
+    .replace(/Dpbossss/g, 'Matkaking')
+    .replace(/Dpboss/g, 'Matkaking')
+    .replace(/dpbossss/g, 'matkaking')
+    .replace(/dpboss/g, 'matkaking');
 }
 
 export function getHomepageTemplate(baseUrl) {

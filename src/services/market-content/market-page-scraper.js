@@ -448,7 +448,7 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
   const description = descriptionMeta ? descriptionMeta.content : '';
 
   // Assemble StructuredMarketContent (version 2)
-  return {
+  const content = {
     version: 2,
     type,
     slug,
@@ -471,4 +471,41 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
     importedAt: null,
     updatedAt: new Date().toISOString(),
   };
+
+  // Replace source site branding with our brand in all string values
+  return rebrandContent(content);
+}
+
+/**
+ * Recursively replaces source site branding (DPBOSS/dpboss) with our brand
+ * (MATKAKING/matkaking) in all string values of the content object.
+ */
+function rebrandContent(value) {
+  if (typeof value === 'string') {
+    return value
+      .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/dpbossss\.boston/gi, 'matkaking.cc')
+      .replace(/dpboss\.boston/gi, 'matkaking.cc')
+      .replace(/DPBOSSSS/g, 'MATKAKING')
+      .replace(/DPBOSS/g, 'MATKAKING')
+      .replace(/Dpbossss/g, 'Matkaking')
+      .replace(/Dpboss/g, 'Matkaking')
+      .replace(/dpbossss/g, 'matkaking')
+      .replace(/dpboss/g, 'matkaking');
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(rebrandContent);
+  }
+
+  if (value && typeof value === 'object') {
+    const result = {};
+    for (const [key, val] of Object.entries(value)) {
+      result[key] = rebrandContent(val);
+    }
+    return result;
+  }
+
+  return value;
 }
