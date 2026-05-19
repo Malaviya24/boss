@@ -88,14 +88,10 @@ function toReactProps(attrs = {}, key) {
   return props;
 }
 
-// Promotional content from matkaking.boston that should be hidden on our site.
+// Promotional content from the source site that should be hidden on our site.
 // We match against the lowercase text content of section header / cell text.
+// NOTE: Do NOT add "matkaking" patterns here — that is our own brand now.
 const EXCLUDED_TEXT_PATTERNS = [
-  'matkaking special game zone',
-  'matkaking guessing forum',
-  'matkaking expert forum',
-  'matkaking kalyan trick forum',
-  'matkaking forum',
   'all market free fix game',
   'ratan khatri fix panel chart',
   'matka final number trick chart',
@@ -165,9 +161,8 @@ function renderNodes(nodes = [], options = {}, path = 'n') {
       return null;
     }
 
-    // Filter out promotional sections from matkaking.boston that should not appear on our site.
-    // This catches "matkaking Special Game Zone" and similar promotional tables/sections
-    // regardless of their selector or section ID.
+    // Filter out promotional sections from the source site that should not appear on our site.
+    // This catches specific promotional tables/sections regardless of their selector or section ID.
     if (shouldExcludeNode(node)) {
       return null;
     }

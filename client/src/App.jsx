@@ -34,11 +34,11 @@ const AllCardPattiChartPage = lazy(
 const FixOpenToCloseByDatePage = lazy(
   () => import('./features/static-pages/FixOpenToCloseByDatePage.jsx'),
 );
-const matkakingResultApiPage = lazy(
-  () => import('./features/static-pages/matkakingResultApiPage.jsx'),
+const MatkakingResultApiPage = lazy(
+  () => import('./features/static-pages/DpbossResultApiPage.jsx'),
 );
-const matkakingResultApiDocumentationPage = lazy(
-  () => import('./features/static-pages/matkakingResultApiDocumentationPage.jsx'),
+const MatkakingResultApiDocumentationPage = lazy(
+  () => import('./features/static-pages/DpbossResultApiDocumentationPage.jsx'),
 );
 const ContactPage = lazy(
   () => import('./features/static-pages/ContactPage.jsx'),
@@ -181,11 +181,11 @@ export default function App() {
             element={<AllCardPattiChartPage />}
           />
           <Route path="/fix-open-to-close-by-date" element={<FixOpenToCloseByDatePage />} />
-          <Route path="/matkaking-result-api" element={<matkakingResultApiPage />} />
-          <Route path="/matkaking-result-api.php" element={<matkakingResultApiPage />} />
+          <Route path="/matkaking-result-api" element={<MatkakingResultApiPage />} />
+          <Route path="/matkaking-result-api.php" element={<MatkakingResultApiPage />} />
           <Route
             path="/matkaking-result-api-documentation"
-            element={<matkakingResultApiDocumentationPage />}
+            element={<MatkakingResultApiDocumentationPage />}
           />
           <Route path="/about.php" element={<AboutPage />} />
           <Route path="/privacy.php" element={<PrivacyPage />} />
