@@ -9,12 +9,12 @@ import { buildLocalMarketPath, normalizeMarketSlug, toLocalMarketPath } from '..
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^(?:\d+-jodi-matkaking\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-jodi-dpbossss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
     sourcePath: 'jodi-chart-record',
   },
   panel: {
     folder: 'panel',
-    pattern: /^(?:\d+-panel-matkaking\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-panel-dpbossss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
     sourcePath: 'panel-chart-record',
   },
 };
@@ -699,7 +699,7 @@ function buildRegistry(webzipRoot, logger) {
 export function createMarketTemplateService({
   webzipRoot,
   logger,
-  targetUrl = 'https://matkaking.boston/',
+  targetUrl = 'https://dpbossss.boston/',
   liveFallbackEnabled = false,
   tableCacheTtlMs = DEFAULT_TABLE_CACHE_TTL_MS,
   tableFetchTimeoutMs = DEFAULT_TABLE_FETCH_TIMEOUT_MS,

@@ -9,7 +9,7 @@ function getPathname(value = '') {
   }
 
   try {
-    return new URL(value, 'https://matkaking.boston/').pathname;
+    return new URL(value, 'https://dpbossss.boston/').pathname;
   } catch {
     return String(value).split(/[?#]/, 1)[0] ?? '';
   }
@@ -110,7 +110,7 @@ export function toLocalStaticPagePath(value = '') {
 
   let pathname = '';
   try {
-    pathname = new URL(raw, 'https://matkakingss.boston/').pathname;
+    pathname = new URL(raw, 'https://dpbossss.boston/').pathname;
   } catch {
     pathname = raw.split(/[?#]/, 1)[0] ?? '';
   }
@@ -141,7 +141,7 @@ export function isExternalSourceHomepage(value = '') {
   try {
     const parsed = new URL(raw);
     const host = parsed.hostname.toLowerCase();
-    if (!/^(?:www\.)?MatkaKingss?\.boston$/.test(host)) {
+    if (!/^(?:www\.)?dpbossss?\.boston$/.test(host)) {
       return false;
     }
     const path = parsed.pathname.replace(/\/+$/, '');

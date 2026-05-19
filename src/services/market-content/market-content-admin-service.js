@@ -470,8 +470,8 @@ function defaultFooter() {
   return {
     blocks: [],
     counterText: '',
-    brandTitle: 'matkaking.BOSTON',
-    rightsLines: ['All Rights Reserved', '(1998-2024)', 'Contact (Astrologer-matkaking)'],
+    brandTitle: 'MATKAKING.CC',
+    rightsLines: ['All Rights Reserved', '(1998-2024)', 'Contact (Astrologer-Matkaking)'],
     matkaPlay: {
       label: 'Matka Play',
       href: '/',
@@ -486,7 +486,7 @@ function toPageTypeLabel(type = '') {
 function buildIntroText(marketName = '', type = '') {
   const pageTypeLabel = toPageTypeLabel(type);
   return [
-    `matkaking ${marketName} ${pageTypeLabel.toLowerCase()} chart, ${marketName} ${pageTypeLabel.toLowerCase()} chart, old ${marketName} ${pageTypeLabel.toLowerCase()} chart,`,
+    `Matkaking ${marketName} ${pageTypeLabel.toLowerCase()} chart, ${marketName} ${pageTypeLabel.toLowerCase()} chart, old ${marketName} ${pageTypeLabel.toLowerCase()} chart,`,
     `${marketName} ${pageTypeLabel.toLowerCase()} record, ${marketName} ${pageTypeLabel.toLowerCase()} chart 2012 to 2023,`,
     `${marketName} final ank, ${marketName} ${pageTypeLabel.toLowerCase()} chart matka, ${marketName} matka chart,`,
     `${marketName} chart result, डीपी बॉस, सट्टा चार्ट, सट्टा मटका ${pageTypeLabel === 'Panel' ? 'पैनल' : 'जोड़ी'} चार्ट`,
@@ -501,7 +501,7 @@ function buildFooterBlocks(marketName = '', type = '') {
     {
       tag: 'p',
       className: '',
-      text: `Welcome to matkaking Services, your ultimate destination for comprehensive ${recordLabel}. In the realm of matka gambling, where precision is paramount, matkaking Services stands as a reliable source committed to providing accurate data, enhancing your matka gaming experience.`,
+      text: `Welcome to MATKAKING Services, your ultimate destination for comprehensive ${recordLabel}. In the realm of matka gambling, where precision is paramount, MATKAKING Services stands as a reliable source committed to providing accurate data, enhancing your matka gaming experience.`,
     },
     {
       tag: 'h3',

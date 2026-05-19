@@ -139,7 +139,7 @@ function sanitizeHomepageHref(rawValue = '') {
     return localStaticPagePath;
   }
 
-  // Bare https://MatkaKingss.boston/ -> internal homepage
+  // Bare https://dpbossss.boston/ -> internal homepage
   if (isExternalSourceHomepage(raw)) {
     return '/';
   }
