@@ -63,7 +63,6 @@ const STATIC_PAGE_ROUTES = new Set([
   '/dpboss-result-api',
   '/dpboss-result-api.php',
   '/dpboss-result-api-documentation',
-  '/dpboss-result-api-documentation.html',
 ]);
 
 function RouteFallback() {
@@ -179,10 +178,6 @@ export default function App() {
           <Route path="/dpboss-result-api.php" element={<DpbossResultApiPage />} />
           <Route
             path="/dpboss-result-api-documentation"
-            element={<DpbossResultApiDocumentationPage />}
-          />
-          <Route
-            path="/dpboss-result-api-documentation.html"
             element={<DpbossResultApiDocumentationPage />}
           />
           <Route path="/about.php" element={<AboutPage />} />
