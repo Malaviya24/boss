@@ -51,7 +51,7 @@ function normalizeText(value = '') {
 
 /**
  * Extracts cell text while preserving line breaks (<br>) as spaces.
- * The dpboss.boston panel cells use <br> tags to stack 3 digits vertically
+ * The matkaking.boston panel cells use <br> tags to stack 3 digits vertically
  * (e.g. "<td>1<br>6<br>7</td>" for panel "167") and date cells use
  * "<td>08/12/2025<br>to<br>14/12/2025</td>". The default cheerio .text()
  * concatenates without separator, mashing the values together. This helper
@@ -264,10 +264,10 @@ export function extractFooter($) {
   const blocks = [];
 
   if (footerTextDiv.length) {
-    // Remove the entire "Dpboss Special Game Zone" section before extracting blocks.
+    // Remove the entire "matkaking Special Game Zone" section before extracting blocks.
     // This section contains promotional links (guessing forum, trick charts, etc.)
     // that we don't want on our site. It's typically a table or div with links to
-    // dpboss subpages.
+    // matkaking subpages.
     footerTextDiv.find('table').each((_, table) => {
       const tableText = normalizeText($(table).text()).toLowerCase();
       if (
@@ -289,7 +289,7 @@ export function extractFooter($) {
       const text = normalizeText(el.text());
       if (!text) return;
 
-      // Skip any remaining promotional/forum links from dpboss.boston
+      // Skip any remaining promotional/forum links from matkaking.boston
       const lowerText = text.toLowerCase();
       if (
         lowerText.includes('game zone') ||
@@ -297,7 +297,7 @@ export function extractFooter($) {
         lowerText.includes('expert forum') ||
         lowerText.includes('trick forum') ||
         lowerText.includes('special game') ||
-        lowerText.includes('dpboss forum') ||
+        lowerText.includes('matkaking forum') ||
         lowerText.includes('free fix game') ||
         lowerText.includes('fix panel chart') ||
         lowerText.includes('final number trick') ||
@@ -334,7 +334,7 @@ export function extractFooter($) {
     : [];
 
   // Extract counter number — a small standalone numeric element that appears
-  // between the "Go to Top" button and the footer brand block on dpboss pages
+  // between the "Go to Top" button and the footer brand block on matkaking pages
   // (e.g. "132"). It is a per-page unique identifier that differs between
   // jodi and panel pages and across markets.
   let counterNumber = '';
@@ -381,7 +381,7 @@ export function extractFooter($) {
 }
 
 /**
- * Scrapes a market page from dpboss.boston and parses it with cheerio.
+ * Scrapes a market page from matkaking.boston and parses it with cheerio.
  *
  * @param {'jodi' | 'panel'} type - Chart type
  * @param {string} slug - Market slug (e.g., 'kalyan', 'milan-day')
@@ -477,8 +477,10 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
 }
 
 /**
- * Recursively replaces source site branding (DPBOSS/dpboss) with our brand
+ * Recursively replaces source site branding (dpboss/dpbossss) with our brand
  * (MATKAKING/matkaking) in all string values of the content object.
+ * NOTE: The regex patterns below must use the SOURCE site's brand name — do NOT
+ * rename these patterns during branding updates.
  */
 function rebrandContent(value) {
   if (typeof value === 'string') {
