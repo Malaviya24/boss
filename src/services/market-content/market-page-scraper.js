@@ -12,18 +12,15 @@ function getBaseUrl() {
 }
 
 function buildScrapeUrl(type, slug, baseUrl) {
-  if (type === 'panel') {
-    return `${baseUrl}/panel-chart-record/${slug}.php`;
-  }
-  if (type === 'hs-online-bb-15-minutes') {
-    // Fixed single page — slug is ignored
+  // Special fixed pages — slug determines the URL directly
+  if (slug === 'hs-online-bb-15-minutes-chart') {
     return `${baseUrl}/hs-online-bb-15-minutes-chart.php`;
   }
-  if (type === 'main-bombay-36-bazar') {
-    // Fixed single page — slug is ignored
+  if (slug === 'main-bombay-36-bazar-chart') {
     return `${baseUrl}/main-bombay-36-bazar-chart.php`;
   }
-  return `${baseUrl}/jodi-chart-record/${slug}.php`;
+  const pathPrefix = type === 'panel' ? 'panel-chart-record' : 'jodi-chart-record';
+  return `${baseUrl}/${pathPrefix}/${slug}.php`;
 }
 
 /**

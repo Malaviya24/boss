@@ -167,8 +167,8 @@ export default function App() {
           <Route path="/live" element={<Navigate to="/" replace />} />
           <Route path="/jodi-chart-record/:slug.php" element={<MarketPage routeType="jodi" />} />
           <Route path="/panel-chart-record/:slug.php" element={<MarketPage routeType="panel" />} />
-          <Route path="/hs-online-bb-15-minutes-chart.php" element={<MarketPage routeType="hs-online-bb-15-minutes" fixedSlug="hs-online-bb-15-minutes-chart" />} />
-          <Route path="/main-bombay-36-bazar-chart.php" element={<MarketPage routeType="main-bombay-36-bazar" fixedSlug="main-bombay-36-bazar-chart" />} />
+          <Route path="/hs-online-bb-15-minutes-chart.php" element={<MarketPage routeType="jodi" fixedSlug="hs-online-bb-15-minutes-chart" />} />
+          <Route path="/main-bombay-36-bazar-chart.php" element={<MarketPage routeType="jodi" fixedSlug="main-bombay-36-bazar-chart" />} />
           <Route path="/admin-x-secure-portal" element={<AdminLoginPage />} />
           <Route path="/admin-x-secure-portal/dashboard" element={<AdminDashboardPage />} />
           <Route path="/about" element={<AboutPage />} />

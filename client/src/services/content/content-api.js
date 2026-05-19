@@ -36,11 +36,7 @@ let preferLegacyMarketContentApi = false;
 let preferLegacyMarketLiveApi = false;
 
 function normalizeMarketType(type = '') {
-  const v = String(type).toLowerCase();
-  if (v === 'panel') return 'panel';
-  if (v === 'hs-online-bb-15-minutes') return 'hs-online-bb-15-minutes';
-  if (v === 'main-bombay-36-bazar') return 'main-bombay-36-bazar';
-  return 'jodi';
+  return String(type).toLowerCase() === 'panel' ? 'panel' : 'jodi';
 }
 
 function normalizeMarketSlug(slug = '') {

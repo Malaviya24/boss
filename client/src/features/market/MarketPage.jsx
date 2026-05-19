@@ -6,11 +6,7 @@ import { MarketNotFound } from '../../components/market/shared/MarketNotFound.js
 import { MarketTemplate } from '../../components/market/MarketTemplate.jsx';
 
 function normalizeMarketType(value = '') {
-  const v = String(value).toLowerCase();
-  if (v === 'panel') return 'panel';
-  if (v === 'hs-online-bb-15-minutes') return 'hs-online-bb-15-minutes';
-  if (v === 'main-bombay-36-bazar') return 'main-bombay-36-bazar';
-  return 'jodi';
+  return String(value).toLowerCase() === 'panel' ? 'panel' : 'jodi';
 }
 
 function normalizeSlug(value = '') {

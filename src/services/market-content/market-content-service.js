@@ -10,11 +10,7 @@ const JODI_COLUMNS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const PROTECTED_CHART_SOURCES = new Set(['admin-result', 'manual']);
 
 function normalizeType(value = '') {
-  const v = String(value).toLowerCase();
-  if (v === 'panel') return 'panel';
-  if (v === 'hs-online-bb-15-minutes') return 'hs-online-bb-15-minutes';
-  if (v === 'main-bombay-36-bazar') return 'main-bombay-36-bazar';
-  return 'jodi';
+  return String(value).toLowerCase() === 'panel' ? 'panel' : 'jodi';
 }
 
 function normalizeText(value = '') {
