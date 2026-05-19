@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$root = 'd:\Project\DPBOSS'
+$root = 'd:\Project\matkaking'
 $dest = Join-Path $root 'static-pages-source'
 
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
@@ -15,8 +15,8 @@ $files = @(
   'penal-total-chart.php',
   'All-22-Card-Panna-Penal-Patti-Chart.php',
   'fix-open-to-close-by-date.php',
-  'dpboss-result-api.php',
-  'dpboss-result-api-documentation.html'
+  'matkaking-result-api.php',
+  'matkaking-result-api-documentation.html'
 )
 
 foreach ($f in $files) {

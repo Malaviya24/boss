@@ -150,7 +150,7 @@ describe('Property 8: Fallback Chain Ordering', () => {
         const service = createMarketContentService({
           scrapeEnabled: true,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: true,
           cacheTtlMs: 1000,
@@ -203,7 +203,7 @@ describe('Property 8: Fallback Chain Ordering', () => {
         const service = createMarketContentService({
           scrapeEnabled: true,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: true,
           cacheTtlMs: 1000,
@@ -258,7 +258,7 @@ describe('Property 8: Fallback Chain Ordering', () => {
         const service = createMarketContentService({
           scrapeEnabled: true,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: true,
           cacheTtlMs: 1000,
@@ -310,7 +310,7 @@ describe('Property 8: Fallback Chain Ordering', () => {
         const service = createMarketContentService({
           scrapeEnabled: true,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: true,
           cacheTtlMs: 1000,

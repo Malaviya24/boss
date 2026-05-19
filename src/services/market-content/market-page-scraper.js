@@ -477,7 +477,7 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
 }
 
 /**
- * Recursively replaces source site branding (dpboss/dpbossss) with our brand
+ * Recursively replaces source site branding (MatkaKing/MatkaKingss) with our brand
  * (MATKAKING/matkaking) in all string values of the content object.
  * NOTE: The regex patterns below must use the SOURCE site's brand name — do NOT
  * rename these patterns during branding updates.
@@ -485,16 +485,16 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
 function rebrandContent(value) {
   if (typeof value === 'string') {
     return value
-      .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
-      .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
-      .replace(/dpbossss\.boston/gi, 'matkaking.cc')
-      .replace(/dpboss\.boston/gi, 'matkaking.cc')
-      .replace(/DPBOSSSS/g, 'MATKAKING')
-      .replace(/DPBOSS/g, 'MATKAKING')
-      .replace(/Dpbossss/g, 'Matkaking')
-      .replace(/Dpboss/g, 'Matkaking')
-      .replace(/dpbossss/g, 'matkaking')
-      .replace(/dpboss/g, 'matkaking');
+      .replace(/MatkaKingSS\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/MatkaKing\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/MatkaKingss\.boston/gi, 'matkaking.cc')
+      .replace(/MatkaKing\.boston/gi, 'matkaking.cc')
+      .replace(/MatkaKingSS/g, 'MATKAKING')
+      .replace(/MatkaKing/g, 'MATKAKING')
+      .replace(/MatkaKingss/g, 'Matkaking')
+      .replace(/MatkaKing/g, 'Matkaking')
+      .replace(/MatkaKingss/g, 'matkaking')
+      .replace(/MatkaKing/g, 'matkaking');
   }
 
   if (Array.isArray(value)) {

@@ -44,7 +44,7 @@ describe('createMarketContentService - scrape configuration (task 4.1)', () => {
         mongoEnabled: true,
         scrapeEnabled: true,
         scrapeTimeoutMs: 10000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: ['surat-night', 'surat-king'],
       });
       expect(service).toBeDefined();

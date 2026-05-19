@@ -233,7 +233,7 @@ function sanitizeDom($, $root, baseUrl) {
       return;
     }
 
-    // Bare https://dpbossss.boston/ or https://dpboss.boston/ -> internal homepage
+    // Bare https://MatkaKingss.boston/ or https://MatkaKing.boston/ -> internal homepage
     if (isExternalSourceHomepage(element.attribs.href)) {
       element.attribs.href = '/';
       delete element.attribs.target;
@@ -365,21 +365,21 @@ export function sanitizeFragmentHtml(html, baseUrl) {
 /**
  * Replaces all occurrences of the source site's brand name with our brand.
  * Handles various casings. Does NOT touch URLs (those are handled by sanitizeUrl).
- * NOTE: The regex patterns below must use the SOURCE site's brand name (dpboss/dpbossss)
+ * NOTE: The regex patterns below must use the SOURCE site's brand name (MatkaKing/MatkaKingss)
  * — do NOT rename these patterns during branding updates.
  */
 function replaceBranding(html) {
   return html
-    .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
-    .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
-    .replace(/dpbossss\.boston/gi, 'matkaking.cc')
-    .replace(/dpboss\.boston/gi, 'matkaking.cc')
-    .replace(/DPBOSSSS/g, 'MATKAKING')
-    .replace(/DPBOSS/g, 'MATKAKING')
-    .replace(/Dpbossss/g, 'Matkaking')
-    .replace(/Dpboss/g, 'Matkaking')
-    .replace(/dpbossss/g, 'matkaking')
-    .replace(/dpboss/g, 'matkaking');
+    .replace(/MatkaKingSS\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/MatkaKing\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/MatkaKingss\.boston/gi, 'matkaking.cc')
+    .replace(/MatkaKing\.boston/gi, 'matkaking.cc')
+    .replace(/MatkaKingSS/g, 'MATKAKING')
+    .replace(/MatkaKing/g, 'MATKAKING')
+    .replace(/MatkaKingss/g, 'Matkaking')
+    .replace(/MatkaKing/g, 'Matkaking')
+    .replace(/MatkaKingss/g, 'matkaking')
+    .replace(/MatkaKing/g, 'matkaking');
 }
 
 export function getHomepageTemplate(baseUrl) {

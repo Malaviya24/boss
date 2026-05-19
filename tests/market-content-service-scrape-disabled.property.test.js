@@ -92,7 +92,7 @@ describe('Property 13: Scrape Disabled Bypasses Scraping', () => {
           mode: 'legacy',
           scrapeEnabled: false,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: false,
           legacyContentService: {
@@ -123,7 +123,7 @@ describe('Property 13: Scrape Disabled Bypasses Scraping', () => {
             mode: 'legacy',
             scrapeEnabled: false,
             scrapeTimeoutMs: 5000,
-            scrapeBaseUrl: 'https://dpboss.boston',
+            scrapeBaseUrl: 'https://matkaking.boston',
             scrapeExcludedSlugs: [],
             mongoEnabled: false,
             cacheTtlMs: 1000, // short TTL
@@ -154,7 +154,7 @@ describe('Property 13: Scrape Disabled Bypasses Scraping', () => {
           mode: 'legacy',
           scrapeEnabled: false,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [],
           mongoEnabled: false,
           legacyContentService: {

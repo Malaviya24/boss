@@ -88,14 +88,14 @@ function toReactProps(attrs = {}, key) {
   return props;
 }
 
-// Promotional content from dpboss.boston that should be hidden on our site.
+// Promotional content from matkaking.boston that should be hidden on our site.
 // We match against the lowercase text content of section header / cell text.
 const EXCLUDED_TEXT_PATTERNS = [
-  'dpboss special game zone',
-  'dpboss guessing forum',
-  'dpboss expert forum',
-  'dpboss kalyan trick forum',
-  'dpboss forum',
+  'matkaking special game zone',
+  'matkaking guessing forum',
+  'matkaking expert forum',
+  'matkaking kalyan trick forum',
+  'matkaking forum',
   'all market free fix game',
   'ratan khatri fix panel chart',
   'matka final number trick chart',
@@ -165,14 +165,14 @@ function renderNodes(nodes = [], options = {}, path = 'n') {
       return null;
     }
 
-    // Filter out promotional sections from dpboss.boston that should not appear on our site.
-    // This catches "Dpboss Special Game Zone" and similar promotional tables/sections
+    // Filter out promotional sections from matkaking.boston that should not appear on our site.
+    // This catches "matkaking Special Game Zone" and similar promotional tables/sections
     // regardless of their selector or section ID.
     if (shouldExcludeNode(node)) {
       return null;
     }
 
-    if (tag === 'dpboss-section') {
+    if (tag === 'matkaking-section') {
       const sectionId = node.attrs?.['data-section-id'] ?? '';
       const sectionNodes =
         typeof options.resolveSectionNodes === 'function'

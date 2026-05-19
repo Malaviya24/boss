@@ -15,7 +15,7 @@ vi.mock('../../src/config/http-agents.js', () => ({
   getHttpAgents: () => ({ httpAgent: {}, httpsAgent: {} }),
 }));
 vi.mock('../../src/config/env.js', () => ({
-  loadEnv: () => ({ marketScrapeBaseUrl: 'https://dpboss.boston' }),
+  loadEnv: () => ({ marketScrapeBaseUrl: 'https://matkaking.boston' }),
 }));
 
 const { default: axios } = await import('axios');

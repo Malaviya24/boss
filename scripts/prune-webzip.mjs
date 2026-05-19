@@ -6,11 +6,11 @@ const ROOT = path.resolve('webzip');
 const TYPE_CONFIG = {
   jodi: {
     dir: path.join(ROOT, 'jodi'),
-    folderPattern: /^\d+-jodi-dpboss\.boston-jodi-chart-record-(.+)\.php$/i,
+    folderPattern: /^\d+-jodi-matkaking\.boston-jodi-chart-record-(.+)\.php$/i,
   },
   panel: {
     dir: path.join(ROOT, 'panel'),
-    folderPattern: /^\d+-panel-dpboss\.boston-panel-chart-record-(.+)\.php$/i,
+    folderPattern: /^\d+-panel-matkaking\.boston-panel-chart-record-(.+)\.php$/i,
   },
 };
 

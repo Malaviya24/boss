@@ -1,4 +1,4 @@
-# DPBOSS Real-Time Clone
+# matkaking Real-Time Clone
 
 Production-ready Express + React application that clones homepage market blocks, renders Jodi/Panel market pages with native React (no HTML proxy), and streams market updates through Socket.io and SSE.
 
@@ -120,8 +120,8 @@ Important:
 ### Docker
 
 ```bash
-docker build -t dpboss .
-docker run -p 4000:4000 --env-file .env dpboss
+docker build -t matkaking .
+docker run -p 4000:4000 --env-file .env matkaking
 ```
 
 ### PM2
@@ -134,7 +134,7 @@ npm run start:pm2
 
 - Vercel project root directory must be `client`.
 - Vercel env must include `VITE_MATKA_API_BASE_URL`, `VITE_CONTENT_API_BASE_URL`, and `RENDER_BACKEND_URL`.
-- Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://dpboss-king.vercel.app`).
+- Render backend `CORS_ORIGIN` must include your frontend origin (for example `https://matkaking-king.vercel.app`).
 - Run `npm run prod:doctor` before deploy to catch common local-vs-production config drift.
 
 ## Webzip Import

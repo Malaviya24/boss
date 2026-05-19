@@ -54,7 +54,7 @@ function makeScrapedContent(type, slug) {
     description: `Description for ${slug}`,
     seo: { meta: [{ name: 'description', content: `${slug} chart` }] },
     styles: { urls: ['https://example.com/style.css'], blocks: ['.chart { color: red; }'], jsonLdBlocks: [] },
-    hero: { logo: { src: '/img/logo.png', alt: 'DPBOSS', href: '/' }, chartTitle: `${slug.toUpperCase()} CHART`, smallHeading: 'Records', introText: 'Welcome' },
+    hero: { logo: { src: '/img/logo.png', alt: 'matkaking', href: '/' }, chartTitle: `${slug.toUpperCase()} CHART`, smallHeading: 'Records', introText: 'Welcome' },
     result: { className: 'chart-result', marketName: slug.toUpperCase(), value: '123-45-678', refreshLabel: 'Refresh Result', refreshHref: '#' },
     controls: { topAnchorId: 'market-top', bottomAnchorId: 'market-bottom', goBottomLabel: 'Go to Bottom', goTopLabel: 'Go to Top' },
     table: {
@@ -65,7 +65,7 @@ function makeScrapedContent(type, slug) {
       headingAttrs: {},
       titleAttrs: {},
     },
-    footer: { blocks: [{ tag: 'p', className: '', text: 'Footer text' }], brandTitle: 'DPBOSS', rightsLines: ['All Rights Reserved'], matkaPlay: { label: 'Matka Play', href: '/' } },
+    footer: { blocks: [{ tag: 'p', className: '', text: 'Footer text' }], brandTitle: 'matkaking', rightsLines: ['All Rights Reserved'], matkaPlay: { label: 'Matka Play', href: '/' } },
     importedAt: null,
     updatedAt: new Date().toISOString(),
   };
@@ -98,11 +98,11 @@ function makeMongoMeta(type, slug) {
     styleUrls: [],
     styleBlocks: [],
     jsonLdBlocks: [],
-    hero: { logo: { src: '/img/logo.png', alt: 'DPBOSS', href: '/' }, chartTitle: '', smallHeading: '', introText: '' },
+    hero: { logo: { src: '/img/logo.png', alt: 'matkaking', href: '/' }, chartTitle: '', smallHeading: '', introText: '' },
     result: { className: 'chart-result', marketName: slug.toUpperCase(), value: '***-**-***', refreshLabel: 'Refresh', refreshHref: '#' },
     controls: { topAnchorId: 'market-top', bottomAnchorId: 'market-bottom', goBottomLabel: 'Go to Bottom', goTopLabel: 'Go to Top' },
     table: { title: '', columns: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], attrs: {}, headingAttrs: {}, titleAttrs: {} },
-    footer: { blocks: [], brandTitle: 'DPBOSS', rightsLines: ['All Rights Reserved'], matkaPlay: { label: 'Play', href: '/' } },
+    footer: { blocks: [], brandTitle: 'matkaking', rightsLines: ['All Rights Reserved'], matkaPlay: { label: 'Play', href: '/' } },
     updatedAt: null,
   };
 }
@@ -130,7 +130,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -148,7 +148,7 @@ describe('MarketContentService Integration Tests', () => {
       expect(result.slug).toBe(slug);
       expect(result.title).toBe(scrapedContent.title);
       expect(result.table.columns).toEqual(scrapedContent.table.columns);
-      expect(result.footer.brandTitle).toBe('DPBOSS');
+      expect(result.footer.brandTitle).toBe('matkaking');
     });
 
     it('should return content with all required structured fields', async () => {
@@ -161,7 +161,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -207,7 +207,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -248,7 +248,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -283,7 +283,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -309,7 +309,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: ['surat-night', 'surat-king'],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -338,7 +338,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: ['surat-night', 'surat-king'],
         mongoEnabled: true,
         cacheTtlMs: 1000,
@@ -370,7 +370,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -410,7 +410,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -445,7 +445,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -477,7 +477,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs: 300000,
@@ -512,7 +512,7 @@ describe('MarketContentService Integration Tests', () => {
       const service = createMarketContentService({
         scrapeEnabled: true,
         scrapeTimeoutMs: 15000,
-        scrapeBaseUrl: 'https://dpboss.boston',
+        scrapeBaseUrl: 'https://matkaking.boston',
         scrapeExcludedSlugs: [],
         mongoEnabled: true,
         cacheTtlMs,

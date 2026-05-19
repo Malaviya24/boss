@@ -88,7 +88,7 @@ describe('Property 10: Request Coalescing', () => {
           scrapeEnabled: true,
           scrapeExcludedSlugs: [],
           scrapeTimeoutMs: 15000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           mongoEnabled: false,
           cacheTtlMs: 300000,
         });

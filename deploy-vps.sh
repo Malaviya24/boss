@@ -29,13 +29,13 @@ npm install -g pm2
 echo "[5/8] Cloning project..."
 mkdir -p /var/www
 cd /var/www
-if [ -d "dpboss" ]; then
+if [ -d "matkaking" ]; then
   echo "Project already exists, pulling latest..."
-  cd dpboss
+  cd matkaking
   git pull origin main
 else
-  git clone https://github.com/Malaviya24/boss.git dpboss
-  cd dpboss
+  git clone https://github.com/Malaviya24/boss.git matkaking
+  cd matkaking
 fi
 
 # Step 6: Install dependencies and build
@@ -52,7 +52,7 @@ npm run content:extract || echo "Content extract skipped (may need .env first)"
 
 # Step 8: Setup Nginx
 echo "[8/8] Configuring Nginx..."
-cat > /etc/nginx/sites-available/dpboss << 'NGINX'
+cat > /etc/nginx/sites-available/matkaking << 'NGINX'
 server {
     listen 80;
     server_name _;
@@ -64,7 +64,7 @@ server {
 
     # Frontend (built client)
     location / {
-        root /var/www/dpboss/client/dist;
+        root /var/www/matkaking/client/dist;
         try_files $uri $uri/ /index.html;
         expires 1h;
         add_header Cache-Control "public, no-transform";
@@ -72,7 +72,7 @@ server {
 
     # Static assets - long cache
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf)$ {
-        root /var/www/dpboss/client/dist;
+        root /var/www/matkaking/client/dist;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
@@ -105,7 +105,7 @@ server {
 }
 NGINX
 
-ln -sf /etc/nginx/sites-available/dpboss /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/matkaking /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl restart nginx
 systemctl enable nginx
@@ -116,8 +116,8 @@ echo "  DEPLOYMENT COMPLETE!"
 echo "========================================="
 echo ""
 echo "Next steps:"
-echo "1. Create .env file:  nano /var/www/dpboss/.env"
-echo "2. Start app:         cd /var/www/dpboss && pm2 start ecosystem.config.cjs"
+echo "1. Create .env file:  nano /var/www/matkaking/.env"
+echo "2. Start app:         cd /var/www/matkaking && pm2 start ecosystem.config.cjs"
 echo "3. Save PM2:          pm2 save && pm2 startup"
 echo "4. Test:              Open http://YOUR_IP in browser"
 echo ""

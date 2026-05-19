@@ -131,7 +131,7 @@ function extractLogoData(nodes = []) {
   if (!logoNode) {
     return {
       src: '/img/logo.png',
-      alt: 'DPBOSS',
+      alt: 'matkaking',
       href: '/',
     };
   }
@@ -141,7 +141,7 @@ function extractLogoData(nodes = []) {
 
   return {
     src: normalizeAssetPath(logoImage?.attrs?.src ?? '/img/logo.png'),
-    alt: normalizeText(logoImage?.attrs?.alt ?? 'DPBOSS') || 'DPBOSS',
+    alt: normalizeText(logoImage?.attrs?.alt ?? 'matkaking') || 'matkaking',
     href: normalizeAssetPath(logoAnchor?.attrs?.href ?? '/'),
   };
 }

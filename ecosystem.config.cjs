@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'dpboss-backend',
+      name: 'matkaking-backend',
       script: 'server.js',
       instances: 'max',
       exec_mode: 'cluster',

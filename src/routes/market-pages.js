@@ -9,11 +9,11 @@ import { marketPageParamsSchema } from '../models/validators.js';
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^(?:\d+-jodi-dpboss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-jodi-matkaking\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
   panel: {
     folder: 'panel',
-    pattern: /^(?:\d+-panel-dpboss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-panel-matkaking\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
 };
 
@@ -73,7 +73,7 @@ function rewriteMarketPhpLinks(html, { defaultType, knownSlugsByType }) {
 
     let parsedPathname = '';
     try {
-      parsedPathname = new URL(raw, 'https://dpboss.boston/').pathname;
+      parsedPathname = new URL(raw, 'https://matkaking.boston/').pathname;
     } catch {
       parsedPathname = raw.split(/[?#]/, 1)[0] ?? '';
     }

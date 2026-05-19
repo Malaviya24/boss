@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import { AppError } from '../../utils/errors.js';
 
-const JWT_ISSUER = 'dpboss-api';
-const JWT_AUDIENCE = 'dpboss-admin';
+const JWT_ISSUER = 'matkaking-api';
+const JWT_AUDIENCE = 'matkaking-admin';
 const JWT_ALGORITHM = 'HS256';
 
 function safeEqual(left = '', right = '') {

@@ -1009,7 +1009,7 @@ export default function AdminDashboardPage() {
         <div className="admin-brand-lockup">
           <span className="admin-brand-mark">Dp</span>
           <div>
-            <strong>DPBoss Admin</strong>
+            <strong>matkaking Admin</strong>
             <span>Market Control</span>
           </div>
         </div>

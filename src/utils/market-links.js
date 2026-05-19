@@ -141,7 +141,7 @@ export function isExternalSourceHomepage(value = '') {
   try {
     const parsed = new URL(raw);
     const host = parsed.hostname.toLowerCase();
-    if (!/^(?:www\.)?dpbossss?\.boston$/.test(host)) {
+    if (!/^(?:www\.)?MatkaKingss?\.boston$/.test(host)) {
       return false;
     }
     const path = parsed.pathname.replace(/\/+$/, '');

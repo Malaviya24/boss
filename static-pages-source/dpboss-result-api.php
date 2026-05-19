@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DPBOSS API - The Fastest Satta Matka Result API in the World. Real-time updates, 100% trusted, 24/7 support. Choose Normal or Premium plans to integrate Satta Matka results into your website seamlessly.">
-    <meta name="keywords" content="DPBOSS API, Satta Matka API, Satta Matka Result, Fastest Matka API, Real-time Matka Result, Trusted Matka API">
-    <meta name="author" content="DPBOSS">
-    <title>DPBOSS API - World's Fastest Satta Matka Result API</title>
+    <meta name="description" content="matkaking API - The Fastest Satta Matka Result API in the World. Real-time updates, 100% trusted, 24/7 support. Choose Normal or Premium plans to integrate Satta Matka results into your website seamlessly.">
+    <meta name="keywords" content="matkaking API, Satta Matka API, Satta Matka Result, Fastest Matka API, Real-time Matka Result, Trusted Matka API">
+    <meta name="author" content="matkaking">
+    <title>matkaking API - World's Fastest Satta Matka Result API</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -193,22 +193,22 @@
 </head>
 <body>
     <header>
-        <h1>DPBOSS - SATTA MATKA RESULT API</h1>
+        <h1>matkaking - SATTA MATKA RESULT API</h1>
         <p>The Ultimate Solution for Real-Time Satta Matka Results</p>
     </header>
 
     <section id="intro">
-    <h2>🚀 Show Fast Satta Matka Results on Your Website with DPBOSS API</h2>
+    <h2>🚀 Show Fast Satta Matka Results on Your Website with matkaking API</h2>
         <div class="intro-text">
-            <p>DPBOSS, the undisputed leader in Satta Matka results, proudly presents our cutting-edge API service. As the No. 1 trusted platform in the industry, we’ve been delivering the fastest and most reliable Satta Matka results to millions of users across India and beyond.</p>
-            <p>Now, with the DPBOSS API, you can seamlessly integrate our lightning-fast results into your own website. Whether you run a Matka portal, a gaming platform, or a results aggregator, our API ensures your users get the most accurate and up-to-date information directly from the source—10X faster than any other provider in the market.</p>
+            <p>matkaking, the undisputed leader in Satta Matka results, proudly presents our cutting-edge API service. As the No. 1 trusted platform in the industry, we’ve been delivering the fastest and most reliable Satta Matka results to millions of users across India and beyond.</p>
+            <p>Now, with the matkaking API, you can seamlessly integrate our lightning-fast results into your own website. Whether you run a Matka portal, a gaming platform, or a results aggregator, our API ensures your users get the most accurate and up-to-date information directly from the source—10X faster than any other provider in the market.</p>
             <a href="#pricing" class="btn">Explore Plans Now</a>
-            <a href="dpboss-result-api-documentation.html" class="btn" style="background-color:#0000FF;">View API Documentation</a>
+            <a href="matkaking-result-api-documentation.html" class="btn" style="background-color:#0000FF;">View API Documentation</a>
         </div>
     </section>
 
     <section id="features">
-    <h2>Why Choose DPBOSS API</h2>
+    <h2>Why Choose matkaking API</h2>
     <div class="features">
 
         <div class="feature-card">
@@ -220,7 +220,7 @@
         <div class="feature-card">
             <i class="fas fa-shield-alt"></i>
             <h3>Trusted & Reliable</h3>
-            <p>DPBOSS is a well-known and trusted name. Our API provides accurate and consistent results that you can rely on every day.</p>
+            <p>matkaking is a well-known and trusted name. Our API provides accurate and consistent results that you can rely on every day.</p>
         </div>
 
         <div class="feature-card">
@@ -282,8 +282,8 @@
 
     </section>
     <footer>
-        <p>© 2025 DPBOSS. All Rights Reserved. | Trusted Leader in Satta Matka Results</p>
-        <p><a href="dpboss-result-api-documentation.html" style="color: #FFF; text-decoration: underline;">API Documentation</a></p>
+        <p>© 2025 matkaking. All Rights Reserved. | Trusted Leader in Satta Matka Results</p>
+        <p><a href="matkaking-result-api-documentation.html" style="color: #FFF; text-decoration: underline;">API Documentation</a></p>
     </footer>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
 </html>

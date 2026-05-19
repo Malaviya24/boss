@@ -34,11 +34,11 @@ const AllCardPattiChartPage = lazy(
 const FixOpenToCloseByDatePage = lazy(
   () => import('./features/static-pages/FixOpenToCloseByDatePage.jsx'),
 );
-const DpbossResultApiPage = lazy(
-  () => import('./features/static-pages/DpbossResultApiPage.jsx'),
+const matkakingResultApiPage = lazy(
+  () => import('./features/static-pages/matkakingResultApiPage.jsx'),
 );
-const DpbossResultApiDocumentationPage = lazy(
-  () => import('./features/static-pages/DpbossResultApiDocumentationPage.jsx'),
+const matkakingResultApiDocumentationPage = lazy(
+  () => import('./features/static-pages/matkakingResultApiDocumentationPage.jsx'),
 );
 const ContactPage = lazy(
   () => import('./features/static-pages/ContactPage.jsx'),
@@ -65,9 +65,9 @@ const STATIC_PAGE_ROUTES = new Set([
   '/all-22-card-panna-penal-patti-chart.php',
   '/fix-open-to-close-by-date',
   '/fix-open-to-close-by-date.php',
-  '/dpboss-result-api',
-  '/dpboss-result-api.php',
-  '/dpboss-result-api-documentation',
+  '/matkaking-result-api',
+  '/matkaking-result-api.php',
+  '/matkaking-result-api-documentation',
 ]);
 
 function RouteFallback() {
@@ -181,11 +181,11 @@ export default function App() {
             element={<AllCardPattiChartPage />}
           />
           <Route path="/fix-open-to-close-by-date" element={<FixOpenToCloseByDatePage />} />
-          <Route path="/dpboss-result-api" element={<DpbossResultApiPage />} />
-          <Route path="/dpboss-result-api.php" element={<DpbossResultApiPage />} />
+          <Route path="/matkaking-result-api" element={<matkakingResultApiPage />} />
+          <Route path="/matkaking-result-api.php" element={<matkakingResultApiPage />} />
           <Route
-            path="/dpboss-result-api-documentation"
-            element={<DpbossResultApiDocumentationPage />}
+            path="/matkaking-result-api-documentation"
+            element={<matkakingResultApiDocumentationPage />}
           />
           <Route path="/about.php" element={<AboutPage />} />
           <Route path="/privacy.php" element={<PrivacyPage />} />

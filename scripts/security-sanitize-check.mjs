@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { sanitizeFragmentHtml } from '../src/utils/homepage-template.js';
 
-const BASE_URL = 'https://dpboss.boston/';
+const BASE_URL = 'https://matkaking.boston/';
 
 function run() {
   const sample = `

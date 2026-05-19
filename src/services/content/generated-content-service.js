@@ -499,7 +499,7 @@ export function createGeneratedContentService({
     const homepage = readCachedJson(homepagePath);
     const sections = {};
 
-    // Sections to exclude from the homepage (promotional content from dpboss.boston)
+    // Sections to exclude from the homepage (promotional content from matkaking.boston)
     const EXCLUDED_SECTIONS = new Set(['free-game-zone']);
 
     for (const sectionId of homepage.sectionOrder ?? []) {

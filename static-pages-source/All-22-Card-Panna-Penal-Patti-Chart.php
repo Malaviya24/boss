@@ -5,13 +5,13 @@
 <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
 <meta charset="UTF-8">
 <title>All 22 Card Panna Penal Patti Chart | All 22 Pana Record</title>
-<meta name="description" content="Get accurate all 22 card panna penal patti chart with dpbossss.boston. We offer the most up-to-date information on live all 22 pana chart online from India.">
+<meta name="description" content="Get accurate all 22 card panna penal patti chart with matkakingss.boston. We offer the most up-to-date information on live all 22 pana chart online from India.">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <script type="application/ld+json">
 	{
 		"@context": "http://schema.org",
 		"@type": "NewsArticle",
-		"author": "dpbossss.boston",
+		"author": "matkakingss.boston",
 		"headline": "Open-source framework for publishing content",
 		"datePublished": "2015-10-07T12:02:41Z",
 		"image": [
@@ -19,16 +19,16 @@
 		],
 		"publisher": {
       "@type": "Organization",
-      "name": "DPBOSS",
+      "name": "matkaking",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://dpbossss.boston/logo.png"
+        "url": "https://matkakingss.boston/logo.png"
       }
     }
 	}
 </script>
 <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-<link rel="canonical" href="https://dpbossss.boston/All-22-Card-Panna-Penal-Patti-Chart.php" />
+<link rel="canonical" href="https://matkakingss.boston/All-22-Card-Panna-Penal-Patti-Chart.php" />
 <link rel="shortcut icon" href="img/favicon.ico">
 <style amp-custom>
 html {
@@ -191,7 +191,7 @@ footer h6 {
 <body>
 <!-- logo -->
 <div class="logo-div" id="top">
-	<amp-img src="img/logo.png" alt="dpbossss.boston logo" width="220" height="82">
+	<amp-img src="img/logo.png" alt="matkakingss.boston logo" width="220" height="82">
 </div>
 <h1> All 22 Card Panna panel patti chart</h1>
 <!-- our fav cards -->
@@ -349,7 +349,7 @@ footer h6 {
 </div>
 <div class="para3">
 <p style="margin: 0;font-size: 12px;line-height: 14px;"> 
-Hello everyone, how are you all? I hope you all are doing well. Welcome to Dpboss.Services Today we are exploring a very important page of our website, it will help you a lot to learn the Panna Panel and Patti Chart. So this page includes all 22 cards of Panna Panel Patti, in the form of a chart.
+Hello everyone, how are you all? I hope you all are doing well. Welcome to matkaking.Services Today we are exploring a very important page of our website, it will help you a lot to learn the Panna Panel and Patti Chart. So this page includes all 22 cards of Panna Panel Patti, in the form of a chart.
 <br>
 <br>
 When you visit this page, you see on the top, there are panels written for every single digit like 1, 2, 3, 4, 5, 6, 7, 8, 9, and 0, and then below it, you will find another section, where you can see all 22 Satta Matka cards, and here you will find the complete sequence and the combinations of the panels. 
@@ -365,14 +365,14 @@ So these are called all 22 Panna Panel, and Patti Chart, and these are very impo
 </div>
 <!-- footer -->
 <footer>
-  <h4>dpbossss.boston</h4>
+  <h4>matkakingss.boston</h4>
   <div class="ftr-btn-div">
   	<a href="#" class="btn btn-home">HOME</a>
   	<a href="#" class="btn btn-back">BACK</a>
   	<a href="#" class="btn btn-dm">DCMA</a>
   </div>
   <big><big>Copyright @2020</big></big>
-  <h6>Powered by dpbossss.boston</h6>
+  <h6>Powered by matkakingss.boston</h6>
 </footer>
 </body>
 </html>

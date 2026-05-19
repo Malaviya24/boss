@@ -77,11 +77,11 @@ function main() {
   const mergedRoot = { ...rootEnv, ...process.env };
   const mergedClient = { ...clientEnv, ...process.env };
 
-  const expectedFrontendOrigin = 'https://dpboss-king.vercel.app';
+  const expectedFrontendOrigin = 'https://matkaking-king.vercel.app';
   const expectedRenderHostSuffix = '.onrender.com';
   const failures = [];
 
-  printHeader('DPBOSS Production Doctor');
+  printHeader('matkaking Production Doctor');
   const head = getGitHead();
   if (head) {
     printOk(`Current git HEAD: ${head}`);

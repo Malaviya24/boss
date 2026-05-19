@@ -13,7 +13,7 @@ import * as fc from 'fast-check';
 // Mock dependencies before importing the scraper
 vi.mock('../src/config/env.js', () => ({
   loadEnv: () => ({
-    marketScrapeBaseUrl: 'https://dpboss.boston',
+    marketScrapeBaseUrl: 'https://matkaking.boston',
   }),
 }));
 
@@ -51,7 +51,7 @@ describe('Property 3: URL Construction Follows Type-Based Pattern', () => {
   it('constructs URL as {baseUrl}/{type}-chart-record/{slug}.php for any valid type and slug', () => {
     fc.assert(
       fc.property(typeArbitrary, slugArbitrary, (type, slug) => {
-        const baseUrl = 'https://dpboss.boston';
+        const baseUrl = 'https://matkaking.boston';
 
         // Mock axios to resolve with valid HTML so we can capture the URL
         mockAxiosGet.mockResolvedValueOnce({

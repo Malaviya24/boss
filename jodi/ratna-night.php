@@ -17,7 +17,7 @@
    {
 		"@context": "http://schema.org",
 		"@type": "NewsArticle",
-		"author": "dpboss.boston",
+		"author": "matkaking.boston",
 		"headline": "Open-source framework for publishing content",
 		"datePublished": "2015-10-07T12:02:41Z",
 		"image": [
@@ -25,10 +25,10 @@
 		],
 		"publisher": {
       "@type": "Organization",
-      "name": "DPBOSS",
+      "name": "matkaking",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://dpboss.boston/logo.png"
+        "url": "https://matkaking.boston/logo.png"
       }
     }
 	}
@@ -215,8 +215,8 @@ h3{font-size: 16px;color:#fff; text-shadow: 0px 0px;margin: 0px;padding: 5px;}
  </head>
  <body>
   <div class="logo" style="box-shadow: 0 8px 0px -3px #ff9628;">
-   <a href="https://dpboss.boston/">
-    <img alt="Image of dpboss.boston" height="57" src="js/image/png;base64,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.js" width="292"/>
+   <a href="https://matkaking.boston/">
+    <img alt="Image of matkaking.boston" height="57" src="js/image/png;base64,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.js" width="292"/>
    </a>
   </div>
   <div class="container-fluid">
@@ -3000,37 +3000,37 @@ h3{font-size: 16px;color:#fff; text-shadow: 0px 0px;margin: 0px;padding: 5px;}
   </div>
   <div class="container-fluid footer-text-div">
    <p>
-    If you would like to play RATNA NIGHT or any other Satta Matka game online safely and interestingly, you need to choose a Satta Matka website that has a high reputation and trustworthiness. DPBoss Services is one such online betting platform, which is considered one of the most reputable and well-established online gambling platforms globally. It has a solid track record and is recognized for its reliability and trustworthiness. The wide range of betting options offered by this Satta Matka website to gamblers helps players significantly in finding and betting on the games they want to play online. Moreover, the in-play gambling feature of the website facilitates its users to have an interactive and dynamic betting experience.
+    If you would like to play RATNA NIGHT or any other Satta Matka game online safely and interestingly, you need to choose a Satta Matka website that has a high reputation and trustworthiness. matkaking Services is one such online betting platform, which is considered one of the most reputable and well-established online gambling platforms globally. It has a solid track record and is recognized for its reliability and trustworthiness. The wide range of betting options offered by this Satta Matka website to gamblers helps players significantly in finding and betting on the games they want to play online. Moreover, the in-play gambling feature of the website facilitates its users to have an interactive and dynamic betting experience.
    </p>
    <br/>
    <div class="small-heading">
     Access RATNA NIGHT Jodi Chart Records
    </div>
    <p>
-    The mobile accessibility is one of the best features of DPBoss Services. This Satta Matka website provides its users with a high-performance mobile app and making it convenient for users to contact the platform on a variety of mobile devices. It is essential to note that the benefits of choosing DPBoss Services for playing RATNA NIGHT and other Satta Matka games online are only a few. Users can get a lot more other benefits from using this gambling platform to play their Satta Matka games.
+    The mobile accessibility is one of the best features of matkaking Services. This Satta Matka website provides its users with a high-performance mobile app and making it convenient for users to contact the platform on a variety of mobile devices. It is essential to note that the benefits of choosing matkaking Services for playing RATNA NIGHT and other Satta Matka games online are only a few. Users can get a lot more other benefits from using this gambling platform to play their Satta Matka games.
    </p>
    <br/>
    <div class="faq-heading">
     Frequently Asked Questions (FAQs):
    </div>
    <p class="faq-title">
-    Q1. Why DPBoss Services is considered a reputable Satta Matka website?
+    Q1. Why matkaking Services is considered a reputable Satta Matka website?
    </p>
    <p class="faq-ans">
-    DPBoss Services is the most reputable Satta Matka website because it has a high status and trusted name in the gambling industry.
+    matkaking Services is the most reputable Satta Matka website because it has a high status and trusted name in the gambling industry.
    </p>
    <p class="faq-title">
-    Q2. What are the betting options available on DPBoss Services?
+    Q2. What are the betting options available on matkaking Services?
    </p>
    <p class="faq-ans">
-    DPBoss Services is considered to most preferred gateway to play all types and variations of Satta Matka games online. It is because of the extensive array of options it offers to both novice players as well as seasoned gamblers.
+    matkaking Services is considered to most preferred gateway to play all types and variations of Satta Matka games online. It is because of the extensive array of options it offers to both novice players as well as seasoned gamblers.
    </p>
   </div>
   <br/>
   <br/>
   <div class="para3">
    <p style="margin: 0;font-size: 12px;line-height: 14px;">
-    Hi, Welcome to dpboss.services, In this chart explainer guide, we will teach you about the RATNA NIGHT Jodi Chart. This chart belongs to the Sridevi Market, one of the most prominent markets, you will know if you know how many players are there who love to play in this market. This is the main market and the results are presented in this chart in the form of Jodi.
+    Hi, Welcome to matkaking.services, In this chart explainer guide, we will teach you about the RATNA NIGHT Jodi Chart. This chart belongs to the Sridevi Market, one of the most prominent markets, you will know if you know how many players are there who love to play in this market. This is the main market and the results are presented in this chart in the form of Jodi.
     <br/>
     <br/>
     Jodi means a combination of two numbers, as we all know this is a very basic thing, we all know Jodi. There are a lot of Jodi in the chart, you can check out this chart looks like a table where we have cells, rows, columns, etc.
@@ -3058,8 +3058,8 @@ h3{font-size: 16px;color:#fff; text-shadow: 0px 0px;margin: 0px;padding: 5px;}
   <!-- adv & links -->
   <!-- footer -->
   <footer style="font-style: normal;">
-   <a class="ftr-icon" href="https://dpboss.boston">
-    dpboss.boston
+   <a class="ftr-icon" href="https://matkaking.boston">
+    matkaking.boston
    </a>
    <p>
     All Rights Reseved®
@@ -3068,12 +3068,12 @@ h3{font-size: 16px;color:#fff; text-shadow: 0px 0px;margin: 0px;padding: 5px;}
     <br/>
     Contact (Astrologer-
     <span>
-     Dpboss
+     matkaking
     </span>
     )
    </p>
   </footer>
-  <!--<a class="mp-btn" href="https://dpboss.boston/dpbossplay-matka-online.php"><i>Matka Play</i></a> -->
+  <!--<a class="mp-btn" href="https://matkaking.boston/matkakingplay-matka-online.php"><i>Matka Play</i></a> -->
   <a class="mp-btn" href="https://sachin99.space/download-application.php">
    <i>
     Matka Play

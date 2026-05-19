@@ -56,14 +56,14 @@ const PAGES = [
     route: '/fix-open-to-close-by-date',
   },
   {
-    source: 'dpboss-result-api.php',
-    html: 'dpboss-result-api',
-    route: '/dpboss-result-api',
+    source: 'matkaking-result-api.php',
+    html: 'matkaking-result-api',
+    route: '/matkaking-result-api',
   },
   {
-    source: 'dpboss-result-api-documentation.html',
-    html: 'dpboss-result-api-documentation',
-    route: '/dpboss-result-api-documentation',
+    source: 'matkaking-result-api-documentation.html',
+    html: 'matkaking-result-api-documentation',
+    route: '/matkaking-result-api-documentation',
   },
 ];
 
@@ -82,12 +82,12 @@ const HREF_MAP = [
     '/all-22-card-panna-penal-patti-chart',
   ],
   ['fix-open-to-close-by-date.php', '/fix-open-to-close-by-date'],
-  ['dpboss-result-api.php', '/dpboss-result-api'],
-  ['dpboss-result-api-documentation.html', '/dpboss-result-api-documentation'],
+  ['matkaking-result-api.php', '/matkaking-result-api'],
+  ['matkaking-result-api-documentation.html', '/matkaking-result-api-documentation'],
 ];
 
 const HOST_PATTERNS = [
-  // capture http or https + dpbossss(.boston) or dpboss.boston (with the optional trailing s)
+  // capture http or https + matkakingss(.boston) or matkaking.boston (with the optional trailing s)
   // we deliberately keep a leading double-quote in the rewriting helpers so that
   // image / canonical / asset URLs (which use other delimiters) are NOT touched.
 ];
@@ -136,15 +136,15 @@ function rewriteHrefs(html) {
   // 1) Specific page maps. Match in href="..." and href='...' for the legacy URLs.
   for (const [legacy, target] of HREF_MAP) {
     const escapedLegacy = legacy.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    // href="https://dpbossss.boston/<page>" -> href="/route"
+    // href="https://matkakingss.boston/<page>" -> href="/route"
     const reDouble = new RegExp(
-      String.raw`href\s*=\s*"https?:\/\/(?:www\.)?dpbossss?\.boston\/${escapedLegacy}"`,
+      String.raw`href\s*=\s*"https?:\/\/(?:www\.)?matkakingss?\.boston\/${escapedLegacy}"`,
       'gi',
     );
     out = out.replace(reDouble, `href="${target}"`);
 
     const reSingle = new RegExp(
-      String.raw`href\s*=\s*'https?:\/\/(?:www\.)?dpbossss?\.boston\/${escapedLegacy}'`,
+      String.raw`href\s*=\s*'https?:\/\/(?:www\.)?matkakingss?\.boston\/${escapedLegacy}'`,
       'gi',
     );
     out = out.replace(reSingle, `href='${target}'`);
@@ -152,11 +152,11 @@ function rewriteHrefs(html) {
 
   // 2) Bare host (with or without trailing slash) used as homepage link.
   out = out.replace(
-    /href\s*=\s*"https?:\/\/(?:www\.)?dpbossss?\.boston\/?"/gi,
+    /href\s*=\s*"https?:\/\/(?:www\.)?matkakingss?\.boston\/?"/gi,
     'href="/"',
   );
   out = out.replace(
-    /href\s*=\s*'https?:\/\/(?:www\.)?dpbossss?\.boston\/?'/gi,
+    /href\s*=\s*'https?:\/\/(?:www\.)?matkakingss?\.boston\/?'/gi,
     "href='/'",
   );
 

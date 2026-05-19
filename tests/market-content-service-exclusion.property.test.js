@@ -6,7 +6,7 @@ import * as fc from 'fast-check';
  * Validates: Requirements 4.1, 4.2
  *
  * For any market slug in the exclusion list, no HTTP request is ever made
- * to dpboss.boston (mock axios, assert zero outbound calls).
+ * to matkaking.boston (mock axios, assert zero outbound calls).
  */
 
 // Track calls to the scraper
@@ -92,7 +92,7 @@ describe('Property 7: Exclusion Guarantee', () => {
           mode: 'legacy',
           scrapeEnabled: true,
           scrapeTimeoutMs: 5000,
-          scrapeBaseUrl: 'https://dpboss.boston',
+          scrapeBaseUrl: 'https://matkaking.boston',
           scrapeExcludedSlugs: [slug],
           mongoEnabled: false,
           legacyContentService: {
@@ -123,7 +123,7 @@ describe('Property 7: Exclusion Guarantee', () => {
             mode: 'legacy',
             scrapeEnabled: true,
             scrapeTimeoutMs: 5000,
-            scrapeBaseUrl: 'https://dpboss.boston',
+            scrapeBaseUrl: 'https://matkaking.boston',
             scrapeExcludedSlugs: [slug],
             mongoEnabled: false,
             cacheTtlMs: 1000, // short TTL

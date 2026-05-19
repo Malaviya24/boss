@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
-import html from './content/dpboss-result-api-documentation.html?raw';
+import html from './content/matkaking-result-api-documentation.html?raw';
 
-const TITLE = 'Dpboss Result API Documentation';
+const TITLE = 'matkaking Result API Documentation';
 
 /**
  * Renders the API documentation page. The HTML content includes a Tailwind CDN
  * <script> tag and an inline switchTab function. We use a ref + manual script
  * execution to ensure the scripts run after the HTML is injected into the DOM.
  */
-export default function DpbossResultApiDocumentationPage() {
+export default function matkakingResultApiDocumentationPage() {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function DpbossResultApiDocumentationPage() {
   return (
     <div
       ref={containerRef}
-      className="dpboss-doc-page"
+      className="matkaking-doc-page"
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: html }}
     />

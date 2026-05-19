@@ -142,7 +142,7 @@ const chartPageHtmlArb = fc
 function assembleStructuredContent($, type, slug) {
   const title = $('title').text().trim();
   const meta = extractMetaTags($);
-  const styles = extractStyles($, 'https://dpboss.boston');
+  const styles = extractStyles($, 'https://matkaking.boston');
   const hero = extractHero($);
   const result = extractResult($, type, slug);
   const table = extractChartTable($, type);

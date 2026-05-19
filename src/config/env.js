@@ -42,7 +42,7 @@ function normalizeMarketContentSource(value = '') {
 }
 
 export function loadEnv() {
-  const primaryTarget = process.env.TARGET_URL ?? 'https://dpboss.boston/';
+  const primaryTarget = process.env.TARGET_URL ?? 'https://matkaking.boston/';
   const scrapeTargets = toList(process.env.SCRAPE_TARGETS, [primaryTarget]);
 
   return {
@@ -85,6 +85,6 @@ export function loadEnv() {
     marketScrapeTimeoutMs: toInt(process.env.MARKET_SCRAPE_TIMEOUT_MS, 15000),
     marketScrapeCacheTtlMs: toInt(process.env.MARKET_SCRAPE_CACHE_TTL_MS, 300_000),
     marketScrapeExcludedSlugs: toList(process.env.MARKET_SCRAPE_EXCLUDED_SLUGS, []),
-    marketScrapeBaseUrl: (process.env.MARKET_SCRAPE_BASE_URL ?? 'https://dpboss.boston').replace(/\/$/, ''),
+    marketScrapeBaseUrl: (process.env.MARKET_SCRAPE_BASE_URL ?? 'https://matkaking.boston').replace(/\/$/, ''),
   };
 }
