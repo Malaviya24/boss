@@ -2,7 +2,7 @@ const API_TIMEOUT_MS = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS ?? '3
 const CSRF_TOKEN = String(import.meta.env.VITE_CSRF_TOKEN ?? '').trim();
 const ADMIN_TOKEN_KEY = 'dpboss_admin_token';
 const CONFIGURED_MATKA_BASE_URL = String(import.meta.env.VITE_MATKA_API_BASE_URL ?? '').trim();
-const DEFAULT_VERCEL_MATKA_BASE_URL = 'https://boss-ehz0.onrender.com';
+const DEFAULT_VERCEL_MATKA_BASE_URL = '';
 const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 
 function ensureErrorMessage(value, fallback) {

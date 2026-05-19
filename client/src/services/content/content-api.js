@@ -14,7 +14,7 @@ const STATIC_MARKET_FILE_ONLY =
 const CONFIGURED_CONTENT_API_BASE_URL = String(
   import.meta.env.VITE_CONTENT_API_BASE_URL ?? '',
 ).trim();
-const DEFAULT_RENDER_CONTENT_BASE_URL = 'https://boss-ehz0.onrender.com';
+const DEFAULT_RENDER_CONTENT_BASE_URL = '';
 const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 const DEFAULT_FOOTER_RIGHTS_LINES = [
   'All Rights Reserved',
