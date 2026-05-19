@@ -11,7 +11,7 @@ export default async function handler(request, response) {
   const type = normalizeSegment(Array.isArray(request.query?.type) ? request.query.type[0] : request.query?.type);
   const slug = normalizeSegment(Array.isArray(request.query?.slug) ? request.query.slug[0] : request.query?.slug);
 
-  if (!['jodi', 'panel'].includes(type) || !slug) {
+  if (!['jodi', 'panel', 'hs-online-bb-15-minutes', 'main-bombay-36-bazar'].includes(type) || !slug) {
     response.status(400).json({ error: 'Invalid market template request' });
     return;
   }
