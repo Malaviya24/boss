@@ -43,16 +43,27 @@ const DpbossResultApiDocumentationPage = lazy(
 
 const STATIC_PAGE_ROUTES = new Set([
   '/about',
+  '/about.php',
   '/privacy',
+  '/privacy.php',
   '/tos',
+  '/tos.php',
   '/matka-jodi-count-chart',
+  '/matka-jodi-count-chart.php',
   '/jodi-chart-family-matka',
+  '/jodi-chart-family-matka.php',
   '/penal-count-chart',
+  '/penal-count-chart.php',
   '/penal-total-chart',
+  '/penal-total-chart.php',
   '/all-22-card-panna-penal-patti-chart',
+  '/all-22-card-panna-penal-patti-chart.php',
   '/fix-open-to-close-by-date',
+  '/fix-open-to-close-by-date.php',
   '/dpboss-result-api',
+  '/dpboss-result-api.php',
   '/dpboss-result-api-documentation',
+  '/dpboss-result-api-documentation.html',
 ]);
 
 function RouteFallback() {
@@ -165,9 +176,32 @@ export default function App() {
           />
           <Route path="/fix-open-to-close-by-date" element={<FixOpenToCloseByDatePage />} />
           <Route path="/dpboss-result-api" element={<DpbossResultApiPage />} />
+          <Route path="/dpboss-result-api.php" element={<DpbossResultApiPage />} />
           <Route
             path="/dpboss-result-api-documentation"
             element={<DpbossResultApiDocumentationPage />}
+          />
+          <Route
+            path="/dpboss-result-api-documentation.html"
+            element={<DpbossResultApiDocumentationPage />}
+          />
+          <Route path="/about.php" element={<AboutPage />} />
+          <Route path="/privacy.php" element={<PrivacyPage />} />
+          <Route path="/tos.php" element={<TosPage />} />
+          <Route path="/matka-jodi-count-chart.php" element={<MatkaJodiCountChartPage />} />
+          <Route
+            path="/jodi-chart-family-matka.php"
+            element={<JodiChartFamilyMatkaPage />}
+          />
+          <Route path="/penal-count-chart.php" element={<PenalCountChartPage />} />
+          <Route path="/penal-total-chart.php" element={<PenalTotalChartPage />} />
+          <Route
+            path="/all-22-card-panna-penal-patti-chart.php"
+            element={<AllCardPattiChartPage />}
+          />
+          <Route
+            path="/fix-open-to-close-by-date.php"
+            element={<FixOpenToCloseByDatePage />}
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
