@@ -40,10 +40,15 @@ const DpbossResultApiPage = lazy(
 const DpbossResultApiDocumentationPage = lazy(
   () => import('./features/static-pages/DpbossResultApiDocumentationPage.jsx'),
 );
+const ContactPage = lazy(
+  () => import('./features/static-pages/ContactPage.jsx'),
+);
 
 const STATIC_PAGE_ROUTES = new Set([
   '/about',
   '/about.php',
+  '/contact',
+  '/contact.php',
   '/privacy',
   '/privacy.php',
   '/tos',
@@ -163,6 +168,8 @@ export default function App() {
           <Route path="/admin-x-secure-portal" element={<AdminLoginPage />} />
           <Route path="/admin-x-secure-portal/dashboard" element={<AdminDashboardPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/contact.php" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/tos" element={<TosPage />} />
           <Route path="/matka-jodi-count-chart" element={<MatkaJodiCountChartPage />} />

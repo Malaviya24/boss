@@ -1,0 +1,234 @@
+<style>
+.contact-page {
+  background-color: #fc9;
+  font-family: Helvetica, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+  padding: 10px;
+  min-height: 100vh;
+}
+
+.contact-page * {
+  box-sizing: border-box;
+}
+
+.contact-header {
+  color: #000;
+  text-align: center;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 20px;
+  border: 2px solid #ff182c !important;
+  border-style: outset;
+  border-radius: 10px;
+  box-shadow: 0 0 20px 0 rgb(0 0 0 / 40%);
+  padding: 15px;
+  background: linear-gradient(180deg, #ff0000 0%, #cc0000 100%);
+}
+
+.contact-header h1 {
+  color: #fff;
+  font-size: 24px;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.contact-content {
+  color: #000;
+  text-align: center;
+  margin: 10px 0;
+  padding: 15px;
+  border: 2px solid #ff182c !important;
+  border-style: outset;
+  border-radius: 10px;
+  box-shadow: 0 0 20px 0 rgb(0 0 0 / 40%);
+  background: #fff8f0;
+}
+
+.contact-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  text-align: left;
+  margin: 10px 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.contact-email {
+  display: inline-block;
+  margin: 15px 0;
+  padding: 12px 25px;
+  background: linear-gradient(45deg, navy, #005780);
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  border: 2px solid #fff;
+}
+
+.contact-email:hover {
+  background: linear-gradient(45deg, #005780, navy);
+}
+
+.contact-info-box {
+  margin: 15px 0;
+  padding: 15px;
+  background: linear-gradient(187deg, #fc9 50%, #ffc387 50%);
+  border: 2px solid #ff182c;
+  border-radius: 10px;
+}
+
+.contact-info-box h3 {
+  color: #1a237e;
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.contact-info-box p {
+  font-size: 14px;
+  color: #333;
+  margin: 5px 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.contact-form {
+  text-align: left;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #ff182c;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.contact-form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: normal;
+  color: #1a237e;
+  margin: 10px 0 5px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: Helvetica, sans-serif;
+}
+
+.contact-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.contact-form button {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: linear-gradient(45deg, #ff0000, #cc0000);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background: linear-gradient(45deg, #cc0000, #990000);
+}
+
+.contact-footer {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #ff182c;
+  border-radius: 10px;
+  background: #fff8f0;
+}
+
+.contact-footer p {
+  font-size: 13px;
+  color: #555;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+}
+</style>
+
+<div class="contact-page">
+  <div class="contact-header">
+    <h1>Contact Us - MatkaKing.Services</h1>
+  </div>
+
+  <div class="contact-content">
+    <p>Hello, all the Satta Matka Enthusiasts! Welcome to the contact details of our website <strong>MatkaKing.Services</strong>. If you are a customer and you have any queries, then you can fill out the below form here and then contact us. We will respond as soon as we check your email.</p>
+
+    <p>So here you need to fill your name in the customer name field. Then you need to enter the game name you want to play specifically. Then you have to add your contact details here. It should be your phone number, and then you need to select the game type, and then your email, after that you can send us a message.</p>
+
+    <p>If you want to know our address, here is our physical address written on the right side, and here is our official email where you can send us an email for any important query.</p>
+  </div>
+
+  <div class="contact-info-box">
+    <h3>📧 Official Email</h3>
+    <a class="contact-email" href="mailto:support@dpboss.net">support@dpboss.net</a>
+    <p>Our experts are available 24/7 to help you with your queries.</p>
+  </div>
+
+  <div class="contact-content">
+    <h3 style="color: #1a237e; font-size: 18px;">📝 Contact Form</h3>
+    <form class="contact-form" onsubmit="event.preventDefault(); alert('Form submitted! We will contact you soon.');">
+      <label for="name">Customer Name *</label>
+      <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+      <label for="game">Game Name *</label>
+      <input type="text" id="game" name="game" placeholder="Enter game name you want to play">
+
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+      <label for="gametype">Game Type *</label>
+      <select id="gametype" name="gametype" required>
+        <option value="">Select Game Type</option>
+        <option value="single">Single</option>
+        <option value="jodi">Jodi</option>
+        <option value="panna">Panna</option>
+        <option value="sangam">Sangam</option>
+        <option value="half-sangam">Half Sangam</option>
+      </select>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <div class="contact-content">
+    <p>Okay, so this is our contact page, and here is our contact number, you can contact us by filling out the form and don't forget to enter all the details we asked for, otherwise your form will not be submitted.</p>
+
+    <p>That's all from this page. I hope you will contact us when you need anything from us. Don't hesitate to contact us. Our experts are available 24/7 to help you with your queries. Just don't forget to add proper details when you submit the form, and carefully fill it out.</p>
+
+    <p><strong>All the entries are mandatory.</strong> You cannot skip any of the entry blanks. Make sure you fill out the form correctly, and we will respond to you as soon as we get your email.</p>
+
+    <p>Thank you so much. We wish you very good luck with your next Satta Matka Games. May you always win!</p>
+  </div>
+
+  <div class="contact-footer">
+    <p>© MatkaKing.Services | All Rights Reserved | Contact: support@dpboss.net</p>
+  </div>
+</div>
