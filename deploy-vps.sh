@@ -1,11 +1,11 @@
 #!/bin/bash
-# DPBOSS VPS Deployment Script for Ubuntu 24.04 LTS
+# MATKAKING VPS Deployment Script for Ubuntu 24.04 LTS
 # Run as root: bash deploy-vps.sh
 
 set -e
 
 echo "========================================="
-echo "  DPBOSS VPS Deployment - Ubuntu 24.04"
+echo "  MATKAKING VPS Deployment - Ubuntu 24.04"
 echo "========================================="
 
 # Step 1: Update system

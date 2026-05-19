@@ -315,7 +315,7 @@ export function MarketTemplate({
       ))}
 
       <a className="logo" href={normalizeHref(hero.logo?.href, '/')}>
-        <img src={normalizeHref(hero.logo?.src, '/img/logo.png')} alt={hero.logo?.alt || 'DPBOSS'} />
+        <img src={normalizeHref(hero.logo?.src, '/img/logo.png')} alt={hero.logo?.alt || 'MATKAKING'} />
       </a>
 
       {hero.chartTitle ? <h1 className="chart-h1">{hero.chartTitle}</h1> : null}
@@ -454,7 +454,7 @@ export function MarketTemplate({
       {(footer.brandTitle || (footer.rightsLines ?? []).length > 0) ? (
         <footer style={{ fontStyle: 'normal' }}>
           {footer.brandTitle ? (
-            <a className="ftr-icon" href="https://dpboss.boston">
+            <a className="ftr-icon" href="https://matkaking.cc">
               {footer.brandTitle}
             </a>
           ) : null}

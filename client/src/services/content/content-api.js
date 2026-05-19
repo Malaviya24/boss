@@ -19,7 +19,7 @@ const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
 const DEFAULT_FOOTER_RIGHTS_LINES = [
   'All Rights Reserved',
   '(1998-2024)',
-  'Contact (Astrologer-Dpboss)',
+  'Contact (Astrologer-Matkaking)',
 ];
 
 const homepageCache = {
@@ -128,7 +128,7 @@ function toLegacyFooter(legacyPayload = {}) {
   return {
     blocks: footerBlocks,
     counterText: '',
-    brandTitle: 'DPBOSS.BOSTON',
+    brandTitle: 'MATKAKING.CC',
     rightsLines: DEFAULT_FOOTER_RIGHTS_LINES,
     matkaPlay: {
       label: 'Matka Play',
@@ -208,7 +208,7 @@ function toStructuredMarketContentFromLegacy(legacyPayload = {}, { type, slug } 
       logo: {
         href: '/',
         src: normalizeText(legacyPayload?.logoUrl) || '/img/logo.png',
-        alt: 'DPBOSS',
+        alt: 'MATKAKING',
       },
       chartTitle: headingText,
       smallHeading: normalizeText(legacyPayload?.summary?.title),
