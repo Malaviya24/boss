@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import html from './content/matkaking-result-api-documentation.html?raw';
+import html from './content/dpboss-result-api-documentation.html?raw';
 
 const TITLE = 'matkaking Result API Documentation';
 
