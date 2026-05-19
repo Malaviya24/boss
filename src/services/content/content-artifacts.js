@@ -21,11 +21,11 @@ const DYNAMIC_SECTION_DEFINITIONS = [
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^(?:\d+-jodi-matkaking\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-jodi-(?:dpboss|dpbossss|matkaking)\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
   panel: {
     folder: 'panel',
-    pattern: /^(?:\d+-panel-matkaking\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-panel-(?:dpboss|dpbossss|matkaking)\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
 };
 
@@ -188,7 +188,7 @@ function sanitizeMarketHref(rawValue, { defaultType, slug, knownSlugsByType }) {
 
   let normalizedPath = '';
   try {
-    normalizedPath = new URL(raw, 'https://matkaking.boston/').pathname.replace(/^\/+/, '').toLowerCase();
+    normalizedPath = new URL(raw, 'https://dpbossss.boston/').pathname.replace(/^\/+/, '').toLowerCase();
   } catch {
     normalizedPath = raw.split(/[?#]/, 1)[0].replace(/^\/+/, '').toLowerCase();
   }

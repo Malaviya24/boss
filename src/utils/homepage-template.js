@@ -152,7 +152,7 @@ function decodeNodeText(node) {
 const SIDE_BUTTON_HIDE_MARKETS = new Set([
   'add your game',
   'add your game email us',
-  'market add email matkaking',
+  'market add email dpboss',
 ]);
 
 function shouldHideSideButtons($, marketNode) {
@@ -169,7 +169,7 @@ function shouldHideSideButtons($, marketNode) {
   const hasAddGameText =
     rowText.includes('add your game') ||
     rowText.includes('market add email') ||
-    rowText.includes('market add email matkaking');
+    rowText.includes('market add email dpboss');
   if (hasAddGameText) {
     return true;
   }
@@ -182,7 +182,7 @@ function shouldHideSideButtons($, marketNode) {
   return hrefs.some(
     (href) =>
       href.includes('add-your-game') ||
-      href.includes('market-add-email-matkaking'),
+      href.includes('market-add-email-dpboss'),
   );
 }
 
@@ -233,7 +233,7 @@ function sanitizeDom($, $root, baseUrl) {
       return;
     }
 
-    // Bare https://MatkaKingss.boston/ or https://MatkaKing.boston/ -> internal homepage
+    // Bare https://dpbossss.boston/ or https://dpboss.boston/ -> internal homepage
     if (isExternalSourceHomepage(element.attribs.href)) {
       element.attribs.href = '/';
       delete element.attribs.target;
@@ -356,7 +356,7 @@ export function sanitizeFragmentHtml(html, baseUrl) {
   let result = $root.html() ?? '';
 
   // Replace scraped branding with our own brand name.
-  // The source site uses "matkaking" / "matkaking" / "matkaking" — we rebrand to "MATKAKING" / "matkaking" / "Matkaking".
+  // The source site uses "DPBOSS" / "dpboss" / "Dpboss" — we rebrand to "MATKAKING" / "matkaking" / "Matkaking".
   result = replaceBranding(result);
 
   return result;
@@ -365,21 +365,21 @@ export function sanitizeFragmentHtml(html, baseUrl) {
 /**
  * Replaces all occurrences of the source site's brand name with our brand.
  * Handles various casings. Does NOT touch URLs (those are handled by sanitizeUrl).
- * NOTE: The regex patterns below must use the SOURCE site's brand name (MatkaKing/MatkaKingss)
+ * NOTE: The regex patterns below must use the SOURCE site's brand name (dpboss/dpbossss)
  * — do NOT rename these patterns during branding updates.
  */
 function replaceBranding(html) {
   return html
-    .replace(/MatkaKingSS\.BOSTON/gi, 'MATKAKING.CC')
-    .replace(/MatkaKing\.BOSTON/gi, 'MATKAKING.CC')
-    .replace(/MatkaKingss\.boston/gi, 'matkaking.cc')
-    .replace(/MatkaKing\.boston/gi, 'matkaking.cc')
-    .replace(/MatkaKingSS/g, 'MATKAKING')
-    .replace(/MatkaKing/g, 'MATKAKING')
-    .replace(/MatkaKingss/g, 'Matkaking')
-    .replace(/MatkaKing/g, 'Matkaking')
-    .replace(/MatkaKingss/g, 'matkaking')
-    .replace(/MatkaKing/g, 'matkaking');
+    .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
+    .replace(/dpbossss\.boston/gi, 'matkaking.cc')
+    .replace(/dpboss\.boston/gi, 'matkaking.cc')
+    .replace(/DPBOSSSS/g, 'MATKAKING')
+    .replace(/DPBOSS/g, 'MATKAKING')
+    .replace(/Dpbossss/g, 'Matkaking')
+    .replace(/Dpboss/g, 'Matkaking')
+    .replace(/dpbossss/g, 'matkaking')
+    .replace(/dpboss/g, 'matkaking');
 }
 
 export function getHomepageTemplate(baseUrl) {
