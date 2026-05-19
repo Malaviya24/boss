@@ -9,7 +9,7 @@ function getPathname(value = '') {
   }
 
   try {
-    return new URL(value, 'https://dpboss.boston/').pathname;
+    return new URL(value, 'https://matkaking.boston/').pathname;
   } catch {
     return String(value).split(/[?#]/, 1)[0] ?? '';
   }
@@ -93,8 +93,8 @@ const STATIC_PAGE_ROUTE_MAP = new Map([
   ['penal-total-chart.php', '/penal-total-chart'],
   ['all-22-card-panna-penal-patti-chart.php', '/all-22-card-panna-penal-patti-chart'],
   ['fix-open-to-close-by-date.php', '/fix-open-to-close-by-date'],
-  ['dpboss-result-api.php', '/dpboss-result-api'],
-  ['dpboss-result-api-documentation.html', '/dpboss-result-api-documentation'],
+  ['matkaking-result-api.php', '/matkaking-result-api'],
+  ['matkaking-result-api-documentation.html', '/matkaking-result-api-documentation'],
 ]);
 
 /**
@@ -110,7 +110,7 @@ export function toLocalStaticPagePath(value = '') {
 
   let pathname = '';
   try {
-    pathname = new URL(raw, 'https://dpbossss.boston/').pathname;
+    pathname = new URL(raw, 'https://matkakingss.boston/').pathname;
   } catch {
     pathname = raw.split(/[?#]/, 1)[0] ?? '';
   }
@@ -130,9 +130,9 @@ export function toLocalStaticPagePath(value = '') {
 }
 
 /**
- * Returns true if the URL points to dpbossss.boston / dpboss.boston homepage.
+ * Returns true if the URL points to the source scraping site's homepage.
  */
-export function isExternalDpbossHomepage(value = '') {
+export function isExternalSourceHomepage(value = '') {
   const raw = String(value ?? '').trim();
   if (!raw) {
     return false;

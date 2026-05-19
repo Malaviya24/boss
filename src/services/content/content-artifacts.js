@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
-import { buildLocalMarketPath, isExternalDpbossHomepage, normalizeMarketSlug, toLocalMarketPath, toLocalStaticPagePath } from '../../utils/market-links.js';
+import { buildLocalMarketPath, isExternalSourceHomepage, normalizeMarketSlug, toLocalMarketPath, toLocalStaticPagePath } from '../../utils/market-links.js';
 
 export const CONTENT_ARTIFACTS_DIR = path.join('generated', 'content');
 
@@ -21,11 +21,11 @@ const DYNAMIC_SECTION_DEFINITIONS = [
 const TYPE_CONFIG = {
   jodi: {
     folder: 'jodi',
-    pattern: /^(?:\d+-jodi-dpboss\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-jodi-matkaking\.boston-jodi-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
   panel: {
     folder: 'panel',
-    pattern: /^(?:\d+-panel-dpboss\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
+    pattern: /^(?:\d+-panel-matkaking\.boston-panel-chart-record-)?([a-z0-9-]+)\.php$/i,
   },
 };
 
@@ -140,7 +140,7 @@ function sanitizeHomepageHref(rawValue = '') {
   }
 
   // Bare https://dpbossss.boston/ -> internal homepage
-  if (isExternalDpbossHomepage(raw)) {
+  if (isExternalSourceHomepage(raw)) {
     return '/';
   }
 
@@ -188,7 +188,7 @@ function sanitizeMarketHref(rawValue, { defaultType, slug, knownSlugsByType }) {
 
   let normalizedPath = '';
   try {
-    normalizedPath = new URL(raw, 'https://dpboss.boston/').pathname.replace(/^\/+/, '').toLowerCase();
+    normalizedPath = new URL(raw, 'https://matkaking.boston/').pathname.replace(/^\/+/, '').toLowerCase();
   } catch {
     normalizedPath = raw.split(/[?#]/, 1)[0].replace(/^\/+/, '').toLowerCase();
   }
@@ -575,7 +575,7 @@ function parseHomepageArtifact(html) {
   for (const section of sections) {
     fallbackSections[section.id] = extractSectionNodes($, section.element);
     $(section.element).replaceWith(
-      `<dpboss-section data-section-id="${section.id}"></dpboss-section>`,
+      `<matkaking-section data-section-id="${section.id}"></matkaking-section>`,
     );
   }
 
@@ -590,7 +590,7 @@ function parseHomepageArtifact(html) {
 
   return {
     version: 1,
-    title: sanitizeText($('title').first().text() ?? 'DPBOSS'),
+    title: sanitizeText($('title').first().text() ?? 'matkaking'),
     meta: serializeMetaTags($),
     styleUrls,
     styleBlocks,
@@ -833,10 +833,10 @@ export function resolveMarketAssetFile({ webzipRoot, type, slug, assetPath, regi
 }
 
 export function parseHomepageFragmentToNodes(fragmentHtml = '') {
-  const $ = cheerio.load(`<div id="__dpboss_fragment__">${fragmentHtml}</div>`, {
+  const $ = cheerio.load(`<div id="__matkaking_fragment__">${fragmentHtml}</div>`, {
     decodeEntities: false,
   });
-  const $root = $('#__dpboss_fragment__');
+  const $root = $('#__matkaking_fragment__');
   sanitizeHomepageDom($, $root);
   return serializeChildren($root.contents().toArray());
 }

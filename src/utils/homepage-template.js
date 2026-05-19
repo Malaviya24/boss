@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as cheerio from 'cheerio';
-import { isExternalmatkakingHomepage, toLocalMarketPath, toLocalStaticPagePath } from './market-links.js';
+import { isExternalSourceHomepage, toLocalMarketPath, toLocalStaticPagePath } from './market-links.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -233,8 +233,8 @@ function sanitizeDom($, $root, baseUrl) {
       return;
     }
 
-    // Bare https://matkakingss.boston/ or https://matkaking.boston/ -> internal homepage
-    if (isExternalmatkakingHomepage(element.attribs.href)) {
+    // Bare https://dpbossss.boston/ or https://dpboss.boston/ -> internal homepage
+    if (isExternalSourceHomepage(element.attribs.href)) {
       element.attribs.href = '/';
       delete element.attribs.target;
       return;
