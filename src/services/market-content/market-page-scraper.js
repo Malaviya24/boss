@@ -12,8 +12,14 @@ function getBaseUrl() {
 }
 
 function buildScrapeUrl(type, slug, baseUrl) {
-  const pathPrefix = type === 'panel' ? 'panel-chart-record' : 'jodi-chart-record';
-  return `${baseUrl}/${pathPrefix}/${slug}.php`;
+  if (type === 'panel') {
+    return `${baseUrl}/panel-chart-record/${slug}.php`;
+  }
+  if (type === 'hs-online-bb-15-minutes') {
+    // Fixed single page — slug is ignored, always the same URL
+    return `${baseUrl}/hs-online-bb-15-minutes-chart.php`;
+  }
+  return `${baseUrl}/jodi-chart-record/${slug}.php`;
 }
 
 /**

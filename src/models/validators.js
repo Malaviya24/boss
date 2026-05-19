@@ -6,7 +6,7 @@ export const marketQuerySchema = z.object({
 });
 
 export const marketPageParamsSchema = z.object({
-  type: z.enum(['jodi', 'panel']),
+  type: z.enum(['jodi', 'panel', 'hs-online-bb-15-minutes']),
   slug: z
     .string()
     .trim()

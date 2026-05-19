@@ -132,6 +132,7 @@ function NavigationInterceptor() {
         nextPathname === '/' ||
         nextPathname.startsWith('/jodi-chart-record/') ||
         nextPathname.startsWith('/panel-chart-record/') ||
+        nextPathname.startsWith('/hs-online-bb-15-minutes-chart/') ||
         nextPathname.startsWith('/admin-x-secure-portal') ||
         STATIC_PAGE_ROUTES.has(nextPathname);
       if (!isHandledRoute) {
@@ -165,6 +166,7 @@ export default function App() {
           <Route path="/live" element={<Navigate to="/" replace />} />
           <Route path="/jodi-chart-record/:slug.php" element={<MarketPage routeType="jodi" />} />
           <Route path="/panel-chart-record/:slug.php" element={<MarketPage routeType="panel" />} />
+          <Route path="/hs-online-bb-15-minutes-chart/:slug.php" element={<MarketPage routeType="hs-online-bb-15-minutes" />} />
           <Route path="/admin-x-secure-portal" element={<AdminLoginPage />} />
           <Route path="/admin-x-secure-portal/dashboard" element={<AdminDashboardPage />} />
           <Route path="/about" element={<AboutPage />} />
