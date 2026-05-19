@@ -13,6 +13,7 @@ function normalizeType(value = '') {
   const v = String(value).toLowerCase();
   if (v === 'panel') return 'panel';
   if (v === 'hs-online-bb-15-minutes') return 'hs-online-bb-15-minutes';
+  if (v === 'main-bombay-36-bazar') return 'main-bombay-36-bazar';
   return 'jodi';
 }
 

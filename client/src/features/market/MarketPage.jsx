@@ -9,6 +9,7 @@ function normalizeMarketType(value = '') {
   const v = String(value).toLowerCase();
   if (v === 'panel') return 'panel';
   if (v === 'hs-online-bb-15-minutes') return 'hs-online-bb-15-minutes';
+  if (v === 'main-bombay-36-bazar') return 'main-bombay-36-bazar';
   return 'jodi';
 }
 
@@ -20,10 +21,10 @@ function normalizeSlug(value = '') {
     .replace(/[^a-z0-9-]/g, '');
 }
 
-export default function MarketPage({ routeType = '' } = {}) {
+export default function MarketPage({ routeType = '', fixedSlug = '' } = {}) {
   const params = useParams();
   const type = normalizeMarketType(routeType || params.type);
-  const slug = normalizeSlug(params.slug);
+  const slug = fixedSlug ? normalizeSlug(fixedSlug) : normalizeSlug(params.slug);
 
   const {
     content,
