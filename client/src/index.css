@@ -375,7 +375,8 @@ body {
   text-transform: uppercase;
 }
 
-.market-page .mp-btn {
+.market-page .mp-btn,
+.clone-app .mp-btn {
   position: fixed;
   left: 10px;
   bottom: 8px;
@@ -385,6 +386,9 @@ body {
   padding: 8px 12px;
   text-decoration: none;
   font-style: italic;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  font-size: 15px;
 }
 
 @media (max-width: 720px) {
