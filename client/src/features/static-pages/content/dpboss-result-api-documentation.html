@@ -1,10 +1,31 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+        /* Reset parent styles that leak into this page */
+        .dpboss-doc-page {
+            all: initial;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: block;
+            text-align: left;
+            font-style: normal;
+            font-weight: 400;
+            color: #000;
+            background: #f3f4f6;
+        }
+        .dpboss-doc-page * {
+            font-style: normal;
+            text-align: left;
+        }
+        .dpboss-doc-page h1, .dpboss-doc-page h2, .dpboss-doc-page h3 {
+            font-style: normal;
+        }
         pre {
             background-color: #f4f4f4;
             padding: 1rem;
             border-radius: 0.5rem;
             overflow-x: auto;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         code {
             font-family: 'Courier New', Courier, monospace;
