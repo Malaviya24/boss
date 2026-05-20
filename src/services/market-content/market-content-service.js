@@ -491,11 +491,15 @@ export function createMarketContentService({
       hero: isAdminMarket
         ? {
             ...(metaDoc.hero ?? {}),
+            logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' },
             chartTitle: `${marketName} ${chartTypeLabel}`,
             smallHeading: `${marketName} ${chartTypeLabel} RECORDS`,
             introText: buildAdminIntroText(marketName, type),
           }
-        : metaDoc.hero ?? {},
+        : {
+            ...(metaDoc.hero ?? {}),
+            logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' },
+          },
       result: metaDoc.result ?? {},
       controls: metaDoc.controls ?? {
         topAnchorId: 'market-top',
