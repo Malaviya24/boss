@@ -207,7 +207,7 @@ function toStructuredMarketContentFromLegacy(legacyPayload = {}, { type, slug } 
     hero: {
       logo: {
         href: '/',
-        src: normalizeText(legacyPayload?.logoUrl) || '/img/logo.png',
+        src: '/3.PNG',
         alt: 'MATKAKING',
       },
       chartTitle: headingText,

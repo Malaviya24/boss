@@ -127,22 +127,11 @@ function firstNonEmpty(values = []) {
 }
 
 function extractLogoData(nodes = []) {
-  const logoNode = findFirstByClass(nodes, 'logo');
-  if (!logoNode) {
-    return {
-      src: '/img/logo.png',
-      alt: 'matkaking',
-      href: '/',
-    };
-  }
-
-  const logoAnchor = findFirstByTag([logoNode], 'a');
-  const logoImage = findFirstByTag([logoNode], 'img') ?? findFirstByTag([logoNode], 'amp-img');
-
+  // Always use our own brand logo
   return {
-    src: normalizeAssetPath(logoImage?.attrs?.src ?? '/img/logo.png'),
-    alt: normalizeText(logoImage?.attrs?.alt ?? 'matkaking') || 'matkaking',
-    href: normalizeAssetPath(logoAnchor?.attrs?.href ?? '/'),
+    src: '/3.PNG',
+    alt: 'MATKAKING',
+    href: '/',
   };
 }
 

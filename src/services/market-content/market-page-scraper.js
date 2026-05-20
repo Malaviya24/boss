@@ -140,20 +140,12 @@ export function extractStyles($, baseUrl) {
  * @returns {{logo: {src: string, alt: string, href: string}, chartTitle: string, smallHeading: string, introText: string}}
  */
 export function extractHero($) {
-  // Extract logo
-  const logoContainer = $('.logo').first();
-  let logo = { src: '', alt: '', href: '' };
-
-  if (logoContainer.length) {
-    const logoAnchor = logoContainer.find('a').first();
-    const logoImg = logoContainer.find('img, amp-img').first();
-
-    logo = {
-      src: logoImg.attr('src') || '',
-      alt: normalizeText(logoImg.attr('alt') || ''),
-      href: logoAnchor.attr('href') || logoContainer.closest('a').attr('href') || '',
-    };
-  }
+  // Always use our own brand logo regardless of what the source site has
+  const logo = {
+    src: '/3.PNG',
+    alt: 'MATKAKING',
+    href: '/',
+  };
 
   // Extract chart title (h1 with class chart-h1)
   const chartTitle = normalizeText($('.chart-h1').first().text());
