@@ -148,7 +148,7 @@ export function extractStyles($, baseUrl) {
 export function extractHero($) {
   // Always use our own brand logo regardless of what the source site has
   const logo = {
-    src: '/3.PNG',
+    src: '/banner.png',
     alt: 'MATKAKING',
     href: '/',
   };
@@ -464,7 +464,7 @@ function parseLocalChartPage($, slug) {
     seo: { meta: [] },
     styles: { urls: [], blocks: [], jsonLdBlocks: [] },
     hero: {
-      logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' },
+      logo: { src: '/banner.png', alt: 'MATKAKING', href: '/' },
       chartTitle: h1,
       smallHeading: '',
       introText: '',
@@ -600,7 +600,7 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
       rawHtml,
       seo: { meta: [] },
       styles: { urls: [], blocks: [], jsonLdBlocks: [] },
-      hero: { logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' }, chartTitle: h1, smallHeading: '', introText: '' },
+      hero: { logo: { src: '/banner.png', alt: 'MATKAKING', href: '/' }, chartTitle: h1, smallHeading: '', introText: '' },
       result: { className: 'chart-result', marketName: h1, value: 'Result Coming', refreshLabel: 'Refresh Result', refreshHref: `/${slug}.php` },
       controls: { topAnchorId: 'market-top', bottomAnchorId: 'market-bottom', goBottomLabel: 'Go to Bottom', goTopLabel: 'Go to Top' },
       table: { title: '', columns: [], rows: [], attrs: {}, headingAttrs: {}, titleAttrs: {} },

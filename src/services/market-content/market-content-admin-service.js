@@ -651,7 +651,7 @@ export function createMarketContentAdminService({
       jsonLdBlocks: Array.isArray(templateMeta?.jsonLdBlocks) ? templateMeta.jsonLdBlocks : [],
       hero: {
         ...(cloneValue(templateMeta?.hero) ?? {}),
-        logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' },
+        logo: { src: '/banner.png', alt: 'MATKAKING', href: '/' },
         chartTitle: `${normalizedName} ${chartTypeLabel}`,
         smallHeading: `${normalizedName} ${chartTypeLabel} RECORDS`,
         introText: buildIntroText(normalizedName, normalizedType),

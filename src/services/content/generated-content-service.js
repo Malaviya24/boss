@@ -60,7 +60,7 @@ function replaceBrandLogoInNodes(nodes = []) {
 
     if (insideMIcon && (node.tag === 'img' || node.tag === 'amp-img')) {
       node.attrs = {
-        src: '/3.PNG',
+        src: '/banner.png',
         alt: 'MATKAKING',
         style: 'width:100%;max-width:500px;height:auto;display:block;margin:auto;',
       };

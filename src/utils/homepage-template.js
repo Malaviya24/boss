@@ -277,7 +277,7 @@ function sanitizeDom($, $root, baseUrl) {
   // Replace the scraped source-site logo with our own brand logo.
   // The source site logo lives inside .m-icon > img (homepage banner).
   $root.find('.m-icon img, .m-icon amp-img').each((_, element) => {
-    element.attribs.src = '/3.PNG';
+    element.attribs.src = '/banner.png';
     element.attribs.alt = 'MATKAKING';
     element.attribs.style = 'width:100%;max-width:500px;height:auto;display:block;margin:auto;image-rendering:crisp-edges;';
     delete element.attribs.width;

@@ -264,7 +264,7 @@ export function MarketTemplate({
     return (
       <main className={`market-page market-page-${type}`}>
         <a className="logo" href="/">
-          <img src="/3.PNG" alt="MATKAKING" style={{width:'100%',maxWidth:'500px',height:'auto',display:'block',margin:'auto'}} />
+          <img src="/banner.png" alt="MATKAKING" style={{width:'100%',maxWidth:'500px',height:'auto',display:'block',margin:'auto'}} />
         </a>
         <div dangerouslySetInnerHTML={{ __html: content.rawHtml }} />
         <a className="mp-btn" href="/"><i>Matka Play</i></a>

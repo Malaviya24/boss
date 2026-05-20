@@ -745,7 +745,7 @@ export function createMarketTemplateService({
         title: sanitizeText($('.para3 h2').first().text()),
         description: sanitizeText($('.para3 p').first().text()),
       },
-      logoUrl: '/3.PNG',
+      logoUrl: '/banner.png',
       faviconUrl: toStaticAssetUrl(type, slug, faviconRaw),
       result: {
         name: sanitizeText($('.chart-result div').first().text()),

@@ -129,7 +129,7 @@ function firstNonEmpty(values = []) {
 function extractLogoData(nodes = []) {
   // Always use our own brand logo
   return {
-    src: '/3.PNG',
+    src: '/banner.png',
     alt: 'MATKAKING',
     href: '/',
   };
