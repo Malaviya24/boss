@@ -243,6 +243,23 @@ export async function bootstrapApp() {
     response.status(200).end();
   });
 
+  // Serve standalone PHP chart pages directly as HTML
+  const standaloneChartPages = [
+    'main-bombay-36-bazar-chart.php',
+    'hs-online-bb-15-minutes-chart.php',
+  ];
+  for (const phpFile of standaloneChartPages) {
+    const filePath = path.join(projectRoot, phpFile);
+    app.get(`/${phpFile}`, (_request, response) => {
+      if (fs.existsSync(filePath)) {
+        response.setHeader('Content-Type', 'text/html; charset=utf-8');
+        response.sendFile(filePath);
+      } else {
+        response.status(404).send('Not found');
+      }
+    });
+  }
+
   mountFrontendStatic(app);
 
   app.use((error, _request, response, next) => {
