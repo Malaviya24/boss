@@ -546,7 +546,7 @@ export async function scrapeMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
  * @throws {Error} On network failure, empty response, or non-2xx status
  */
 export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
-  // Special pages: scrape from source and parse their custom HTML format
+  // Special pages: scrape from source and return raw HTML body for direct rendering
   if (LOCAL_STATIC_SLUGS.has(slug)) {
     const phpFile = LOCAL_STATIC_SLUGS.get(slug);
     const baseUrl = getBaseUrl();
@@ -567,7 +567,33 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
       throw new Error(`Empty response from ${url}`);
     }
     const $ = cheerio.load(html, { decodeEntities: false });
-    return rebrandContent(parseLocalChartPage($, slug));
+
+    // Extract just the body content (skip the logo/header div .B1)
+    const title = normalizeText($('title').text()) || slug.replace(/-/g, ' ').toUpperCase();
+    const h1 = normalizeText($('h1').first().text()) || title;
+
+    // Get the container content (everything after the logo div)
+    const bodyContent = $('body').clone();
+    bodyContent.find('.B1').remove(); // remove source logo
+    const rawHtml = bodyContent.html() ?? '';
+
+    return {
+      version: 2,
+      type,
+      slug,
+      title,
+      description: h1,
+      rawHtml,
+      seo: { meta: [] },
+      styles: { urls: [], blocks: [], jsonLdBlocks: [] },
+      hero: { logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' }, chartTitle: h1, smallHeading: '', introText: '' },
+      result: { className: 'chart-result', marketName: h1, value: 'Result Coming', refreshLabel: 'Refresh Result', refreshHref: `/${slug}.php` },
+      controls: { topAnchorId: 'market-top', bottomAnchorId: 'market-bottom', goBottomLabel: 'Go to Bottom', goTopLabel: 'Go to Top' },
+      table: { title: '', columns: [], rows: [], attrs: {}, headingAttrs: {}, titleAttrs: {} },
+      footer: { blocks: [], brandTitle: 'MATKAKING.CC', rightsLines: [], counterText: '', counterNumber: '', matkaPlay: { label: 'Matka Play', href: '/' } },
+      importedAt: null,
+      updatedAt: new Date().toISOString(),
+    };
   }
 
   const { $, url } = await scrapeMarketPage(type, slug, { timeoutMs });

@@ -259,6 +259,19 @@ export function MarketTemplate({
   liveRecord,
   onRefresh,
 }) {
+  // Special pages with raw HTML content — render directly
+  if (content?.rawHtml) {
+    return (
+      <main className={`market-page market-page-${type}`}>
+        <a className="logo" href="/">
+          <img src="/3.PNG" alt="MATKAKING" style={{width:'100%',maxWidth:'500px',height:'auto',display:'block',margin:'auto'}} />
+        </a>
+        <div dangerouslySetInnerHTML={{ __html: content.rawHtml }} />
+        <a className="mp-btn" href="/"><i>Matka Play</i></a>
+      </main>
+    );
+  }
+
   const controls = content?.controls ?? {};
   const hero = content?.hero ?? {};
   const result = content?.result ?? {};
