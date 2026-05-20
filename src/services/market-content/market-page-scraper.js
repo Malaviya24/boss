@@ -572,10 +572,24 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
     const title = normalizeText($('title').text()) || slug.replace(/-/g, ' ').toUpperCase();
     const h1 = normalizeText($('h1').first().text()) || title;
 
+    // Extract CSS links and style blocks from <head>
+    const cssLinks = $('link[rel="stylesheet"]').toArray()
+      .map((el) => $(el).attr('href'))
+      .filter(Boolean)
+      .map((href) => `<link rel="stylesheet" href="${href}">`)
+      .join('\n');
+
+    const styleBlocks = $('style').toArray()
+      .map((el) => `<style>${$(el).html()}</style>`)
+      .join('\n');
+
     // Get the container content (everything after the logo div)
     const bodyContent = $('body').clone();
     bodyContent.find('.B1').remove(); // remove source logo
-    const rawHtml = bodyContent.html() ?? '';
+    const bodyHtml = bodyContent.html() ?? '';
+
+    // Combine styles + body for complete rendering
+    const rawHtml = `${cssLinks}\n${styleBlocks}\n${bodyHtml}`;
 
     return {
       version: 2,
