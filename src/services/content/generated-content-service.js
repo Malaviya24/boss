@@ -58,11 +58,16 @@ function replaceBrandLogoInNodes(nodes = []) {
     const isMIcon = classAttr.split(/\s+/).includes('m-icon');
     const childInside = insideMIcon || isMIcon;
 
+    // Remove padding from .m-icon container
+    if (isMIcon) {
+      node.attrs = { ...node.attrs, style: 'padding:0;margin-bottom:5px;' };
+    }
+
     if (insideMIcon && (node.tag === 'img' || node.tag === 'amp-img')) {
       node.attrs = {
         src: '/banner.png',
         alt: 'MATKAKING',
-        style: 'max-height:120px;height:auto;width:auto;max-width:100%;display:block;margin:auto;',
+        style: 'max-height:140px;height:auto;width:auto;max-width:100%;display:block;margin:auto;',
       };
       node.children = [];
       return;
