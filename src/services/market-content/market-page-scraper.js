@@ -1,16 +1,9 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { getHttpAgents } from '../../config/http-agents.js';
 import { loadEnv } from '../../config/env.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const PROJECT_ROOT = path.resolve(__dirname, '..', '..', '..');
-
-// Slugs that are served from local static PHP files instead of dpbossss.boston
+// Slugs that are scraped from their own fixed URLs instead of jodi/panel-chart-record paths
 const LOCAL_STATIC_SLUGS = new Map([
   ['main-bombay-36-bazar-chart', 'main-bombay-36-bazar-chart.php'],
   ['hs-online-bb-15-minutes-chart', 'hs-online-bb-15-minutes-chart.php'],
@@ -553,15 +546,28 @@ export async function scrapeMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
  * @throws {Error} On network failure, empty response, or non-2xx status
  */
 export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
-  // Special pages: read from local static PHP files instead of scraping
+  // Special pages: scrape from source and parse their custom HTML format
   if (LOCAL_STATIC_SLUGS.has(slug)) {
     const phpFile = LOCAL_STATIC_SLUGS.get(slug);
-    const filePath = path.join(PROJECT_ROOT, phpFile);
-    if (fs.existsSync(filePath)) {
-      const html = fs.readFileSync(filePath, 'utf-8');
-      const $ = cheerio.load(html, { decodeEntities: false });
-      return rebrandContent(parseLocalChartPage($, slug));
+    const baseUrl = getBaseUrl();
+    const url = `${baseUrl}/${phpFile}`;
+    const { httpAgent, httpsAgent } = getHttpAgents();
+    const response = await axios.get(url, {
+      timeout: timeoutMs,
+      httpAgent,
+      httpsAgent,
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+      },
+    });
+    const html = response.data;
+    if (!html || typeof html !== 'string') {
+      throw new Error(`Empty response from ${url}`);
     }
+    const $ = cheerio.load(html, { decodeEntities: false });
+    return rebrandContent(parseLocalChartPage($, slug));
   }
 
   const { $, url } = await scrapeMarketPage(type, slug, { timeoutMs });
