@@ -1,178 +1,154 @@
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
-    pre {
-        background-color: #f4f4f4;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-    }
-    code {
-        font-family: 'Courier New', Courier, monospace;
-    }
-    .tab {
-        cursor: pointer;
-        padding: 0.5rem 1rem;
-        border-bottom: 2px solid transparent;
-        transition: border-color 0.3s;
-    }
-    .tab.active {
-        border-bottom: 2px solid #3b82f6;
-        font-weight: bold;
-    }
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-    .matkaking-doc-page {
-        all: initial;
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        display: block;
-        text-align: left;
-        font-style: normal;
-        font-weight: 400;
-        color: #000;
-        background: #f3f4f6;
-    }
-    .matkaking-doc-page * {
-        font-style: normal;
-        box-sizing: border-box;
-    }
+.matkaking-doc-page { all: initial; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: block; text-align: left; font-style: normal; font-weight: 400; color: #1f2937; background: #f3f4f6; }
+.matkaking-doc-page * { font-style: normal; box-sizing: border-box; }
+.matkaking-doc-page .doc-header { background-color: #2563eb; color: white; padding: 1.5rem 0; }
+.matkaking-doc-page .doc-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+.matkaking-doc-page .doc-header h1 { font-size: 1.875rem; font-weight: 700; margin: 0; }
+.matkaking-doc-page .doc-header p { margin-top: 0.5rem; }
+.matkaking-doc-page .doc-nav { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1rem 0; }
+.matkaking-doc-page .doc-nav ul { display: flex; flex-wrap: wrap; gap: 1.5rem; list-style: none; padding: 0; margin: 0; }
+.matkaking-doc-page .doc-nav a { color: #2563eb; text-decoration: none; }
+.matkaking-doc-page .doc-nav a:hover { text-decoration: underline; }
+.matkaking-doc-page main.doc-main { max-width: 1280px; margin: 0 auto; padding: 2rem 1rem; }
+.matkaking-doc-page section { margin-bottom: 2rem; }
+.matkaking-doc-page h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: #111827; }
+.matkaking-doc-page p { color: #374151; margin-bottom: 0.5rem; line-height: 1.6; }
+.matkaking-doc-page ul, .matkaking-doc-page ol { margin: 0.5rem 0 0 1.5rem; color: #374151; }
+.matkaking-doc-page ul { list-style: disc; }
+.matkaking-doc-page ol { list-style: decimal; }
+.matkaking-doc-page li { margin: 0.25rem 0; }
+.matkaking-doc-page pre { background-color: #f4f4f4; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 0.5rem; white-space: pre-wrap; word-wrap: break-word; }
+.matkaking-doc-page code { font-family: 'Courier New', Courier, monospace; background: #f3f4f6; padding: 0.125rem 0.25rem; border-radius: 0.25rem; }
+.matkaking-doc-page pre code { background: transparent; padding: 0; }
+.matkaking-doc-page table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.matkaking-doc-page th, .matkaking-doc-page td { border: 1px solid #d1d5db; padding: 0.5rem; text-align: left; }
+.matkaking-doc-page th { background: #e5e7eb; font-weight: 600; }
+.matkaking-doc-page .tabs { display: flex; border-bottom: 1px solid #d1d5db; }
+.matkaking-doc-page .tab { cursor: pointer; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: border-color 0.3s; user-select: none; }
+.matkaking-doc-page .tab.active { border-bottom: 2px solid #3b82f6; font-weight: bold; }
+.matkaking-doc-page .tab-content { display: none; }
+.matkaking-doc-page .tab-content.active { display: block; }
+.matkaking-doc-page .doc-footer { background: #1f2937; color: white; padding: 1rem 0; text-align: center; margin-top: 2rem; }
+.matkaking-doc-page a { color: #2563eb; }
+.matkaking-doc-page strong { font-weight: 600; }
 </style>
 
-<div class="bg-gray-100 font-sans">
-    <header class="bg-blue-600 text-white py-6">
-        <div class="container mx-auto px-4">
-            <h1 class="text-3xl font-bold">matkaking Result API Documentation</h1>
-            <p class="mt-2">A beginner-friendly guide to using the matkaking Result API</p>
-        </div>
-    </header>
+<div class="doc-header">
+  <div class="doc-container">
+    <h1>matkaking Result API Documentation</h1>
+    <p>A beginner-friendly guide to using the matkaking Result API</p>
+  </div>
+</div>
 
-    <nav class="bg-white shadow py-4">
-        <div class="container mx-auto px-4">
-            <ul class="flex flex-wrap space-x-6">
-                <li><a href="#introduction" class="text-blue-600 hover:underline">Introduction</a></li>
-                <li><a href="#hostname" class="text-blue-600 hover:underline">API Hostname</a></li>
-                <li><a href="#authentication" class="text-blue-600 hover:underline">Authentication</a></li>
-                <li><a href="#signature" class="text-blue-600 hover:underline">Signature Generation</a></li>
-                <li><a href="#requests" class="text-blue-600 hover:underline">Making Requests</a></li>
-                <li><a href="#example" class="text-blue-600 hover:underline">Example Use Case</a></li>
-                <li><a href="#errors" class="text-blue-600 hover:underline">Error Handling</a></li>
-                <li><a href="#code-examples" class="text-blue-600 hover:underline">Code Examples</a></li>
-                <li><a href="#contact" class="text-blue-600 hover:underline">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="doc-nav">
+  <div class="doc-container">
+    <ul>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#hostname">API Hostname</a></li>
+      <li><a href="#authentication">Authentication</a></li>
+      <li><a href="#signature">Signature Generation</a></li>
+      <li><a href="#requests">Making Requests</a></li>
+      <li><a href="#example">Example Use Case</a></li>
+      <li><a href="#errors">Error Handling</a></li>
+      <li><a href="#code-examples">Code Examples</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-    <main class="container mx-auto px-4 py-8">
-        <section id="introduction" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
-            <p class="text-gray-700">Welcome to the matkaking Result API! This guide is designed to be easy for beginners to understand. It will show you how to make secure requests to our API to fetch data. We'll cover:</p>
-            <ul class="list-disc ml-6 mt-2 text-gray-700">
-                <li>Adding special headers to keep your requests secure.</li>
-                <li>Sending requests to get the data you need.</li>
-                <li>Understanding what the API sends back.</li>
-            </ul>
-            <p class="text-gray-700 mt-2">The API uses a simple system to check that only authorized users can access it, keeping your data safe.</p>
-        </section>
+<main class="doc-main">
+  <section id="introduction">
+    <h2>Introduction</h2>
+    <p>Welcome to the matkaking Result API! This guide is designed to be easy for beginners to understand. It will show you how to make secure requests to our API to fetch data. We'll cover:</p>
+    <ul>
+      <li>Adding special headers to keep your requests secure.</li>
+      <li>Sending requests to get the data you need.</li>
+      <li>Understanding what the API sends back.</li>
+    </ul>
+    <p>The API uses a simple system to check that only authorized users can access it, keeping your data safe.</p>
+  </section>
 
-        <section id="hostname" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">API Hostname</h2>
-            <p class="text-gray-700">All requests start with this base URL:</p>
-            <pre class="mt-2"><code>https://matkakingresultapi.com</code></pre>
-            <p class="text-gray-700 mt-2">To use an endpoint, add its path to this URL. For example, to get data, use <code>https://matkakingresultapi.com/api/data</code>.</p>
-        </section>
+  <section id="hostname">
+    <h2>API Hostname</h2>
+    <p>All requests start with this base URL:</p>
+    <pre><code>https://matkakingresultapi.com</code></pre>
+    <p>To use an endpoint, add its path to this URL. For example, to get data, use <code>https://matkakingresultapi.com/api/data</code>.</p>
+  </section>
 
-        <section id="authentication" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Authentication</h2>
-            <p class="text-gray-700">Every request needs three headers to prove it's from you:</p>
-            <table class="w-full border-collapse border border-gray-300 mt-4">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border border-gray-300 p-2">Header Name</th>
-                        <th class="border border-gray-300 p-2">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><code>X-API-Key</code></td>
-                        <td class="border border-gray-300 p-2">Your unique API key (like a username).</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><code>X-Timestamp</code></td>
-                        <td class="border border-gray-300 p-2">The current time in RFC3339 format (e.g., <code>2025-06-03T15:01:00Z</code>).</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><code>X-Signature</code></td>
-                        <td class="border border-gray-300 p-2">A secure code (HMAC-SHA256) to prove your request is safe.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+  <section id="authentication">
+    <h2>Authentication</h2>
+    <p>Every request needs three headers to prove it's from you:</p>
+    <table>
+      <thead><tr><th>Header Name</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>X-API-Key</code></td><td>Your unique API key (like a username).</td></tr>
+        <tr><td><code>X-Timestamp</code></td><td>The current time in RFC3339 format (e.g., <code>2025-06-03T15:01:00Z</code>).</td></tr>
+        <tr><td><code>X-Signature</code></td><td>A secure code (HMAC-SHA256) to prove your request is safe.</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-        <section id="signature" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Signature Generation</h2>
-            <p class="text-gray-700">The <code>X-Signature</code> header is like a password for your request. Here's how to make it:</p>
-            <ol class="list-decimal ml-6 mt-2 text-gray-700">
-                <li>Combine these in order: <code>API_KEY + HTTP_METHOD + REQUEST_PATH + TIMESTAMP</code>.</li>
-                <li>Use your API Secret to create an HMAC-SHA256 hash of the combined string.</li>
-                <li>Turn the hash into a hexadecimal string.</li>
-                <li>Use this as the <code>X-Signature</code> header.</li>
-            </ol>
-        </section>
+  <section id="signature">
+    <h2>Signature Generation</h2>
+    <p>The <code>X-Signature</code> header is like a password for your request. Here's how to make it:</p>
+    <ol>
+      <li>Combine these in order: <code>API_KEY + HTTP_METHOD + REQUEST_PATH + TIMESTAMP</code>.</li>
+      <li>Use your API Secret to create an HMAC-SHA256 hash of the combined string.</li>
+      <li>Turn the hash into a hexadecimal string.</li>
+      <li>Use this as the <code>X-Signature</code> header.</li>
+    </ol>
+  </section>
 
-        <section id="requests" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Making Requests</h2>
-            <p class="text-gray-700">To call the API:</p>
-            <ul class="list-disc ml-6 mt-2 text-gray-700">
-                <li>Build the full URL: <code>https://matkakingresultapi.com/&lt;endpoint&gt;</code>.</li>
-                <li>Add the three headers (<code>X-API-Key</code>, <code>X-Timestamp</code>, <code>X-Signature</code>).</li>
-                <li>Send the request using a tool like cURL, Fetch, or Axios.</li>
-                <li>Check the JSON response you get back.</li>
-            </ul>
-        </section>
+  <section id="requests">
+    <h2>Making Requests</h2>
+    <p>To call the API:</p>
+    <ul>
+      <li>Build the full URL: <code>https://matkakingresultapi.com/&lt;endpoint&gt;</code>.</li>
+      <li>Add the three headers (<code>X-API-Key</code>, <code>X-Timestamp</code>, <code>X-Signature</code>).</li>
+      <li>Send the request using a tool like cURL, Fetch, or Axios.</li>
+      <li>Check the JSON response you get back.</li>
+    </ul>
+  </section>
 
-        <section id="example" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Example Use Case</h2>
-            <p class="text-gray-700">Want to fetch all available data? Here's how:</p>
-            <ul class="list-disc ml-6 mt-2 text-gray-700">
-                <li><strong>Method</strong>: GET</li>
-                <li><strong>Endpoint Path</strong>: <code>/api/data</code></li>
-                <li><strong>Full URL</strong>: <code>https://matkakingresultapi.com/api/data</code></li>
-                <li><strong>Response</strong>: A JSON object or array with the data.</li>
-            </ul>
-        </section>
+  <section id="example">
+    <h2>Example Use Case</h2>
+    <p>Want to fetch all available data? Here's how:</p>
+    <ul>
+      <li><strong>Method</strong>: GET</li>
+      <li><strong>Endpoint Path</strong>: <code>/api/data</code></li>
+      <li><strong>Full URL</strong>: <code>https://matkakingresultapi.com/api/data</code></li>
+      <li><strong>Response</strong>: A JSON object or array with the data.</li>
+    </ul>
+  </section>
 
-        <section id="errors" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Error Handling</h2>
-            <p class="text-gray-700">If something goes wrong, here's what might happen:</p>
-            <ul class="list-disc ml-6 mt-2 text-gray-700">
-                <li><strong>HTTP Errors</strong>:
-                    <ul class="list-disc ml-6">
-                        <li><code>400</code>: Something's wrong with your request (e.g., missing headers).</li>
-                        <li><code>401</code>: Wrong API key or signature.</li>
-                        <li><code>500</code>: Server issue (try again later).</li>
-                    </ul>
-                </li>
-                <li><strong>Timeouts</strong>: If the server takes too long, you'll get an error.</li>
-                <li><strong>No Response</strong>: Network issues will show in your logs.</li>
-                <li><strong>Other Issues</strong>: Check your console for error details.</li>
-            </ul>
-        </section>
+  <section id="errors">
+    <h2>Error Handling</h2>
+    <p>If something goes wrong, here's what might happen:</p>
+    <ul>
+      <li><strong>HTTP Errors</strong>:
+        <ul>
+          <li><code>400</code>: Something's wrong with your request.</li>
+          <li><code>401</code>: Wrong API key or signature.</li>
+          <li><code>500</code>: Server issue (try again later).</li>
+        </ul>
+      </li>
+      <li><strong>Timeouts</strong>: If the server takes too long, you'll get an error.</li>
+      <li><strong>No Response</strong>: Network issues will show in your logs.</li>
+    </ul>
+  </section>
 
-        <section id="code-examples" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Code Examples</h2>
-            <p class="text-gray-700">Below are examples in different programming languages. Use the tabs to switch between them.</p>
-            <div class="mt-4">
-                <div class="flex border-b border-gray-300">
-                    <div class="tab active" onclick="switchTab('php')">PHP</div>
-                    <div class="tab" onclick="switchTab('js-fetch')">JavaScript (Fetch)</div>
-                    <div class="tab" onclick="switchTab('node-axios')">Node.js (Axios)</div>
-                    <div class="tab" onclick="switchTab('react-axios')">React (Axios)</div>
-                </div>
-                <div id="php" class="tab-content active">
-                    <pre><code>&lt;?php
+  <section id="code-examples">
+    <h2>Code Examples</h2>
+    <p>Below are examples in different programming languages. Use the tabs to switch between them.</p>
+    <div style="margin-top:1rem;">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('php')">PHP</div>
+        <div class="tab" onclick="switchTab('js-fetch')">JavaScript (Fetch)</div>
+        <div class="tab" onclick="switchTab('node-axios')">Node.js (Axios)</div>
+        <div class="tab" onclick="switchTab('react-axios')">React (Axios)</div>
+      </div>
+      <div id="php" class="tab-content active">
+        <pre><code>&lt;?php
 $apiKey = "YOUR_API_KEY";
 $apiSecret = "YOUR_API_SECRET";
 $baseUrl = "https://matkakingresultapi.com";
@@ -190,36 +166,32 @@ $response = curl_exec($ch);
 echo $response;
 curl_close($ch);
 ?&gt;</code></pre>
-                </div>
-                <div id="js-fetch" class="tab-content">
-                    <pre><code>const crypto = require('crypto');
+      </div>
+      <div id="js-fetch" class="tab-content">
+        <pre><code>const crypto = require('crypto');
 const apiKey = 'YOUR_API_KEY';
 const apiSecret = 'YOUR_API_SECRET';
-const baseUrl = 'https://matkakingresultapi.com';
-const path = '/api/data';
-const method = 'GET';
 const timestamp = new Date().toISOString();
-const message = apiKey + method + path + timestamp;
+const message = apiKey + 'GET' + '/api/data' + timestamp;
 const signature = crypto.createHmac('sha256', apiSecret).update(message).digest('hex');
-fetch(baseUrl + path, { method, headers: { 'X-API-Key': apiKey, 'X-Timestamp': timestamp, 'X-Signature': signature } })
-  .then(r => r.json()).then(data => console.log(data));</code></pre>
-                </div>
-                <div id="node-axios" class="tab-content">
-                    <pre><code>const axios = require('axios');
+fetch('https://matkakingresultapi.com/api/data', {
+  headers: { 'X-API-Key': apiKey, 'X-Timestamp': timestamp, 'X-Signature': signature }
+}).then(r => r.json()).then(data => console.log(data));</code></pre>
+      </div>
+      <div id="node-axios" class="tab-content">
+        <pre><code>const axios = require('axios');
 const crypto = require('crypto');
 const apiKey = 'YOUR_API_KEY';
 const apiSecret = 'YOUR_API_SECRET';
-const baseUrl = 'https://matkakingresultapi.com';
-const path = '/api/data';
-const method = 'GET';
 const timestamp = new Date().toISOString();
-const message = apiKey + method + path + timestamp;
+const message = apiKey + 'GET' + '/api/data' + timestamp;
 const signature = crypto.createHmac('sha256', apiSecret).update(message).digest('hex');
-axios.get(baseUrl + path, { headers: { 'X-API-Key': apiKey, 'X-Timestamp': timestamp, 'X-Signature': signature } })
-  .then(r => console.log(r.data));</code></pre>
-                </div>
-                <div id="react-axios" class="tab-content">
-                    <pre><code>import axios from 'axios';
+axios.get('https://matkakingresultapi.com/api/data', {
+  headers: { 'X-API-Key': apiKey, 'X-Timestamp': timestamp, 'X-Signature': signature }
+}).then(r => console.log(r.data));</code></pre>
+      </div>
+      <div id="react-axios" class="tab-content">
+        <pre><code>import axios from 'axios';
 import CryptoJS from 'crypto-js';
 const apiKey = 'YOUR_API_KEY';
 const apiSecret = 'YOUR_API_SECRET';
@@ -229,28 +201,27 @@ const signature = CryptoJS.HmacSHA256(message, apiSecret).toString(CryptoJS.enc.
 axios.get('https://matkakingresultapi.com/api/data', {
   headers: { 'X-API-Key': apiKey, 'X-Timestamp': timestamp, 'X-Signature': signature }
 }).then(r => console.log(r.data));</code></pre>
-                </div>
-            </div>
-        </section>
+      </div>
+    </div>
+  </section>
 
-        <section id="contact" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Contact</h2>
-            <p class="text-gray-700">Need help? Reach out to our support team at: <a href="mailto:support@matkakingresultapi.com" class="text-blue-600 hover:underline">support@matkakingresultapi.com</a></p>
-        </section>
-    </main>
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Need help? Reach out to our support team at: <a href="mailto:support@matkakingresultapi.com">support@matkakingresultapi.com</a></p>
+  </section>
+</main>
 
-    <footer class="bg-gray-800 text-white py-4">
-        <div class="container mx-auto px-4 text-center">
-            <p>© 2025 matkaking Result API. All rights reserved.</p>
-        </div>
-    </footer>
-</div>
+<footer class="doc-footer">
+  <div class="doc-container">
+    <p>© 2025 matkaking Result API. All rights reserved.</p>
+  </div>
+</footer>
 
 <script>
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.querySelector('[onclick="switchTab(\'' + tabId + '\')"]').classList.add('active');
-        document.getElementById(tabId).classList.add('active');
-    }
+  function switchTab(tabId) {
+    document.querySelectorAll('.matkaking-doc-page .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.matkaking-doc-page .tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector('.matkaking-doc-page [onclick="switchTab(\'' + tabId + '\')"]').classList.add('active');
+    document.querySelector('.matkaking-doc-page #' + tabId).classList.add('active');
+  }
 </script>
