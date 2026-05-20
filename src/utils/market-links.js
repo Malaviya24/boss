@@ -112,7 +112,16 @@ export function toLocalStaticPagePath(value = '') {
 
   let pathname = '';
   try {
-    pathname = new URL(raw, 'https://dpbossss.boston/').pathname;
+    const parsed = new URL(raw, 'https://dpbossss.boston/');
+    // Accept links from source site OR our own domain
+    const host = parsed.hostname.toLowerCase();
+    const isKnownHost = /^(?:www\.)?dpbossss?\.boston$/.test(host) ||
+      /^(?:www\.)?matkaking\.(?:cc|boston|net)$/.test(host);
+    if (isKnownHost || !raw.startsWith('http')) {
+      pathname = parsed.pathname;
+    } else {
+      pathname = raw.split(/[?#]/, 1)[0] ?? '';
+    }
   } catch {
     pathname = raw.split(/[?#]/, 1)[0] ?? '';
   }

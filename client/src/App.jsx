@@ -126,7 +126,12 @@ function NavigationInterceptor() {
       }
 
       if (nextUrl.origin !== window.location.origin) {
-        return;
+        // Also handle matkaking.cc links when accessed via IP or different domain
+        const nextHost = nextUrl.hostname.toLowerCase();
+        const isMatkakingDomain = /^(?:www\.)?matkaking\.(?:cc|boston|net)$/.test(nextHost);
+        if (!isMatkakingDomain) {
+          return;
+        }
       }
 
       const nextPathname = nextUrl.pathname || '/';
