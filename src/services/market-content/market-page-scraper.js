@@ -1,7 +1,20 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getHttpAgents } from '../../config/http-agents.js';
 import { loadEnv } from '../../config/env.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..', '..');
+
+// Slugs that are served from local static PHP files instead of dpbossss.boston
+const LOCAL_STATIC_SLUGS = new Map([
+  ['main-bombay-36-bazar-chart', 'main-bombay-36-bazar-chart.php'],
+  ['hs-online-bb-15-minutes-chart', 'hs-online-bb-15-minutes-chart.php'],
+]);
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
@@ -380,6 +393,117 @@ export function extractFooter($) {
 }
 
 /**
+ * Parses the custom HTML format used by main-bombay-36-bazar-chart.php
+ * and hs-online-bb-15-minutes-chart.php (local static files).
+ * These pages use .result-table/.result-grid/.result-cell or <table> with Time/Result columns.
+ */
+function parseLocalChartPage($, slug) {
+  const title = normalizeText($('title').text()) || slug.replace(/-/g, ' ').toUpperCase();
+  const h1 = normalizeText($('h1').first().text()) || title;
+
+  // Try to extract table data — two formats:
+  // Format 1: .result-table > .result-grid > .result-cell (main-bombay)
+  // Format 2: .result-table > table with Time/Result columns (hs-online)
+  const columns = ['Date', 'Time', 'Result'];
+  const rows = [];
+  let rowIndex = 0;
+
+  $('.result-table').each((tableIndex, tableEl) => {
+    const dateLabel = normalizeText($(tableEl).find('.result-date').first().text());
+
+    // Format 1: grid cells
+    const gridCells = $(tableEl).find('.result-cell').toArray();
+    if (gridCells.length > 0) {
+      const cells = gridCells.map((cell) => {
+        const time = normalizeText($(cell).find('.time-label').text());
+        const value = normalizeText($(cell).find('.game-value').text());
+        return { time, value };
+      });
+
+      // Group into rows of 4
+      for (let i = 0; i < cells.length; i += 4) {
+        const rowCells = cells.slice(i, i + 4);
+        rows.push({
+          id: String(rowIndex),
+          rowIndex,
+          cells: [
+            { id: '0', column: 'Date', text: i === 0 ? dateLabel : '', isHighlight: false, className: '', attrs: {} },
+            ...rowCells.flatMap((c) => [
+              { id: String(rowIndex) + 't', column: 'Time', text: c.time, isHighlight: false, className: '', attrs: {} },
+              { id: String(rowIndex) + 'v', column: 'Result', text: c.value, isHighlight: false, className: '', attrs: {} },
+            ]),
+          ],
+        });
+        rowIndex++;
+      }
+      return;
+    }
+
+    // Format 2: <table> with Time/Result columns
+    $(tableEl).find('tbody tr').each((_, tr) => {
+      const tds = $(tr).find('td').toArray().map((td) => normalizeText($(td).text()));
+      if (tds.length === 0) return;
+      rows.push({
+        id: String(rowIndex),
+        rowIndex,
+        cells: [
+          { id: '0', column: 'Date', text: rowIndex === 0 ? dateLabel : '', isHighlight: false, className: '', attrs: {} },
+          ...tds.map((text, i) => ({
+            id: String(i + 1),
+            column: i % 2 === 0 ? 'Time' : 'Result',
+            text,
+            isHighlight: false,
+            className: '',
+            attrs: {},
+          })),
+        ],
+      });
+      rowIndex++;
+    });
+  });
+
+  return {
+    version: 2,
+    type: 'jodi',
+    slug,
+    title,
+    description: `${h1} - Latest results and chart`,
+    seo: { meta: [] },
+    styles: { urls: [], blocks: [], jsonLdBlocks: [] },
+    hero: {
+      logo: { src: '/3.PNG', alt: 'MATKAKING', href: '/' },
+      chartTitle: h1,
+      smallHeading: '',
+      introText: '',
+    },
+    result: {
+      className: 'chart-result',
+      marketName: h1,
+      value: 'Result Coming',
+      refreshLabel: 'Refresh Result',
+      refreshHref: `/${slug}.php`,
+    },
+    controls: {
+      topAnchorId: 'market-top',
+      bottomAnchorId: 'market-bottom',
+      goBottomLabel: 'Go to Bottom',
+      goTopLabel: 'Go to Top',
+    },
+    table: {
+      title: h1,
+      columns,
+      rows,
+      attrs: { class: 'panel-chart chart-table', style: 'width:100%;text-align:center;' },
+      headingAttrs: { class: 'panel-heading text-center', style: 'background:#3f51b5;' },
+      titleAttrs: {},
+    },
+    footer: { blocks: [], brandTitle: 'MATKAKING.CC', rightsLines: [], counterText: '', counterNumber: '', matkaPlay: { label: 'Matka Play', href: '/' } },
+    importedAt: null,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/**
  * Scrapes a market page from dpbossss.boston and parses it with cheerio.
  *
  * @param {'jodi' | 'panel'} type - Chart type
@@ -429,6 +553,17 @@ export async function scrapeMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
  * @throws {Error} On network failure, empty response, or non-2xx status
  */
 export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 } = {}) {
+  // Special pages: read from local static PHP files instead of scraping
+  if (LOCAL_STATIC_SLUGS.has(slug)) {
+    const phpFile = LOCAL_STATIC_SLUGS.get(slug);
+    const filePath = path.join(PROJECT_ROOT, phpFile);
+    if (fs.existsSync(filePath)) {
+      const html = fs.readFileSync(filePath, 'utf-8');
+      const $ = cheerio.load(html, { decodeEntities: false });
+      return rebrandContent(parseLocalChartPage($, slug));
+    }
+  }
+
   const { $, url } = await scrapeMarketPage(type, slug, { timeoutMs });
 
   // Extract page title from <title> tag
