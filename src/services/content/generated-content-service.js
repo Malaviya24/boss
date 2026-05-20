@@ -39,6 +39,45 @@ function cloneJsonValue(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+/**
+ * Walks layout nodes and replaces any <img> inside an .m-icon container with
+ * our brand logo. This ensures the homepage always shows our logo regardless
+ * of what's in the source homepage.json or scraped content.
+ */
+function replaceBrandLogoInNodes(nodes = []) {
+  if (!Array.isArray(nodes)) return nodes;
+  const cloned = cloneJsonValue(nodes);
+
+  function patchInside(node, insideMIcon = false) {
+    if (!node || node.type !== 'element') return;
+
+    const classAttr = String(node.attrs?.class ?? '');
+    const isMIcon = classAttr.split(/\s+/).includes('m-icon');
+    const childInside = insideMIcon || isMIcon;
+
+    if (insideMIcon && (node.tag === 'img' || node.tag === 'amp-img')) {
+      node.attrs = {
+        src: '/3.PNG',
+        alt: 'MATKAKING',
+        style: 'width:100%;max-width:400px;height:auto;display:block;margin:auto;',
+      };
+      node.children = [];
+      return;
+    }
+
+    if (Array.isArray(node.children)) {
+      for (const child of node.children) {
+        patchInside(child, childInside);
+      }
+    }
+  }
+
+  for (const node of cloned) {
+    patchInside(node, false);
+  }
+  return cloned;
+}
+
 function toSlugDisplayName(slug = '') {
   return normalizeText(String(slug).replace(/-/g, ' ')).toUpperCase();
 }
@@ -516,9 +555,11 @@ export function createGeneratedContentService({
     }
 
     const nextSections = injectAdminMarketsIntoSections(sections, matkaCards);
+    const patchedLayoutNodes = replaceBrandLogoInNodes(homepage.layoutNodes ?? []);
 
     return {
       ...homepage,
+      layoutNodes: patchedLayoutNodes,
       sectionOrder: (homepage.sectionOrder ?? []).filter((id) => !EXCLUDED_SECTIONS.has(id)),
       sections: nextSections,
       updatedAt,
