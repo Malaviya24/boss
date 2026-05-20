@@ -95,6 +95,7 @@ const STATIC_PAGE_ROUTE_MAP = new Map([
   ['fix-open-to-close-by-date.php', '/fix-open-to-close-by-date'],
   ['matkaking-result-api.php', '/matkaking-result-api'],
   ['matkaking-result-api-documentation.html', '/matkaking-result-api-documentation'],
+  ['dpboss-result-api-documentation.html', '/matkaking-result-api-documentation'],
   ['main-bombay-36-bazar-chart.php', '/main-bombay-36-bazar-chart.php'],
   ['hs-online-bb-15-minutes-chart.php', '/hs-online-bb-15-minutes-chart.php'],
 ]);

@@ -68,6 +68,7 @@ const STATIC_PAGE_ROUTES = new Set([
   '/matkaking-result-api',
   '/matkaking-result-api.php',
   '/matkaking-result-api-documentation',
+  '/matkaking-result-api-documentation.html',
   '/hs-online-bb-15-minutes-chart.php',
   '/main-bombay-36-bazar-chart.php',
 ]);
@@ -194,6 +195,10 @@ export default function App() {
           <Route path="/matkaking-result-api.php" element={<MatkakingResultApiPage />} />
           <Route
             path="/matkaking-result-api-documentation"
+            element={<MatkakingResultApiDocumentationPage />}
+          />
+          <Route
+            path="/matkaking-result-api-documentation.html"
             element={<MatkakingResultApiDocumentationPage />}
           />
           <Route path="/about.php" element={<AboutPage />} />
