@@ -43,10 +43,13 @@ function cloneJsonValue(value) {
  * Walks layout nodes and replaces any <img> inside an .m-icon container with
  * our brand logo. This ensures the homepage always shows our logo regardless
  * of what's in the source homepage.json or scraped content.
+ * Also rewrites absolute matkaking.cc links to relative paths.
  */
 function replaceBrandLogoInNodes(nodes = []) {
   if (!Array.isArray(nodes)) return nodes;
   const cloned = cloneJsonValue(nodes);
+
+  const MATKAKING_ORIGIN = /^https?:\/\/(?:www\.)?matkaking\.(?:cc|boston|net)/i;
 
   function patchInside(node, insideMIcon = false) {
     if (!node || node.type !== 'element') return;
@@ -63,6 +66,19 @@ function replaceBrandLogoInNodes(nodes = []) {
       };
       node.children = [];
       return;
+    }
+
+    // Rewrite absolute matkaking.cc hrefs to relative paths
+    if (node.tag === 'a' && node.attrs?.href) {
+      const href = String(node.attrs.href);
+      if (MATKAKING_ORIGIN.test(href)) {
+        try {
+          const url = new URL(href);
+          node.attrs.href = url.pathname + url.search + url.hash;
+        } catch {
+          // keep original
+        }
+      }
     }
 
     if (Array.isArray(node.children)) {
