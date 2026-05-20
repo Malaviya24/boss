@@ -279,7 +279,7 @@ function sanitizeDom($, $root, baseUrl) {
   $root.find('.m-icon img, .m-icon amp-img').each((_, element) => {
     element.attribs.src = '/banner.png';
     element.attribs.alt = 'MATKAKING';
-    element.attribs.style = 'max-height:70px;height:auto;width:auto;max-width:100%;display:block;margin:auto;';
+    element.attribs.style = 'max-height:120px;height:auto;width:auto;max-width:100%;display:block;margin:auto;';
     delete element.attribs.width;
     delete element.attribs.height;
   });

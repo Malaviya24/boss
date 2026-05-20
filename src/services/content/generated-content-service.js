@@ -62,7 +62,7 @@ function replaceBrandLogoInNodes(nodes = []) {
       node.attrs = {
         src: '/banner.png',
         alt: 'MATKAKING',
-        style: 'max-height:70px;height:auto;width:auto;max-width:100%;display:block;margin:auto;',
+        style: 'max-height:120px;height:auto;width:auto;max-width:100%;display:block;margin:auto;',
       };
       node.children = [];
       return;
