@@ -96,6 +96,9 @@ const EXCLUDED_TEXT_PATTERNS = [
   'ratan khatri fix panel chart',
   'matka final number trick chart',
   'evergreen trick zone',
+  'download dpboss forum app',
+  'guessing champion',
+  'dpboss forum app',
 ];
 
 function getNodeText(node) {

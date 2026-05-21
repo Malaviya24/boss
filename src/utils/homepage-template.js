@@ -288,6 +288,37 @@ function sanitizeDom($, $root, baseUrl) {
     delete element.attribs.height;
   });
 
+  // Replace source-site promotional ads with our own MatkaKing.bet ad.
+  // Detect by class names and text patterns used by dpbossss.boston.
+  const OUR_AD_HTML = `
+<div class="promo-box" style="margin-bottom:7px;font-size:14px;padding:10px;line-height:22px;background:linear-gradient(135deg,#8b0000,#cc0000);color:#fff;text-align:center;border-radius:10px;border:2px solid #ff9800;">
+  <img src="/logo.jpeg" alt="MatkaKing" style="height:50px;width:auto;display:block;margin:0 auto 6px;border-radius:8px;">
+  <strong style="font-size:16px;">🎯 Play Matka on MatkaKing.bet</strong><br>
+  Play on every phone — Android &amp; iPhone. Fast results, easy cash, live updates.<br>
+  ⚡ Fast Play &nbsp;•&nbsp; 💰 Easy Cash &nbsp;•&nbsp; 📊 Live Results<br>
+  <a href="https://matkaking.bet" target="_blank" rel="noopener noreferrer" class="download-btn" style="display:inline-block;margin-top:8px;padding:6px 28px;font-size:14px;font-weight:700;color:#8b0000;background:#fff;border-radius:20px;text-decoration:none;">
+    🎮 Play Now on MatkaKing.bet
+  </a>
+</div>`;
+
+  // Replace .promo-box elements (source ad containers)
+  $root.find('.promo-box').each((_, element) => {
+    $(element).replaceWith(OUR_AD_HTML);
+  });
+
+  // Also replace any dark-red/maroon div that contains "Download App" or "Trusted Matka"
+  $root.find('div').each((_, element) => {
+    const text = $(element).text().toLowerCase();
+    const style = String(element.attribs?.style ?? '').toLowerCase();
+    const isSrcAd = (
+      (text.includes('download app') || text.includes('trusted matka') || text.includes('play matka on mobile') || text.includes('guessing champion') || text.includes('dpboss forum')) &&
+      (style.includes('background') || $(element).find('a').length > 0)
+    );
+    if (isSrcAd && $(element).children().length <= 5) {
+      $(element).replaceWith(OUR_AD_HTML);
+    }
+  });
+
   $root.contents().each((_, node) => {
     decodeNodeText(node);
   });
