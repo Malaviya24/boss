@@ -436,7 +436,10 @@ export function getCloneCss() {
 }
 
 export function sanitizeFragmentHtml(html, baseUrl) {
-  const $ = cheerio.load(`<div id="__root__">${html}</div>`, {
+  // Pre-process: replace matkakingplay.live with matkaking.bet before any DOM parsing
+  const preProcessed = String(html ?? '').replace(/https?:\/\/(?:www\.)?matkakingplay\.live[^\s"']*/gi, 'https://matkaking.bet');
+
+  const $ = cheerio.load(`<div id="__root__">${preProcessed}</div>`, {
     decodeEntities: false,
   });
   const $root = $('#__root__');
@@ -444,7 +447,6 @@ export function sanitizeFragmentHtml(html, baseUrl) {
   let result = $root.html() ?? '';
 
   // Replace scraped branding with our own brand name.
-  // The source site uses "DPBOSS" / "dpboss" / "Dpboss" — we rebrand to "MATKAKING" / "matkaking" / "Matkaking".
   result = replaceBranding(result);
 
   return result;
