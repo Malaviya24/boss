@@ -94,6 +94,38 @@ function replaceBrandLogoInNodes(nodes = []) {
     return '';
   }
 
+  // Apply branding rebrand to text nodes (catches MATKAKING BOSTON, DP, boss, boston etc.)
+  function rebrandText(text = '') {
+    if (typeof text !== 'string') return text;
+    return text
+      .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
+      .replace(/dpbossss\.boston/gi, 'matkaking.cc')
+      .replace(/dpboss\.boston/gi, 'matkaking.cc')
+      .replace(/MATKAKING\s+BOSTON/g, 'MATKAKING.CC')
+      .replace(/Matkaking\s+Boston/g, 'Matkaking')
+      .replace(/matkaking\s+boston/g, 'matkaking.cc')
+      .replace(/matkakingplay\.live\/download-app\.php/gi, 'matkaking.bet')
+      .replace(/matkakingplay\.live/gi, 'matkaking.bet')
+      .replace(/DPBOSSSS/g, 'MATKAKING')
+      .replace(/DPBOSS/g, 'MATKAKING')
+      .replace(/DPBossss/g, 'MatkaKing')
+      .replace(/DPBoss/g, 'MatkaKing')
+      .replace(/Dpbossss/g, 'MatkaKing')
+      .replace(/Dpboss/g, 'MatkaKing')
+      .replace(/dpbossss/g, 'matkaking')
+      .replace(/dpboss/g, 'matkaking')
+      .replace(/\bBOSTON\b/g, 'CC')
+      .replace(/\bBoston\b/g, 'Cc')
+      .replace(/\bboston\b/g, 'cc')
+      .replace(/\bBOSS\b/g, 'KING')
+      .replace(/\bBoss\b/g, 'King')
+      .replace(/\bboss\b/g, 'king')
+      .replace(/\bDP\b/g, 'MATKA')
+      .replace(/\bDp\b/g, 'Matka')
+      .replace(/\bdp\b/g, 'matka');
+  }
+
   function isSourceAd(node) {
     if (!node || node.type !== 'element') return false;
     const text = getNodeText(node).toLowerCase().replace(/\s+/g, ' ').trim();
@@ -103,7 +135,15 @@ function replaceBrandLogoInNodes(nodes = []) {
   }
 
   function patchInside(node, insideMIcon = false) {
-    if (!node || node.type !== 'element') return node;
+    if (!node) return node;
+
+    // Apply text rebranding to text nodes
+    if (node.type === 'text') {
+      node.text = rebrandText(node.text);
+      return node;
+    }
+
+    if (node.type !== 'element') return node;
 
     const classAttr = String(node.attrs?.class ?? '');
     const isMIcon = classAttr.split(/\s+/).includes('m-icon');
@@ -156,9 +196,14 @@ function replaceBrandLogoInNodes(nodes = []) {
     return node;
   }
 
-  // First pass: replace top-level ad nodes
+  // First pass: replace top-level ad nodes and rebrand text nodes
   const result = cloned.map((node) => {
-    if (node && node.type === 'element' && isSourceAd(node)) {
+    if (!node) return node;
+    if (node.type === 'text') {
+      node.text = rebrandText(node.text);
+      return node;
+    }
+    if (node.type === 'element' && isSourceAd(node)) {
       return cloneJsonValue(OUR_AD_NODE);
     }
     patchInside(node, false);
