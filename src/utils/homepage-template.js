@@ -294,9 +294,10 @@ function sanitizeDom($, $root, baseUrl) {
 <div class="promo-box" style="margin-bottom:7px;font-size:14px;padding:10px;line-height:22px;background:linear-gradient(135deg,#8b0000,#cc0000);color:#fff;text-align:center;border-radius:10px;border:2px solid #ff9800;">
   <img src="/logo.jpeg" alt="MatkaKing" style="height:50px;width:auto;display:block;margin:0 auto 6px;border-radius:8px;">
   <strong style="font-size:16px;">🎯 Play Matka on MatkaKing.bet</strong><br>
+  🌍 World's Trusted Website to Play All MatkaKing Markets — Every Market Available!<br>
   Play on every phone — Android &amp; iPhone. Fast results, easy cash, live updates.<br>
   ⚡ Fast Play &nbsp;•&nbsp; 💰 Easy Cash &nbsp;•&nbsp; 📊 Live Results<br>
-  <a href="https://matkaking.bet" target="_blank" rel="noopener noreferrer" class="download-btn" style="display:inline-block;margin-top:8px;padding:6px 28px;font-size:14px;font-weight:700;color:#8b0000;background:#fff;border-radius:20px;text-decoration:none;">
+  <a href="https://matkaking.bet" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:8px;padding:6px 28px;font-size:14px;font-weight:700;color:#8b0000;background:#fff;border-radius:20px;text-decoration:none;">
     🎮 Play Now on MatkaKing.bet
   </a>
 </div>`;
@@ -306,16 +307,31 @@ function sanitizeDom($, $root, baseUrl) {
     $(element).replaceWith(OUR_AD_HTML);
   });
 
-  // Also replace any dark-red/maroon div that contains "Download App" or "Trusted Matka"
-  $root.find('div').each((_, element) => {
-    const text = $(element).text().toLowerCase();
-    const style = String(element.attribs?.style ?? '').toLowerCase();
+  // Replace the dark-red "Trusted Matka Play App" / "Download App" ad sections
+  // These use inline background-color:#8a000c or #8f0000 or similar dark red
+  $root.find('div, section').each((_, element) => {
+    const $el = $(element);
+    // Only replace if this element has NO child divs with market data
+    // (i.e., it's a leaf-level ad, not a container with market data inside)
+    const hasMarketData = $el.find('.tkt-val, .liv-rslt, .f-pti, .my-table, .sun-col, .aaj-pass, table').length > 0;
+    if (hasMarketData) return;
+
+    const text = $el.text().toLowerCase().replace(/\s+/g, ' ').trim();
+    // Only match if the text is short (pure ad, not a container with lots of content)
+    if (text.length > 300) return;
+
     const isSrcAd = (
-      (text.includes('download app') || text.includes('trusted matka') || text.includes('play matka on mobile') || text.includes('guessing champion') || text.includes('dpboss forum')) &&
-      (style.includes('background') || $(element).find('a').length > 0)
+      text.includes('trusted matka play app') ||
+      text.includes('download dp777 app') ||
+      text.includes('download ratan777 app') ||
+      text.includes('play matka on mobile') ||
+      text.includes('guessing champion') ||
+      text.includes('dpboss forum app') ||
+      text.includes('download dpboss forum') ||
+      (text.includes('download app') && text.includes('fast payin'))
     );
-    if (isSrcAd && $(element).children().length <= 5) {
-      $(element).replaceWith(OUR_AD_HTML);
+    if (isSrcAd) {
+      $el.replaceWith(OUR_AD_HTML);
     }
   });
 

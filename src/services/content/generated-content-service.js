@@ -44,6 +44,7 @@ function cloneJsonValue(value) {
  * our brand logo. This ensures the homepage always shows our logo regardless
  * of what's in the source homepage.json or scraped content.
  * Also rewrites absolute matkaking.cc links to relative paths.
+ * Also replaces source-site promotional ads with our MatkaKing.bet ad.
  */
 function replaceBrandLogoInNodes(nodes = []) {
   if (!Array.isArray(nodes)) return nodes;
@@ -51,8 +52,58 @@ function replaceBrandLogoInNodes(nodes = []) {
 
   const MATKAKING_ORIGIN = /^https?:\/\/(?:www\.)?matkaking\.(?:cc|boston|net)/i;
 
+  const AD_KEYWORDS = [
+    'trusted matka play app',
+    'download dp777 app',
+    'download ratan777 app',
+    'play matka on mobile',
+    'guessing champion',
+    'dpboss forum app',
+    'download dpboss forum',
+  ];
+
+  const OUR_AD_NODE = {
+    type: 'element',
+    tag: 'div',
+    attrs: {
+      class: 'promo-box',
+      style: 'margin-bottom:7px;font-size:14px;padding:10px;line-height:22px;background:linear-gradient(135deg,#8b0000,#cc0000);color:#fff;text-align:center;border-radius:10px;border:2px solid #ff9800;',
+    },
+    children: [
+      { type: 'element', tag: 'img', attrs: { src: '/logo.jpeg', alt: 'MatkaKing', style: 'height:50px;width:auto;display:block;margin:0 auto 6px;border-radius:8px;' }, children: [] },
+      { type: 'element', tag: 'strong', attrs: { style: 'font-size:16px;' }, children: [{ type: 'text', text: '🎯 Play Matka on MatkaKing.bet' }] },
+      { type: 'element', tag: 'br', attrs: {}, children: [] },
+      { type: 'text', text: '🌍 World\'s Trusted Website to Play All MatkaKing Markets — Every Market Available!' },
+      { type: 'element', tag: 'br', attrs: {}, children: [] },
+      { type: 'text', text: 'Play on every phone — Android & iPhone. Fast results, easy cash, live updates.' },
+      { type: 'element', tag: 'br', attrs: {}, children: [] },
+      { type: 'text', text: '⚡ Fast Play • 💰 Easy Cash • 📊 Live Results' },
+      { type: 'element', tag: 'br', attrs: {}, children: [] },
+      {
+        type: 'element', tag: 'a',
+        attrs: { href: 'https://matkaking.bet', target: '_blank', rel: 'noopener noreferrer', style: 'display:inline-block;margin-top:8px;padding:6px 28px;font-size:14px;font-weight:700;color:#8b0000;background:#fff;border-radius:20px;text-decoration:none;' },
+        children: [{ type: 'text', text: '🎮 Play Now on MatkaKing.bet' }],
+      },
+    ],
+  };
+
+  function getNodeText(node) {
+    if (!node) return '';
+    if (node.type === 'text') return String(node.text ?? '');
+    if (Array.isArray(node.children)) return node.children.map(getNodeText).join(' ');
+    return '';
+  }
+
+  function isSourceAd(node) {
+    if (!node || node.type !== 'element') return false;
+    const text = getNodeText(node).toLowerCase().replace(/\s+/g, ' ').trim();
+    // Only match short nodes (pure ads, not containers with market data)
+    if (text.length > 300) return false;
+    return AD_KEYWORDS.some((kw) => text.includes(kw));
+  }
+
   function patchInside(node, insideMIcon = false) {
-    if (!node || node.type !== 'element') return;
+    if (!node || node.type !== 'element') return node;
 
     const classAttr = String(node.attrs?.class ?? '');
     const isMIcon = classAttr.split(/\s+/).includes('m-icon');
@@ -70,7 +121,7 @@ function replaceBrandLogoInNodes(nodes = []) {
         style: 'max-height:140px;height:auto;width:auto;max-width:100%;display:block;margin:auto;',
       };
       node.children = [];
-      return;
+      return node;
     }
 
     // Rewrite absolute matkaking.cc hrefs to relative paths
@@ -87,16 +138,28 @@ function replaceBrandLogoInNodes(nodes = []) {
     }
 
     if (Array.isArray(node.children)) {
-      for (const child of node.children) {
+      node.children = node.children.map((child) => {
+        if (child && child.type === 'element' && isSourceAd(child)) {
+          return cloneJsonValue(OUR_AD_NODE);
+        }
         patchInside(child, childInside);
-      }
+        return child;
+      });
     }
+
+    return node;
   }
 
-  for (const node of cloned) {
+  // First pass: replace top-level ad nodes
+  const result = cloned.map((node) => {
+    if (node && node.type === 'element' && isSourceAd(node)) {
+      return cloneJsonValue(OUR_AD_NODE);
+    }
     patchInside(node, false);
-  }
-  return cloned;
+    return node;
+  });
+
+  return result;
 }
 
 function toSlugDisplayName(slug = '') {
