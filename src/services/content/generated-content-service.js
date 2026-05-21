@@ -127,7 +127,13 @@ function replaceBrandLogoInNodes(nodes = []) {
     // Rewrite absolute matkaking.cc hrefs to relative paths
     if (node.tag === 'a' && node.attrs?.href) {
       const href = String(node.attrs.href);
-      if (MATKAKING_ORIGIN.test(href)) {
+
+      // Rewrite matkakingplay.live links to matkaking.bet
+      if (/matkakingplay\.live/i.test(href)) {
+        node.attrs.href = 'https://matkaking.bet';
+        node.attrs.target = '_blank';
+        node.attrs.rel = 'noopener noreferrer';
+      } else if (MATKAKING_ORIGIN.test(href)) {
         try {
           const url = new URL(href);
           node.attrs.href = url.pathname + url.search + url.hash;
@@ -639,13 +645,18 @@ export function createGeneratedContentService({
     }
 
     const nextSections = injectAdminMarketsIntoSections(sections, matkaCards);
+    // Apply ad/logo/link replacements to all sections too (not just layoutNodes)
+    const patchedSections = {};
+    for (const [sectionId, sectionNodes] of Object.entries(nextSections)) {
+      patchedSections[sectionId] = replaceBrandLogoInNodes(sectionNodes);
+    }
     const patchedLayoutNodes = replaceBrandLogoInNodes(homepage.layoutNodes ?? []);
 
     return {
       ...homepage,
       layoutNodes: patchedLayoutNodes,
       sectionOrder: (homepage.sectionOrder ?? []).filter((id) => !EXCLUDED_SECTIONS.has(id)),
-      sections: nextSections,
+      sections: patchedSections,
       updatedAt,
       lastScrapeAt,
     };
