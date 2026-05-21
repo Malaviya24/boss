@@ -473,7 +473,18 @@ function replaceBranding(html) {
     .replace(/Dpbossss/g, 'Matkaking')
     .replace(/Dpboss/g, 'Matkaking')
     .replace(/dpbossss/g, 'matkaking')
-    .replace(/dpboss/g, 'matkaking');
+    .replace(/dpboss/g, 'matkaking')
+    // Standalone word replacements (after the combined ones above)
+    // DP → Matka, boss → king, boston → cc (with word boundaries)
+    .replace(/\bBOSTON\b/g, 'CC')
+    .replace(/\bBoston\b/g, 'Cc')
+    .replace(/\bboston\b/g, 'cc')
+    .replace(/\bBOSS\b/g, 'KING')
+    .replace(/\bBoss\b/g, 'King')
+    .replace(/\bboss\b/g, 'king')
+    .replace(/\bDP\b/g, 'MATKA')
+    .replace(/\bDp\b/g, 'Matka')
+    .replace(/\bdp\b/g, 'matka');
 }
 
 export function getHomepageTemplate(baseUrl) {
