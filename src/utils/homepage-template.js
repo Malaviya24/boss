@@ -335,6 +335,26 @@ function sanitizeDom($, $root, baseUrl) {
     }
   });
 
+  // Make small inline red ads (like "DPBoss App / MatkaKing App" inside live results)
+  // clickable links to matkaking.bet
+  $root.find('div, td').each((_, element) => {
+    const $el = $(element);
+    const style = String(element.attribs?.style ?? '').toLowerCase();
+    const text = $el.text().toLowerCase().replace(/\s+/g, ' ').trim();
+    const isSmallInlineAd = (
+      style.includes('background') &&
+      (style.includes('red') || style.includes('ff0000') || style.includes('cc0000') || style.includes('8a000c')) &&
+      text.length < 150 &&
+      (text.includes('app') || text.includes('fastest play') || text.includes('instant withdraw')) &&
+      $el.find('a').length === 0
+    );
+    if (isSmallInlineAd) {
+      // Wrap content in a link to matkaking.bet
+      const inner = $el.html() ?? '';
+      $el.html(`<a href="https://matkaking.bet" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:block;">${inner.replace(/DPBoss/gi, 'MatkaKing').replace(/dpboss/gi, 'matkaking')}</a>`);
+    }
+  });
+
   $root.contents().each((_, node) => {
     decodeNodeText(node);
   });
@@ -437,6 +457,8 @@ function replaceBranding(html) {
     .replace(/dpboss\.boston/gi, 'matkaking.cc')
     .replace(/DPBOSSSS/g, 'MATKAKING')
     .replace(/DPBOSS/g, 'MATKAKING')
+    .replace(/DPBossss/g, 'MatkaKing')
+    .replace(/DPBoss/g, 'MatkaKing')
     .replace(/Dpbossss/g, 'Matkaking')
     .replace(/Dpboss/g, 'Matkaking')
     .replace(/dpbossss/g, 'matkaking')
