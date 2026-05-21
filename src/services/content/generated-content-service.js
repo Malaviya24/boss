@@ -109,6 +109,8 @@ function replaceBrandLogoInNodes(nodes = []) {
       .replace(/matkakingplay\.live/gi, 'matkaking.bet')
       .replace(/DPBOSSSS/g, 'MATKAKING')
       .replace(/DPBOSS/g, 'MATKAKING')
+      .replace(/DpBossss/g, 'MatkaKing')
+      .replace(/DpBoss/g, 'MatkaKing')
       .replace(/DPBossss/g, 'MatkaKing')
       .replace(/DPBoss/g, 'MatkaKing')
       .replace(/Dpbossss/g, 'MatkaKing')
