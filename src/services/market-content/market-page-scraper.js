@@ -669,12 +669,26 @@ function rebrandContent(value) {
       .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
       .replace(/dpbossss\.boston/gi, 'matkaking.cc')
       .replace(/dpboss\.boston/gi, 'matkaking.cc')
+      .replace(/matkakingplay\.live\/download-app\.php/gi, 'matkaking.bet')
+      .replace(/matkakingplay\.live/gi, 'matkaking.bet')
       .replace(/DPBOSSSS/g, 'MATKAKING')
       .replace(/DPBOSS/g, 'MATKAKING')
-      .replace(/Dpbossss/g, 'Matkaking')
-      .replace(/Dpboss/g, 'Matkaking')
+      .replace(/DPBossss/g, 'MatkaKing')
+      .replace(/DPBoss/g, 'MatkaKing')
+      .replace(/Dpbossss/g, 'MatkaKing')
+      .replace(/Dpboss/g, 'MatkaKing')
       .replace(/dpbossss/g, 'matkaking')
-      .replace(/dpboss/g, 'matkaking');
+      .replace(/dpboss/g, 'matkaking')
+      // Standalone word replacements
+      .replace(/\bBOSTON\b/g, 'CC')
+      .replace(/\bBoston\b/g, 'Cc')
+      .replace(/\bboston\b/g, 'cc')
+      .replace(/\bBOSS\b/g, 'KING')
+      .replace(/\bBoss\b/g, 'King')
+      .replace(/\bboss\b/g, 'king')
+      .replace(/\bDP\b/g, 'MATKA')
+      .replace(/\bDp\b/g, 'Matka')
+      .replace(/\bdp\b/g, 'matka');
   }
 
   if (Array.isArray(value)) {
