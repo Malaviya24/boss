@@ -218,6 +218,13 @@ function sanitizeDom($, $root, baseUrl) {
   });
 
   $root.find('a[href]').each((_, element) => {
+    // Rewrite matkakingplay.live links to our domain
+    if (/matkakingplay\.live/i.test(element.attribs.href)) {
+      element.attribs.href = 'https://matkaking.bet';
+      delete element.attribs.target;
+      return;
+    }
+
     const localMarketPath = toLocalMarketPath(element.attribs.href);
     if (localMarketPath) {
       element.attribs.href = localMarketPath;
@@ -455,6 +462,8 @@ function replaceBranding(html) {
     .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
     .replace(/dpbossss\.boston/gi, 'matkaking.cc')
     .replace(/dpboss\.boston/gi, 'matkaking.cc')
+    .replace(/matkakingplay\.live\/download-app\.php/gi, 'matkaking.bet')
+    .replace(/matkakingplay\.live/gi, 'matkaking.bet')
     .replace(/DPBOSSSS/g, 'MATKAKING')
     .replace(/DPBOSS/g, 'MATKAKING')
     .replace(/DPBossss/g, 'MatkaKing')
