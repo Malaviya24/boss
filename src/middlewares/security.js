@@ -74,6 +74,12 @@ export function buildSecurityMiddleware(env, logger) {
       return;
     }
 
+    // Exempt admin auth login (has its own rate limiter and bcrypt validation)
+    if (path.endsWith('/admin/auth/login') || path === '/api/v1/admin/auth/login') {
+      next();
+      return;
+    }
+
     if (!env.csrfToken) {
       logger.warn('csrf_token_missing_for_unsafe_method', {
         method: request.method,
