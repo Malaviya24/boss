@@ -67,6 +67,12 @@ export function buildSecurityMiddleware(env, logger) {
       return;
     }
 
+    // Exempt public contact form endpoint from CSRF (rate-limited anyway)
+    if (request.path === '/api/contact' || request.path === '/contact') {
+      next();
+      return;
+    }
+
     if (!env.csrfToken) {
       logger.warn('csrf_token_missing_for_unsafe_method', {
         method: request.method,

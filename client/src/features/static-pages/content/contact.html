@@ -319,33 +319,38 @@
   var overlay = document.getElementById('matkaking-success-overlay');
   if (!form || !overlay) return;
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
-    var name = (document.getElementById('name') || {}).value || '';
-    var game = (document.getElementById('game') || {}).value || '';
-    var phone = (document.getElementById('phone') || {}).value || '';
-    var email = (document.getElementById('email') || {}).value || '';
-    var message = (document.getElementById('message') || {}).value || '';
+    var btn = form.querySelector('button[type="submit"]');
+    var originalText = btn ? btn.textContent : 'Send Message';
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
 
-    var subject = 'Contact Form: ' + name;
-    var body =
-      'Customer Name: ' + name + '\n' +
-      'Game Name: ' + game + '\n' +
-      'Phone Number: ' + phone + '\n' +
-      'Email: ' + email + '\n\n' +
-      'Message:\n' + message;
+    var payload = {
+      name: (document.getElementById('name') || {}).value || '',
+      game: (document.getElementById('game') || {}).value || '',
+      phone: (document.getElementById('phone') || {}).value || '',
+      email: (document.getElementById('email') || {}).value || '',
+      message: (document.getElementById('message') || {}).value || '',
+    };
 
-    var mailto = 'mailto:support@matkaking.cc?subject=' +
-      encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-
-    // Open user's email client
-    window.location.href = mailto;
-
-    // Show success animation
-    overlay.classList.add('show');
-
-    // Reset form
-    form.reset();
+    try {
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      var data = await res.json().catch(function(){ return {}; });
+      if (res.ok && data.success) {
+        overlay.classList.add('show');
+        form.reset();
+      } else {
+        alert(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = originalText; }
+    }
   });
 })();
 </script>

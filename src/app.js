@@ -19,6 +19,7 @@ import { createV1ApiRouter } from './routes/v1/api-routes.js';
 import { createMarketPagesRouter } from './routes/market-pages.js';
 import { createCloneCssRouter } from './routes/clone-css-route.js';
 import { createHealthRouter } from './routes/health-route.js';
+import { createContactRouter } from './routes/contact-route.js';
 import { createMarketTemplateService } from './services/market-template-service.js';
 import { createGeneratedContentService } from './services/content/generated-content-service.js';
 import { createMarketContentService } from './services/market-content/market-content-service.js';
@@ -156,6 +157,7 @@ export async function bootstrapApp() {
 
   app.use(createHealthRouter(store));
   app.use(createCloneCssRouter());
+  app.use('/api', createContactRouter());
 
   mountImageStatic(app, {
     allowWebzipAssets: env.marketContentSource === 'legacy',
