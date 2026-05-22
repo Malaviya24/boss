@@ -98,6 +98,7 @@ function replaceBrandLogoInNodes(nodes = []) {
   function rebrandText(text = '') {
     if (typeof text !== 'string') return text;
     return text
+      .replace(/88781750XX/g, '86199201XX')
       .replace(/support@matkaking\.(?:net|boston)/gi, 'support@matkaking.cc')
       .replace(/support@matkakingresultapi\.com/gi, 'support@matkaking.cc')
       .replace(/support@dpbossss?\.(?:net|boston|com)/gi, 'support@matkaking.cc')

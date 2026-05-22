@@ -17,6 +17,8 @@ function rebrandHtml(rawHtml = '') {
       /<img[^>]+src="data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhsAAABpCAMAAACkjBFs[^"]+"[^>]*>/gi,
       '<img src="/banner.png" alt="MATKAKING" style="max-height:140px;height:auto;width:auto;max-width:100%;display:block;margin:auto;">'
     )
+    // Number replacement
+    .replace(/88781750XX/g, '86199201XX')
     // Email replacements
     .replace(/support@matkaking\.(?:net|boston)/gi, 'support@matkaking.cc')
     .replace(/support@matkakingresultapi\.com/gi, 'support@matkaking.cc')
