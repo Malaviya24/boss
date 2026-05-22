@@ -165,6 +165,86 @@
   font-weight: 400;
   line-height: 1.5;
 }
+
+/* Success animation overlay */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+.success-overlay.show { display: flex; }
+.success-card {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 90%;
+}
+.success-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: #4CAF50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+.success-icon::after {
+  content: '';
+  width: 26px;
+  height: 14px;
+  border-left: 5px solid #fff;
+  border-bottom: 5px solid #fff;
+  transform: rotate(-45deg) translate(2px, -4px);
+  animation: drawCheck 0.4s ease 0.4s both;
+}
+.success-card h2 {
+  color: #1a237e;
+  font-size: 22px;
+  margin: 0 0 8px;
+  font-style: normal;
+}
+.success-card p {
+  color: #555;
+  font-size: 14px;
+  margin: 0 0 18px;
+  font-style: normal;
+  font-weight: 400;
+}
+.success-card button {
+  padding: 8px 24px;
+  background: #1a237e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes scaleIn {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes drawCheck {
+  0% { width: 0; height: 0; }
+  50% { width: 26px; height: 0; }
+  100% { width: 26px; height: 14px; }
+}
 </style>
 
 <div class="contact-page">
@@ -175,7 +255,7 @@
   <div class="contact-content">
     <p>Hello, all the Satta Matka Enthusiasts! Welcome to the contact details of our website <strong>MatkaKing.Services</strong>. If you are a customer and you have any queries, then you can fill out the below form here and then contact us. We will respond as soon as we check your email.</p>
 
-    <p>So here you need to fill your name in the customer name field. Then you need to enter the game name you want to play specifically. Then you have to add your contact details here. It should be your phone number, and then you need to select the game type, and then your email, after that you can send us a message.</p>
+    <p>So here you need to fill your name in the customer name field. Then you need to enter the game name you want to play specifically. Then you have to add your contact details here. It should be your phone number and then your email, after that you can send us a message.</p>
 
     <p>If you want to know our address, here is our physical address written on the right side, and here is our official email where you can send us an email for any important query.</p>
   </div>
@@ -188,7 +268,7 @@
 
   <div class="contact-content">
     <h3 style="color: #1a237e; font-size: 18px;">📝 Contact Form</h3>
-    <form class="contact-form" onsubmit="event.preventDefault(); alert('Form submitted! We will contact you soon.');">
+    <form class="contact-form" id="matkaking-contact-form">
       <label for="name">Customer Name *</label>
       <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
@@ -197,16 +277,6 @@
 
       <label for="phone">Phone Number *</label>
       <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-
-      <label for="gametype">Game Type *</label>
-      <select id="gametype" name="gametype" required>
-        <option value="">Select Game Type</option>
-        <option value="single">Single</option>
-        <option value="jodi">Jodi</option>
-        <option value="panna">Panna</option>
-        <option value="sangam">Sangam</option>
-        <option value="half-sangam">Half Sangam</option>
-      </select>
 
       <label for="email">Email Address *</label>
       <input type="email" id="email" name="email" placeholder="Enter your email address" required>
@@ -231,4 +301,51 @@
   <div class="contact-footer">
     <p>© MatkaKing.Services | All Rights Reserved | Contact: support@matkaking.cc</p>
   </div>
+
+  <!-- Success animation overlay -->
+  <div class="success-overlay" id="matkaking-success-overlay">
+    <div class="success-card">
+      <div class="success-icon"></div>
+      <h2>Message Submitted!</h2>
+      <p>Thank you for contacting us. We will get back to you soon.</p>
+      <button type="button" onclick="document.getElementById('matkaking-success-overlay').classList.remove('show');">OK</button>
+    </div>
+  </div>
 </div>
+
+<script>
+(function() {
+  var form = document.getElementById('matkaking-contact-form');
+  var overlay = document.getElementById('matkaking-success-overlay');
+  if (!form || !overlay) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = (document.getElementById('name') || {}).value || '';
+    var game = (document.getElementById('game') || {}).value || '';
+    var phone = (document.getElementById('phone') || {}).value || '';
+    var email = (document.getElementById('email') || {}).value || '';
+    var message = (document.getElementById('message') || {}).value || '';
+
+    var subject = 'Contact Form: ' + name;
+    var body =
+      'Customer Name: ' + name + '\n' +
+      'Game Name: ' + game + '\n' +
+      'Phone Number: ' + phone + '\n' +
+      'Email: ' + email + '\n\n' +
+      'Message:\n' + message;
+
+    var mailto = 'mailto:support@matkaking.cc?subject=' +
+      encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+    // Open user's email client
+    window.location.href = mailto;
+
+    // Show success animation
+    overlay.classList.add('show');
+
+    // Reset form
+    form.reset();
+  });
+})();
+</script>

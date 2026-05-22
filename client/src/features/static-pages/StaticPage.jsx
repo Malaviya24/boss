@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 /**
  * Shared shell for legacy static pages (about, privacy, tos, charts, etc.).
@@ -54,6 +54,8 @@ function rebrandHtml(rawHtml = '') {
 }
 
 export default function StaticPage({ title, html, className = 'static-page' }) {
+  const containerRef = useRef(null);
+
   useEffect(() => {
     if (!title) return;
     const previous = document.title;
@@ -65,6 +67,32 @@ export default function StaticPage({ title, html, className = 'static-page' }) {
 
   const rebranded = useMemo(() => rebrandHtml(html), [html]);
 
-  // eslint-disable-next-line react/no-danger
-  return <div className={className} dangerouslySetInnerHTML={{ __html: rebranded }} />;
+  useEffect(() => {
+    if (!containerRef.current) return;
+    // Execute any <script> tags injected via dangerouslySetInnerHTML
+    const scripts = containerRef.current.querySelectorAll('script');
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement('script');
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      Array.from(oldScript.attributes).forEach((attr) => {
+        if (attr.name !== 'src') {
+          newScript.setAttribute(attr.name, attr.value);
+        }
+      });
+      oldScript.parentNode?.replaceChild(newScript, oldScript);
+    });
+  }, [rebranded]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{ __html: rebranded }}
+    />
+  );
 }
