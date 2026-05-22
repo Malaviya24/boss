@@ -218,6 +218,15 @@ function sanitizeDom($, $root, baseUrl) {
   });
 
   $root.find('a[href]').each((_, element) => {
+    // Rewrite Matka Play button to matkaking.bet
+    const $el = $(element);
+    if ($el.hasClass('mp-btn')) {
+      element.attribs.href = 'https://matkaking.bet';
+      element.attribs.target = '_blank';
+      element.attribs.rel = 'noopener noreferrer';
+      return;
+    }
+
     // Rewrite matkakingplay.live links to our domain
     if (/matkakingplay\.live/i.test(element.attribs.href)) {
       element.attribs.href = 'https://matkaking.bet';

@@ -267,7 +267,7 @@ export function MarketTemplate({
           <img src="/banner.png" alt="MATKAKING" style={{maxHeight:'140px',height:'auto',width:'auto',maxWidth:'100%',display:'block',margin:'auto'}} />
         </a>
         <div dangerouslySetInnerHTML={{ __html: content.rawHtml }} />
-        <a className="mp-btn" href="/"><i>Matka Play</i></a>
+        <a className="mp-btn" href="https://matkaking.bet" target="_blank" rel="noopener noreferrer"><i>Matka Play</i></a>
       </main>
     );
   }
@@ -485,7 +485,7 @@ export function MarketTemplate({
       ) : null}
 
       {footer.matkaPlay?.href ? (
-        <a className="mp-btn" href={normalizeHref(footer.matkaPlay.href)}>
+        <a className="mp-btn" href="https://matkaking.bet" target="_blank" rel="noopener noreferrer">
           <i>{footer.matkaPlay.label || 'Matka Play'}</i>
         </a>
       ) : null}

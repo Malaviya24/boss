@@ -101,7 +101,7 @@ export default function HomePage() {
     <div className="clone-app" onClickCapture={handleClickCapture}>
       <StyleRefs styleUrls={content.styleUrls} styleBlocks={content.styleBlocks} />
       <NodeRenderer nodes={content.layoutNodes} resolveSectionNodes={resolveSectionNodes} />
-      <a className="mp-btn" href="/"><i>Matka Play</i></a>
+      <a className="mp-btn" href="https://matkaking.bet" target="_blank" rel="noopener noreferrer"><i>Matka Play</i></a>
     </div>
   );
 }

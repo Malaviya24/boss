@@ -169,9 +169,15 @@ function replaceBrandLogoInNodes(nodes = []) {
     // Rewrite absolute matkaking.cc hrefs to relative paths
     if (node.tag === 'a' && node.attrs?.href) {
       const href = String(node.attrs.href);
+      const cls = String(node.attrs.class ?? '');
 
-      // Rewrite matkakingplay.live links to matkaking.bet
-      if (/matkakingplay\.live/i.test(href)) {
+      // Matka Play button → matkaking.bet
+      if (cls.split(/\s+/).includes('mp-btn')) {
+        node.attrs.href = 'https://matkaking.bet';
+        node.attrs.target = '_blank';
+        node.attrs.rel = 'noopener noreferrer';
+      } else if (/matkakingplay\.live/i.test(href)) {
+        // Rewrite matkakingplay.live links to matkaking.bet
         node.attrs.href = 'https://matkaking.bet';
         node.attrs.target = '_blank';
         node.attrs.rel = 'noopener noreferrer';
