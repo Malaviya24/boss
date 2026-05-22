@@ -59,24 +59,27 @@
 .contact-email {
   display: inline-block;
   margin: 15px 0;
-  padding: 12px 25px;
+  padding: 14px 30px;
   background: linear-gradient(45deg, navy, #005780);
   color: #fff !important;
   text-decoration: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 700;
   border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .contact-email:hover {
   background: linear-gradient(45deg, #005780, navy);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
 .contact-info-box {
   margin: 15px 0;
-  padding: 15px;
+  padding: 25px 15px;
   background: linear-gradient(187deg, #fc9 50%, #ffc387 50%);
   border: 2px solid #ff182c;
   border-radius: 10px;
@@ -84,70 +87,16 @@
 
 .contact-info-box h3 {
   color: #1a237e;
-  font-size: 18px;
-  margin: 0 0 10px;
+  font-size: 22px;
+  margin: 0 0 12px;
 }
 
 .contact-info-box p {
   font-size: 14px;
   color: #333;
-  margin: 5px 0;
+  margin: 8px 0;
   font-style: normal;
   font-weight: 400;
-}
-
-.contact-form {
-  text-align: left;
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  border: 2px solid #ff182c;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-
-.contact-form label {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  font-style: normal;
-  color: #1a237e;
-  margin: 10px 0 5px;
-}
-
-.contact-form input,
-.contact-form select,
-.contact-form textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  font-family: Helvetica, sans-serif;
-}
-
-.contact-form textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-.contact-form button {
-  display: block;
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  background: linear-gradient(45deg, #ff0000, #cc0000);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.contact-form button:hover {
-  background: linear-gradient(45deg, #cc0000, #990000);
 }
 
 .contact-footer {
@@ -165,86 +114,6 @@
   font-weight: 400;
   line-height: 1.5;
 }
-
-/* Success animation overlay */
-.success-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.3s ease;
-}
-.success-overlay.show { display: flex; }
-.success-card {
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 14px;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-width: 90%;
-}
-.success-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 15px;
-  border-radius: 50%;
-  background: #4CAF50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
-}
-.success-icon::after {
-  content: '';
-  width: 26px;
-  height: 14px;
-  border-left: 5px solid #fff;
-  border-bottom: 5px solid #fff;
-  transform: rotate(-45deg) translate(2px, -4px);
-  animation: drawCheck 0.4s ease 0.4s both;
-}
-.success-card h2 {
-  color: #1a237e;
-  font-size: 22px;
-  margin: 0 0 8px;
-  font-style: normal;
-}
-.success-card p {
-  color: #555;
-  font-size: 14px;
-  margin: 0 0 18px;
-  font-style: normal;
-  font-weight: 400;
-}
-.success-card button {
-  padding: 8px 24px;
-  background: #1a237e;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-@keyframes scaleIn {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
-}
-@keyframes drawCheck {
-  0% { width: 0; height: 0; }
-  50% { width: 26px; height: 0; }
-  100% { width: 26px; height: 14px; }
-}
 </style>
 
 <div class="contact-page">
@@ -253,104 +122,30 @@
   </div>
 
   <div class="contact-content">
-    <p>Hello, all the Satta Matka Enthusiasts! Welcome to the contact details of our website <strong>MatkaKing.Services</strong>. If you are a customer and you have any queries, then you can fill out the below form here and then contact us. We will respond as soon as we check your email.</p>
+    <p>Hello, all the Satta Matka Enthusiasts! Welcome to the contact details of our website <strong>MatkaKing.Services</strong>. If you have any queries, you can reach us directly via email and we will respond as soon as we check your message.</p>
 
-    <p>So here you need to fill your name in the customer name field. Then you need to enter the game name you want to play specifically. Then you have to add your contact details here. It should be your phone number and then your email, after that you can send us a message.</p>
-
-    <p>If you want to know our address, here is our physical address written on the right side, and here is our official email where you can send us an email for any important query.</p>
+    <p>Whether you want to add your market, report an issue, give feedback, or simply ask a question — our experts are ready to help you 24/7. Just send us an email with your details and we'll get back to you shortly.</p>
   </div>
 
   <div class="contact-info-box">
-    <h3>📧 Official Email</h3>
+    <h3>📧 Get In Touch</h3>
+    <p>For any inquiries, support, or business requests, please email us at:</p>
     <a class="contact-email" href="mailto:support@matkaking.cc">support@matkaking.cc</a>
     <p>Our experts are available 24/7 to help you with your queries.</p>
   </div>
 
   <div class="contact-content">
-    <h3 style="color: #1a237e; font-size: 18px;">📝 Contact Form</h3>
-    <form class="contact-form" id="matkaking-contact-form">
-      <label for="name">Customer Name *</label>
-      <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-
-      <label for="game">Game Name *</label>
-      <input type="text" id="game" name="game" placeholder="Enter game name you want to play">
-
-      <label for="phone">Phone Number *</label>
-      <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-
-      <label for="email">Email Address *</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email address" required>
-
-      <label for="message">Message *</label>
-      <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
-
-      <button type="submit">Send Message</button>
-    </form>
-  </div>
-
-  <div class="contact-content">
-    <p>Okay, so this is our contact page, and here is our contact number, you can contact us by filling out the form and don't forget to enter all the details we asked for, otherwise your form will not be submitted.</p>
-
-    <p>That's all from this page. I hope you will contact us when you need anything from us. Don't hesitate to contact us. Our experts are available 24/7 to help you with your queries. Just don't forget to add proper details when you submit the form, and carefully fill it out.</p>
-
-    <p><strong>All the entries are mandatory.</strong> You cannot skip any of the entry blanks. Make sure you fill out the form correctly, and we will respond to you as soon as we get your email.</p>
-
-    <p>Thank you so much. We wish you very good luck with your next Satta Matka Games. May you always win!</p>
+    <p>When emailing us, please include the following details so we can help you faster:</p>
+    <p>
+      • <strong>Your Name</strong><br>
+      • <strong>Phone Number</strong><br>
+      • <strong>Game / Market Name</strong> (if related to a specific market)<br>
+      • <strong>Your Message or Query</strong>
+    </p>
+    <p>We respond to most emails within 24 hours during business days. Thank you for choosing MatkaKing — we wish you good luck with your Satta Matka games!</p>
   </div>
 
   <div class="contact-footer">
     <p>© MatkaKing.Services | All Rights Reserved | Contact: support@matkaking.cc</p>
   </div>
-
-  <!-- Success animation overlay -->
-  <div class="success-overlay" id="matkaking-success-overlay">
-    <div class="success-card">
-      <div class="success-icon"></div>
-      <h2>Message Submitted!</h2>
-      <p>Thank you for contacting us. We will get back to you soon.</p>
-      <button type="button" onclick="document.getElementById('matkaking-success-overlay').classList.remove('show');">OK</button>
-    </div>
-  </div>
 </div>
-
-<script>
-(function() {
-  var form = document.getElementById('matkaking-contact-form');
-  var overlay = document.getElementById('matkaking-success-overlay');
-  if (!form || !overlay) return;
-
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    var btn = form.querySelector('button[type="submit"]');
-    var originalText = btn ? btn.textContent : 'Send Message';
-    if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
-
-    var payload = {
-      name: (document.getElementById('name') || {}).value || '',
-      game: (document.getElementById('game') || {}).value || '',
-      phone: (document.getElementById('phone') || {}).value || '',
-      email: (document.getElementById('email') || {}).value || '',
-      message: (document.getElementById('message') || {}).value || '',
-    };
-
-    try {
-      var res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      var data = await res.json().catch(function(){ return {}; });
-      if (res.ok && data.success) {
-        overlay.classList.add('show');
-        form.reset();
-      } else {
-        alert(data.message || 'Failed to send message. Please try again.');
-      }
-    } catch (err) {
-      alert('Network error. Please try again.');
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = originalText; }
-    }
-  });
-})();
-</script>
