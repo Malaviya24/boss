@@ -469,6 +469,9 @@ export function sanitizeFragmentHtml(html, baseUrl) {
  */
 function replaceBranding(html) {
   return html
+    .replace(/support@matkaking\.(?:net|boston)/gi, 'support@matkaking.cc')
+    .replace(/support@matkakingresultapi\.com/gi, 'support@matkaking.cc')
+    .replace(/support@dpbossss?\.(?:net|boston|com)/gi, 'support@matkaking.cc')
     .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
     .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
     .replace(/dpbossss\.boston/gi, 'matkaking.cc')

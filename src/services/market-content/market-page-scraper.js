@@ -665,6 +665,9 @@ export async function scrapeAndParseMarketPage(type, slug, { timeoutMs = 15000 }
 function rebrandContent(value) {
   if (typeof value === 'string') {
     return value
+      .replace(/support@matkaking\.(?:net|boston)/gi, 'support@matkaking.cc')
+      .replace(/support@matkakingresultapi\.com/gi, 'support@matkaking.cc')
+      .replace(/support@dpbossss?\.(?:net|boston|com)/gi, 'support@matkaking.cc')
       .replace(/DPBOSSSS\.BOSTON/gi, 'MATKAKING.CC')
       .replace(/DPBOSS\.BOSTON/gi, 'MATKAKING.CC')
       .replace(/dpbossss\.boston/gi, 'matkaking.cc')
