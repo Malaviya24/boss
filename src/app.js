@@ -130,6 +130,10 @@ export async function bootstrapApp() {
   app.use(security.compressionMiddleware);
   app.use(security.corsMiddleware);
   app.use(express.json({ limit: env.bodyLimit }));
+
+  // Mount contact form BEFORE csrfGuard (public endpoint, no CSRF token required)
+  app.use('/api', createContactRouter());
+
   app.use(security.csrfGuard);
 
   app.use('/api', security.apiLimiter, (request, response, next) => {
@@ -157,7 +161,6 @@ export async function bootstrapApp() {
 
   app.use(createHealthRouter(store));
   app.use(createCloneCssRouter());
-  app.use('/api', createContactRouter());
 
   mountImageStatic(app, {
     allowWebzipAssets: env.marketContentSource === 'legacy',
