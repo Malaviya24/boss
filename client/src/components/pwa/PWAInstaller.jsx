@@ -1,38 +1,30 @@
 import { useState, useEffect } from 'react';
 
-// Simple PWA Install Button that always shows for testing
+// ── PWA Download Button (Matches original Matka Play button style) ──
 export function PWAFloatingButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showButton, setShowButton] = useState(true); // Always show for now
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [showButton, setShowButton] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Check if already installed
-    const checkInstalled = () => {
-      const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-      const isWebkitStandalone = window.navigator.standalone === true;
-      return isStandalone || isWebkitStandalone;
-    };
-
-    if (checkInstalled()) {
-      setIsInstalled(true);
+    if (
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true
+    ) {
+      setShowButton(false);
       return;
     }
 
-    // Listen for install prompt
     const handleBeforeInstallPrompt = (event) => {
-      console.log('PWA: Install prompt available');
       event.preventDefault();
       setDeferredPrompt(event);
       setShowButton(true);
     };
 
-    // Listen for app installed
     const handleAppInstalled = () => {
-      console.log('PWA: App installed');
-      setShowButton(false);
-      setIsInstalled(true);
       setDeferredPrompt(null);
+      setShowButton(false);
+      setShowModal(false);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -44,103 +36,183 @@ export function PWAFloatingButton() {
     };
   }, []);
 
-  const handleInstall = async () => {
-    if (!deferredPrompt) {
-      // Fallback - show manual instructions
-      alert('To install this app:\n\n' +
-            'Chrome: Menu (⋮) → "Install app" or "Add to Home screen"\n' +
-            'Safari: Share button → "Add to Home Screen"\n' +
-            'Edge: Menu (⋯) → "Apps" → "Install this site as an app"');
-      return;
-    }
+  const handleInstallClick = () => {
+    setShowModal(true);
+  };
 
+  const handleDirectInstall = async () => {
+    if (!deferredPrompt) return;
     try {
       deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      console.log('PWA Install choice:', choiceResult.outcome);
-      
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('PWA Install choice:', outcome);
       setDeferredPrompt(null);
-      setShowButton(false);
-    } catch (error) {
-      console.error('PWA Install error:', error);
+      setShowModal(false);
+      if (outcome === 'accepted') {
+        setShowButton(false);
+      }
+    } catch (err) {
+      console.error('PWA Install error:', err);
     }
   };
 
-  // Don't show if already installed - but for testing, let's always show
-  // if (isInstalled) {
-  //   return null;
-  // }
+  if (!showButton) return null;
 
-  // Always show the button for testing
   return (
-    <div className="fixed bottom-6 right-6 z-50" style={{ zIndex: 9999 }}>
+    <>
       <button
-        onClick={handleInstall}
-        className="group relative w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
-        title="Install MATKAKING App"
+        onClick={handleInstallClick}
+        title="Download App"
         style={{
-          background: 'linear-gradient(135deg, #1e40af 0%, #7c3aed 100%)',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1)',
-          zIndex: 9999,
-          position: 'fixed'
+          position: 'fixed',
+          left: '10px',
+          bottom: '48px', /* Stacks exactly above the old Matka Play button which is at bottom: 8px */
+          zIndex: 10,
+          background: '#0054c7',
+          color: '#fff',
+          padding: '8px 12px',
+          textDecoration: 'none',
+          fontStyle: 'normal',
+          fontWeight: 'bold',
+          border: '1px solid #fff',
+          borderRadius: '5px',
+          fontSize: '15px',
+          cursor: 'pointer',
+          boxShadow: 'none',
         }}
       >
-        {/* Matka Play Style Icon */}
-        <div className="relative">
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded flex items-center justify-center">
-              <svg
-                 className="w-4 h-4 text-white"
-                 fill="currentColor"
-                 viewBox="0 0 24 24"
+        Download
+      </button>
+
+      {/* ── Custom Themed Popup Modal ── */}
+      {showModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, width: '100vw', height: '100vh',
+          background: 'rgba(0,0,0,0.8)',
+          zIndex: 10000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{
+            background: '#fff',
+            border: '3px solid #ff002b',
+            borderRadius: '10px',
+            width: '90%',
+            maxWidth: '380px',
+            padding: '20px',
+            textAlign: 'center',
+            boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.4)',
+          }}>
+            <h2 style={{
+              background: '#ff1731',
+              color: '#fff',
+              borderRadius: '8px',
+              padding: '8px 10px',
+              margin: '0 0 15px 0',
+              fontSize: '22px',
+              textShadow: '1px 1px 2px #000',
+              textTransform: 'uppercase'
+            }}>
+              Download App
+            </h2>
+
+            <div style={{
+              background: 'linear-gradient(187deg, #ffcc99 50%, #ffc387 50%)',
+              border: '2px solid #ff0016',
+              borderRadius: '8px',
+              padding: '15px 10px',
+              marginBottom: '20px',
+              color: '#00094d',
+              fontSize: '15px',
+              fontWeight: 'bold',
+              lineHeight: '1.5',
+              whiteSpace: 'pre-wrap',
+              textShadow: '1px 1px 2px #fff',
+              boxShadow: '0 0 10px rgba(0,0,0,0.2) inset'
+            }}>
+              {deferredPrompt
+                ? "Get the best experience! Direct install the MATKAKING app to your home screen for ultra-fast access."
+                : "To install this app manually:\n\nChrome: Menu (⋮) → 'Add to Home screen'\nSafari: Share button → 'Add to Home Screen'\nEdge: Menu (⋯) → 'Apps' → 'Install app'"}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
+              {deferredPrompt && (
+                <button
+                  onClick={handleDirectInstall}
+                  style={{
+                    background: 'linear-gradient(45deg, navy, #005780)',
+                    color: '#fff',
+                    border: '2px solid #fff',
+                    padding: '8px 18px',
+                    borderRadius: '5px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                    transition: 'transform 0.1s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  Direct Install
+                </button>
+              )}
+              <button
+                onClick={() => setShowModal(false)}
+                style={{
+                  background: '#e91e63',
+                  color: '#fff',
+                  border: '2px solid #fff',
+                  padding: '8px 18px',
+                  borderRadius: '5px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                  transition: 'transform 0.1s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
+                Close
+              </button>
             </div>
           </div>
-          
-          {/* Pulsing indicator */}
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full" />
         </div>
-        
-        {/* Tooltip */}
-        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-          Install Matka App
-          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
-        </div>
-      </button>
-    </div>
+      )}
+    </>
   );
 }
 
-// Alternative text-based button (use if icon doesn't work)
+// ── Alternative text-based button (fallback) ──
 export function PWATextButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      setDeferredPrompt(event);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    const handler = (e) => { e.preventDefault(); setDeferredPrompt(e); };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstall = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
+      await deferredPrompt.userChoice;
       setDeferredPrompt(null);
     }
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: 50 }}>
       <button
         onClick={handleInstall}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 text-sm font-medium"
+        style={{
+          background: '#2563eb', color: '#fff', padding: '8px 16px',
+          borderRadius: '8px', border: 'none', cursor: 'pointer',
+          fontSize: '14px', fontWeight: '500',
+        }}
       >
         📱 Install App
       </button>
@@ -148,160 +220,106 @@ export function PWATextButton() {
   );
 }
 
-// Hook to detect PWA installation status
+// ── Hook to detect PWA installation status ──
 export function usePWA() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
-  
+
   useEffect(() => {
-    // Check if running in standalone mode
-    const checkStandalone = () => {
-      const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-      const webkitStandalone = window.navigator.standalone === true;
-      
-      setIsStandalone(standalone || webkitStandalone);
+    const check = () => {
+      const sa = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+      const wk = window.navigator.standalone === true;
+      setIsStandalone(sa || wk);
+      setIsInstalled('serviceWorker' in navigator && sa);
     };
-    
-    // Check if app appears to be installed
-    const checkInstalled = () => {
-      const installed = 'serviceWorker' in navigator && 
-                       window.matchMedia('(display-mode: standalone)').matches;
-      setIsInstalled(installed);
-    };
-    
-    checkStandalone();
-    checkInstalled();
-    
-    // Listen for display mode changes
-    const mediaQuery = window.matchMedia('(display-mode: standalone)');
-    mediaQuery.addEventListener('change', checkStandalone);
-    
-    return () => {
-      mediaQuery.removeEventListener('change', checkStandalone);
-    };
+    check();
+    const mq = window.matchMedia('(display-mode: standalone)');
+    mq.addEventListener('change', check);
+    return () => mq.removeEventListener('change', check);
   }, []);
-  
+
   return { isInstalled, isStandalone };
 }
 
-// Alternative simple button for testing
+// ── Full PWAInstaller banner variant ──
 export function PWAInstaller() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Check if app is already installed
-    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+    if (
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true
+    ) {
       setIsInstalled(true);
       return;
     }
 
-    // Check if running in PWA mode
-    if (window.navigator.standalone === true) {
-      setIsInstalled(true);
-      return;
-    }
+    const onPrompt = (e) => { e.preventDefault(); setDeferredPrompt(e); setShowInstallButton(true); };
+    const onInstalled = () => { setShowInstallButton(false); setIsInstalled(true); setDeferredPrompt(null); };
 
-    // Listen for the beforeinstallprompt event
-    const handleBeforeInstallPrompt = (event) => {
-      console.log('PWA: beforeinstallprompt event fired');
-      
-      // Prevent the mini-infobar from appearing on mobile
-      event.preventDefault();
-      
-      // Save the event for later use
-      setDeferredPrompt(event);
-      setShowInstallButton(true);
-    };
-
-    // Listen for app installation
-    const handleAppInstalled = () => {
-      console.log('PWA: App was installed');
-      setShowInstallButton(false);
-      setIsInstalled(true);
-      setDeferredPrompt(null);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
+    window.addEventListener('beforeinstallprompt', onPrompt);
+    window.addEventListener('appinstalled', onInstalled);
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener('beforeinstallprompt', onPrompt);
+      window.removeEventListener('appinstalled', onInstalled);
     };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      return;
-    }
-
-    // Show the installation prompt
+    if (!deferredPrompt) return;
     deferredPrompt.prompt();
-
-    // Wait for the user's response
-    const choiceResult = await deferredPrompt.userChoice;
-    
-    console.log('PWA: User choice:', choiceResult.outcome);
-    
-    if (choiceResult.outcome === 'accepted') {
-      console.log('PWA: User accepted the install prompt');
-    } else {
-      console.log('PWA: User dismissed the install prompt');
-    }
-
-    // Clear the deferred prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('PWA: User choice:', outcome);
     setDeferredPrompt(null);
     setShowInstallButton(false);
   };
 
-  // Don't show if already installed or prompt not available
-  if (isInstalled || !showInstallButton) {
-    return null;
-  }
+  if (isInstalled || !showInstallButton) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-sm">
-      <div className="bg-blue-600 text-white p-4 rounded-lg shadow-lg border border-blue-500">
-        <div className="flex items-center gap-3">
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-              <svg 
-                className="w-6 h-6" 
-                fill="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-            </div>
+    <div style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: 50, maxWidth: '360px' }}>
+      <div style={{
+        background: '#2563eb', color: '#fff', padding: '16px',
+        borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.2)', border: '1px solid #3b82f6',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '48px', height: '48px', background: '#3b82f6',
+            borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold">Install MATKAKING App</h3>
-            <p className="text-xs text-blue-100 mt-1">
-              Get faster access with our app! Add to home screen for quick results.
+          <div style={{ flex: 1 }}>
+            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600 }}>Install MATKAKING App</h3>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#bfdbfe' }}>
+              Get faster access — add to home screen for quick results.
             </p>
           </div>
           <button
             onClick={() => setShowInstallButton(false)}
-            className="flex-shrink-0 text-blue-200 hover:text-white p-1"
             aria-label="Dismiss"
+            style={{ flexShrink: 0, background: 'transparent', border: 'none', color: '#93c5fd', cursor: 'pointer', padding: '4px' }}
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-            </svg>
+            ✕
           </button>
         </div>
-        <div className="mt-3 flex gap-2">
+        <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
           <button
             onClick={handleInstallClick}
-            className="flex-1 bg-white text-blue-600 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-blue-50 transition-colors"
+            style={{
+              flex: 1, background: '#fff', color: '#2563eb', border: 'none',
+              padding: '8px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer',
+            }}
           >
             Install App
           </button>
           <button
             onClick={() => setShowInstallButton(false)}
-            className="px-4 py-2 text-blue-100 text-sm hover:text-white transition-colors"
+            style={{ padding: '8px 16px', background: 'transparent', border: 'none', color: '#bfdbfe', fontSize: '14px', cursor: 'pointer' }}
           >
             Later
           </button>

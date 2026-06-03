@@ -1,5 +1,221 @@
 import { useState, useEffect } from 'react';
 
+const S = {
+  container: {
+    background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+    border: '1px solid #e2e8f0',
+    borderRadius: '10px',
+    padding: '16px',
+    marginTop: '12px',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '14px',
+    gap: '8px',
+    flexWrap: 'wrap',
+  },
+  headerInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    minWidth: 0,
+  },
+  icon: {
+    fontSize: '18px',
+    width: '36px',
+    height: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: '#3b82f6',
+    borderRadius: '8px',
+    flexShrink: 0,
+  },
+  title: {
+    margin: 0,
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#1e293b',
+  },
+  subtitle: {
+    margin: '2px 0 0 0',
+    fontSize: '12px',
+    color: '#64748b',
+  },
+  actions: {
+    display: 'flex',
+    gap: '6px',
+    flexShrink: 0,
+  },
+  btnBase: {
+    padding: '6px 14px',
+    borderRadius: '6px',
+    border: 'none',
+    fontSize: '13px',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'background 0.15s',
+  },
+  btnPrimary: {
+    background: '#3b82f6',
+    color: 'white',
+  },
+  btnSecondary: {
+    background: '#f1f5f9',
+    color: '#475569',
+    border: '1px solid #e2e8f0',
+  },
+  btnSmall: {
+    padding: '5px 10px',
+    fontSize: '12px',
+  },
+  btnFull: {
+    width: '100%',
+  },
+  btnDanger: {
+    background: '#fee2e2',
+    color: '#b91c1c',
+    border: '1px solid #fca5a5',
+  },
+  resultsGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '12px',
+    marginBottom: '12px',
+  },
+  resultCard: {
+    background: 'white',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '12px',
+  },
+  resultHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px',
+  },
+  timeLabel: {
+    fontSize: '12px',
+    fontWeight: 500,
+    color: '#475569',
+  },
+  autoBadge: {
+    background: '#10b981',
+    color: 'white',
+    fontSize: '10px',
+    fontWeight: 700,
+    padding: '2px 6px',
+    borderRadius: '4px',
+    letterSpacing: '0.05em',
+  },
+  resultValue: {
+    fontSize: '20px',
+    fontWeight: 700,
+    textAlign: 'center',
+    padding: '8px',
+    background: '#f8fafc',
+    borderRadius: '6px',
+    color: '#1e293b',
+    fontFamily: 'monospace',
+  },
+  activeIndicator: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    background: '#dcfce7',
+    border: '1px solid #bbf7d0',
+    borderRadius: '6px',
+    padding: '8px 12px',
+    marginBottom: '10px',
+    fontSize: '12px',
+    color: '#166534',
+  },
+  activeDot: {
+    width: '8px',
+    height: '8px',
+    background: '#22c55e',
+    borderRadius: '50%',
+    flexShrink: 0,
+  },
+  overridePanel: {
+    background: 'white',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '14px',
+    marginBottom: '12px',
+  },
+  overrideTitle: {
+    margin: '0 0 12px 0',
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#1e293b',
+  },
+  formRow: {
+    marginBottom: '10px',
+  },
+  formLabel: {
+    display: 'block',
+    marginBottom: '4px',
+    fontSize: '12px',
+    fontWeight: 500,
+    color: '#374151',
+  },
+  formSelect: {
+    width: '100%',
+    padding: '7px 10px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '13px',
+    background: 'white',
+  },
+  formInput: {
+    flex: 1,
+    padding: '7px 10px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    fontFamily: 'monospace',
+    fontWeight: 600,
+    textAlign: 'center',
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+  panelInputRow: {
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center',
+  },
+  formActions: {
+    display: 'flex',
+    gap: '8px',
+    marginTop: '12px',
+  },
+  helpText: {
+    fontSize: '11px',
+    color: '#94a3b8',
+    lineHeight: 1.5,
+    borderTop: '1px solid #f1f5f9',
+    paddingTop: '10px',
+    marginTop: '4px',
+  },
+  helpItem: {
+    marginBottom: '2px',
+  },
+  loading: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '16px',
+    background: '#f8fafc',
+    borderRadius: '8px',
+    fontSize: '13px',
+    color: '#64748b',
+  },
+};
+
 export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime }) {
   const [autoResults, setAutoResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -9,17 +225,15 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
 
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // Fetch auto-declared results
   const fetchAutoResults = async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/v1/admin/auto-results?marketId=${marketId}&date=${todayStr}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
-          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || ''
-        }
+          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
+        },
       });
-
       if (response.ok) {
         const data = await response.json();
         setAutoResults(data.data);
@@ -31,27 +245,24 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
     }
   };
 
-  // Override auto-declared result
   const handleOverride = async (e) => {
     e.preventDefault();
     setOverriding(true);
-
     try {
       const response = await fetch('/api/v1/admin/auto-results/override', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
-          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || ''
+          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
         },
         body: JSON.stringify({
           marketId,
           date: todayStr,
           session: overrideForm.session,
-          panel: overrideForm.panel
-        })
+          panel: overrideForm.panel,
+        }),
       });
-
       if (response.ok) {
         fetchAutoResults();
         setShowOverride(false);
@@ -68,36 +279,32 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
     }
   };
 
-  // Generate random panel for preview
   const generateRandomPanel = async () => {
     try {
       const response = await fetch('/api/v1/admin/generate-panel', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
-          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || ''
-        }
+          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
+        },
       });
-
       if (response.ok) {
         const data = await response.json();
-        setOverrideForm(prev => ({ ...prev, panel: data.data.panel }));
+        setOverrideForm((prev) => ({ ...prev, panel: data.data.panel }));
       }
     } catch (error) {
       console.error('Failed to generate random panel:', error);
     }
   };
 
-  // Trigger auto-declaration check
   const triggerAutoCheck = async () => {
     try {
       const response = await fetch('/api/v1/admin/auto-results/trigger', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
-          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || ''
-        }
+          'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
+        },
       });
-
       if (response.ok) {
         fetchAutoResults();
       }
@@ -108,17 +315,25 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
 
   useEffect(() => {
     fetchAutoResults();
-    
-    // Refresh every 30 seconds
     const interval = setInterval(fetchAutoResults, 30000);
     return () => clearInterval(interval);
   }, [marketId]);
 
   if (loading && !autoResults) {
     return (
-      <div className="auto-declaration-loading">
-        <div className="auto-spinner"></div>
+      <div style={S.loading}>
+        <span style={{
+          width: '14px',
+          height: '14px',
+          border: '2px solid #e2e8f0',
+          borderTop: '2px solid #3b82f6',
+          borderRadius: '50%',
+          display: 'inline-block',
+          animation: 'adp-spin 0.8s linear infinite',
+          flexShrink: 0,
+        }} />
         <span>Loading auto-declaration status...</span>
+        <style>{`@keyframes adp-spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -126,97 +341,93 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
   const hasAutoResults = autoResults?.openPanel || autoResults?.closePanel;
 
   return (
-    <div className="auto-declaration-container">
-      <div className="auto-declaration-header">
-        <div className="auto-declaration-info">
-          <div className="auto-icon">🤖</div>
+    <div style={S.container}>
+      {/* Header row */}
+      <div style={S.header}>
+        <div style={S.headerInfo}>
+          <div style={S.icon}>🤖</div>
           <div>
-            <h4>Auto Declaration - {marketName}</h4>
-            <p>System automatically generates results 1 minute before time</p>
+            <h4 style={S.title}>Auto Declaration — {marketName}</h4>
+            <p style={S.subtitle}>Auto-generates results 1 min before time</p>
           </div>
         </div>
-        <div className="auto-actions">
+        <div style={S.actions}>
           <button
+            type="button"
             onClick={triggerAutoCheck}
-            className="auto-btn auto-btn-secondary"
+            style={{ ...S.btnBase, ...S.btnSecondary }}
           >
             Check Now
           </button>
           <button
-            onClick={() => setShowOverride(!showOverride)}
-            className="auto-btn auto-btn-primary"
+            type="button"
+            onClick={() => setShowOverride((v) => !v)}
+            style={{ ...S.btnBase, ...S.btnPrimary }}
           >
-            Override
+            {showOverride ? 'Cancel' : 'Override'}
           </button>
         </div>
       </div>
 
-      <div className="auto-results-grid">
-        <div className="auto-result-card">
-          <div className="auto-result-header">
-            <span className="auto-time">Open Time: {openTime}</span>
+      {/* Result cards */}
+      <div style={S.resultsGrid}>
+        <div style={S.resultCard}>
+          <div style={S.resultHeader}>
+            <span style={S.timeLabel}>Open — {openTime}</span>
             {autoResults?.isAutoGenerated?.open && (
-              <span className="auto-badge">AUTO</span>
+              <span style={S.autoBadge}>AUTO</span>
             )}
           </div>
-          <div className="auto-result-value">
+          <div style={S.resultValue}>
             {autoResults?.openPanel || '---'}
           </div>
         </div>
 
-        <div className="auto-result-card">
-          <div className="auto-result-header">
-            <span className="auto-time">Close Time: {closeTime}</span>
+        <div style={S.resultCard}>
+          <div style={S.resultHeader}>
+            <span style={S.timeLabel}>Close — {closeTime}</span>
             {autoResults?.isAutoGenerated?.close && (
-              <span className="auto-badge">AUTO</span>
+              <span style={S.autoBadge}>AUTO</span>
             )}
           </div>
-          <div className="auto-result-value">
+          <div style={S.resultValue}>
             {autoResults?.closePanel || '---'}
           </div>
         </div>
       </div>
 
-      {autoResults?.jodi && (
-        <div className="auto-jodi-display">
-          <div className="auto-jodi-badge">
-            <span>Jodi: </span>
-            <strong>{autoResults.jodi}</strong>
-          </div>
-        </div>
-      )}
-
+      {/* Active indicator — replaces the huge ✅ emoji block */}
       {hasAutoResults && (
-        <div className="auto-status-info">
-          <div className="auto-status-icon">✅</div>
-          <span>
-            Auto-declaration active. System will automatically declare results 1 minute before time if not manually set.
-          </span>
+        <div style={S.activeIndicator}>
+          <span style={S.activeDot} />
+          Auto-declaration active — results auto-generated 1 min before time.
         </div>
       )}
 
+      {/* Override form */}
       {showOverride && (
-        <div className="auto-override-panel">
-          <h4>Override Auto-Declared Result</h4>
-          <form onSubmit={handleOverride} className="auto-override-form">
-            <div className="auto-form-row">
-              <label>Session</label>
+        <div style={S.overridePanel}>
+          <h4 style={S.overrideTitle}>Override Auto-Declared Result</h4>
+          <form onSubmit={handleOverride}>
+            <div style={S.formRow}>
+              <label style={S.formLabel}>Session</label>
               <select
+                style={S.formSelect}
                 value={overrideForm.session}
-                onChange={(e) => setOverrideForm(prev => ({ ...prev, session: e.target.value }))}
+                onChange={(e) => setOverrideForm((prev) => ({ ...prev, session: e.target.value }))}
               >
                 <option value="open">Open</option>
                 <option value="close">Close</option>
               </select>
             </div>
-
-            <div className="auto-form-row">
-              <label>Panel (3 digits)</label>
-              <div className="auto-panel-input">
+            <div style={S.formRow}>
+              <label style={S.formLabel}>Panel (3 digits)</label>
+              <div style={S.panelInputRow}>
                 <input
                   type="text"
+                  style={S.formInput}
                   value={overrideForm.panel}
-                  onChange={(e) => setOverrideForm(prev => ({ ...prev, panel: e.target.value.slice(0, 3) }))}
+                  onChange={(e) => setOverrideForm((prev) => ({ ...prev, panel: e.target.value.replace(/\D/g, '').slice(0, 3) }))}
                   placeholder="000"
                   pattern="[0-9]{3}"
                   maxLength={3}
@@ -225,25 +436,24 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
                 <button
                   type="button"
                   onClick={generateRandomPanel}
-                  className="auto-btn auto-btn-small"
+                  style={{ ...S.btnBase, ...S.btnSecondary, ...S.btnSmall, flexShrink: 0 }}
                 >
                   Random
                 </button>
               </div>
             </div>
-
-            <div className="auto-form-actions">
+            <div style={S.formActions}>
               <button
                 type="submit"
                 disabled={overriding}
-                className="auto-btn auto-btn-primary auto-btn-full"
+                style={{ ...S.btnBase, ...S.btnPrimary, flex: 1, opacity: overriding ? 0.7 : 1 }}
               >
                 {overriding ? 'Overriding...' : 'Override Result'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowOverride(false)}
-                className="auto-btn auto-btn-secondary"
+                style={{ ...S.btnBase, ...S.btnSecondary }}
               >
                 Cancel
               </button>
@@ -252,289 +462,12 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
         </div>
       )}
 
-      <div className="auto-help-text">
-        <div>• System automatically generates results 1 minute before declaration time</div>
-        <div>• Auto-generated results are marked with "AUTO" badge</div>
-        <div>• Admin can override auto-generated results at any time</div>
-        <div>• Manual results take priority over auto-generated ones</div>
+      {/* Help text */}
+      <div style={S.helpText}>
+        <div style={S.helpItem}>• Auto-generates results 1 minute before declaration time</div>
+        <div style={S.helpItem}>• Auto-generated results show <strong>AUTO</strong> badge</div>
+        <div style={S.helpItem}>• Admin can override at any time — manual results take priority</div>
       </div>
-
-      <style jsx>{`
-        .auto-declaration-container {
-          background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
-          padding: 20px;
-          margin-top: 16px;
-          position: relative;
-          z-index: 1;
-        }
-
-        .auto-declaration-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-
-        .auto-declaration-info {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .auto-icon {
-          font-size: 24px;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #3b82f6;
-          border-radius: 8px;
-        }
-
-        .auto-declaration-info h4 {
-          margin: 0;
-          font-size: 16px;
-          font-weight: 600;
-          color: #1e293b;
-        }
-
-        .auto-declaration-info p {
-          margin: 4px 0 0 0;
-          font-size: 14px;
-          color: #64748b;
-        }
-
-        .auto-actions {
-          display: flex;
-          gap: 8px;
-        }
-
-        .auto-btn {
-          padding: 8px 16px;
-          border-radius: 6px;
-          border: none;
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .auto-btn-primary {
-          background: #3b82f6;
-          color: white;
-        }
-
-        .auto-btn-primary:hover {
-          background: #2563eb;
-        }
-
-        .auto-btn-secondary {
-          background: #f1f5f9;
-          color: #475569;
-          border: 1px solid #e2e8f0;
-        }
-
-        .auto-btn-secondary:hover {
-          background: #e2e8f0;
-        }
-
-        .auto-btn-small {
-          padding: 6px 12px;
-          font-size: 12px;
-        }
-
-        .auto-btn-full {
-          width: 100%;
-        }
-
-        .auto-results-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-          margin-bottom: 16px;
-        }
-
-        .auto-result-card {
-          background: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 16px;
-        }
-
-        .auto-result-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-        }
-
-        .auto-time {
-          font-size: 14px;
-          font-weight: 500;
-          color: #475569;
-        }
-
-        .auto-badge {
-          background: #10b981;
-          color: white;
-          font-size: 11px;
-          font-weight: 600;
-          padding: 2px 6px;
-          border-radius: 4px;
-        }
-
-        .auto-result-value {
-          font-size: 24px;
-          font-weight: 700;
-          text-align: center;
-          padding: 12px;
-          background: #f8fafc;
-          border-radius: 6px;
-          color: #1e293b;
-        }
-
-        .auto-jodi-display {
-          text-align: center;
-          margin-bottom: 16px;
-        }
-
-        .auto-jodi-badge {
-          display: inline-block;
-          background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-          color: white;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 16px;
-          font-weight: 600;
-        }
-
-        .auto-status-info {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: #dcfce7;
-          border: 1px solid #bbf7d0;
-          border-radius: 8px;
-          padding: 12px;
-          margin-bottom: 16px;
-          font-size: 14px;
-          color: #166534;
-        }
-
-        .auto-status-icon {
-          font-size: 16px;
-          flex-shrink: 0;
-        }
-
-        .auto-override-panel {
-          background: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 16px;
-          margin-bottom: 16px;
-        }
-
-        .auto-override-panel h4 {
-          margin: 0 0 16px 0;
-          font-size: 16px;
-          color: #1e293b;
-        }
-
-        .auto-form-row {
-          margin-bottom: 12px;
-        }
-
-        .auto-form-row label {
-          display: block;
-          margin-bottom: 4px;
-          font-size: 14px;
-          font-weight: 500;
-          color: #374151;
-        }
-
-        .auto-form-row select,
-        .auto-form-row input {
-          width: 100%;
-          padding: 8px 12px;
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          font-size: 14px;
-        }
-
-        .auto-panel-input {
-          display: flex;
-          gap: 8px;
-        }
-
-        .auto-panel-input input {
-          flex: 1;
-          text-align: center;
-          font-family: monospace;
-          font-size: 18px;
-          font-weight: 600;
-        }
-
-        .auto-form-actions {
-          display: flex;
-          gap: 8px;
-          margin-top: 16px;
-        }
-
-        .auto-help-text {
-          font-size: 12px;
-          color: #64748b;
-          line-height: 1.4;
-        }
-
-        .auto-help-text div {
-          margin-bottom: 2px;
-        }
-
-        .auto-declaration-loading {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 20px;
-          background: #f8fafc;
-          border-radius: 8px;
-          font-size: 14px;
-          color: #64748b;
-        }
-
-        .auto-spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid #e2e8f0;
-          border-top: 2px solid #3b82f6;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-          .auto-results-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .auto-declaration-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-          }
-          
-          .auto-actions {
-            width: 100%;
-            justify-content: flex-end;
-          }
-        }
-      `}</style>
     </div>
   );
 }

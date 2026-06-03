@@ -47,8 +47,12 @@ DPBOSS/
 │   │   │   │   └── live/           # Live results page
 │   │   │   └── static-pages/       # Static content pages
 │   │   ├── components/             # Shared UI components
+│   │   │   ├── admin/              # Admin-specific components
+│   │   │   │   └── AutoDeclarationPanel.jsx  # Auto result generation UI
 │   │   │   ├── content/            # Content rendering components
-│   │   │   └── market/             # Market-specific components
+│   │   │   ├── market/             # Market-specific components
+│   │   │   └── pwa/                # Progressive Web App components
+│   │   │       └── PWAInstaller.jsx # PWA install button component
 │   │   ├── hooks/                  # Custom React hooks
 │   │   └── App.jsx                 # Main application component
 │   ├── api/                        # Vercel serverless functions
@@ -65,6 +69,7 @@ DPBOSS/
 │   ├── services/                   # Business logic services
 │   │   ├── content/                # Content generation and management
 │   │   ├── matka/                  # Matka-specific business logic
+│   │   │   └── auto-declaration-service.js # Automated result generation
 │   │   ├── queue/                  # Background job processing
 │   │   ├── realtime/               # Socket.io and SSE handling
 │   │   └── scraper/                # Web scraping services
@@ -106,8 +111,21 @@ DPBOSS/
 - **Chart Management:** Historical data entry and management
 - **Audit Logging:** Complete audit trail for all administrative actions
 - **User Management:** Admin user management with role-based access
+- **Auto-Declaration System:** Automated result generation 1 minute before declaration time
+  - Automatic panel generation using secure algorithms
+  - Override capabilities for manual control
+  - Visual status indicators for auto-generated vs manual results
+  - Integration with existing admin workflow
 
-### 5. API Architecture
+### 5. Progressive Web App (PWA) Features
+- **PWA Installation:** Native app-like installation experience
+- **Floating Install Button:** Prominent install button with Matka Play styling
+- **Service Worker:** Offline caching and background sync capabilities
+- **Web App Manifest:** Full PWA configuration with icons and metadata
+- **Mobile Optimization:** Enhanced mobile experience with app-like behavior
+- **Push Notifications:** Real-time result notifications (ready for implementation)
+
+### 6. API Architecture
 - **RESTful Design:** Clean API structure with proper HTTP methods
 - **Versioning:** `/api/v1/` for new features, legacy routes for backward compatibility
 - **Rate Limiting:** 240 requests/minute general, 60 requests/minute for strict endpoints
@@ -216,6 +234,12 @@ PATCH /api/v1/admin/markets/:id/toggle-active - Toggle market status
 PUT  /api/v1/admin/markets/:id/results/open   - Publish open result
 PUT  /api/v1/admin/markets/:id/results/close  - Publish close result
 GET  /api/v1/admin/audit-logs        - Admin action audit trail
+
+# Auto-Declaration System APIs
+GET  /api/v1/admin/auto-results      - Get auto-declared results for a market/date
+POST /api/v1/admin/auto-results/override - Override auto-declared result
+POST /api/v1/admin/auto-results/trigger  - Manually trigger auto-declaration check
+GET  /api/v1/admin/generate-panel    - Generate random panel for testing
 ```
 
 ### Frontend Routes
@@ -265,7 +289,14 @@ RATE_LIMIT_STRICT_MAX=60
 # Matka Configuration
 MATKA_TIMEZONE=Asia/Kolkata
 MATKA_REVEAL_LOADING_MS=15000
+MATKA_PRE_REVEAL_LOADING_MS=300000
+MATKA_OPEN_RESULT_VISIBLE_MS=120000
+MATKA_PRIORITY_LEAD_MS=300000
 MARKET_CONTENT_SOURCE=mongo
+
+# Auto-Declaration System
+AUTO_DECLARATION_ENABLED=true
+AUTO_DECLARATION_LEAD_TIME_MS=60000
 
 # Email Configuration (Contact Forms)
 SMTP_HOST=smtp.hostinger.com
@@ -306,6 +337,150 @@ The project uses a split deployment approach for optimal performance and cost:
 - MongoDB database connection
 - Real-time Socket.io server
 - Background scraping services
+
+### Production Deployment Guide
+
+#### Prerequisites
+- Server with Node.js 20+ and PM2 installed
+- MongoDB database (local or Atlas)
+- Domain name configured (optional)
+- SSL certificate (recommended)
+
+#### Step-by-Step Deployment Process
+
+##### 1. Server Setup and Code Deployment
+```bash
+# Navigate to project directory (usually /var/www/dpboss)
+cd /var/www/dpboss
+
+# Stop existing PM2 processes
+pm2 stop matkaking-backend
+
+# Pull latest changes from GitHub
+git pull origin main
+
+# Install dependencies for both backend and frontend
+npm install
+cd client && npm install && cd ..
+```
+
+##### 2. Environment Configuration
+```bash
+# Check and update backend environment variables
+cat .env | grep -E "(MATKA_|CSRF_|MONGODB_)"
+
+# Edit .env file if needed
+nano .env
+
+# Ensure these variables are set:
+# MATKA_REVEAL_LOADING_MS=5000
+# MATKA_PRE_REVEAL_LOADING_MS=300000
+# MATKA_OPEN_RESULT_VISIBLE_MS=120000
+# MATKA_PRIORITY_LEAD_MS=300000
+# CSRF_TOKEN=your-csrf-token
+
+# Check client environment variables
+cat client/.env
+
+# Edit client .env if needed
+nano client/.env
+# Ensure VITE_CSRF_TOKEN matches backend CSRF_TOKEN
+```
+
+##### 3. Build and Deploy
+```bash
+# Extract content and import markets (if needed)
+npm run content:extract
+npm run market:import
+
+# Build the application
+npm run build
+
+# Restart PM2 with cluster mode
+pm2 restart matkaking-backend
+```
+
+##### 4. Verification and Monitoring
+```bash
+# Check PM2 status
+pm2 status
+
+# Monitor application logs
+pm2 logs matkaking-backend --lines 20
+
+# Test key endpoints
+curl http://localhost:4000/health
+curl http://localhost:4000/manifest.json
+curl http://localhost:4000/api/v1/all
+
+# Check auto-declaration service (requires admin token)
+curl -X GET "http://localhost:4000/api/v1/admin/generate-panel" \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -H "X-CSRF-Token: YOUR_CSRF_TOKEN"
+```
+
+##### 5. Feature Verification Checklist
+After deployment, verify these new features are working:
+
+**PWA Features:**
+- [ ] PWA install button appears on homepage (bottom-right floating button)
+- [ ] Button has blue gradient styling with star icon
+- [ ] Clicking shows browser install prompt or manual instructions
+- [ ] Manifest.json is accessible at `/manifest.json`
+- [ ] Service worker registration in browser console
+
+**Auto-Declaration System:**
+- [ ] Admin dashboard shows auto-declaration panel for each market
+- [ ] Panel displays market open/close times
+- [ ] "Check Now" and "Override" buttons are functional
+- [ ] Auto-generated results show "AUTO" badge
+- [ ] Override form allows manual panel entry
+- [ ] System generates results 1 minute before declaration time
+
+**Admin Dashboard:**
+- [ ] Auto-declaration panel integrates cleanly without UI overlap
+- [ ] No large circular elements covering content
+- [ ] All existing admin functions still work
+- [ ] Market management operates normally
+- [ ] Result publishing works for both manual and auto modes
+
+#### Troubleshooting Common Deployment Issues
+
+**PWA Button Not Appearing:**
+```bash
+# Check if button component is loaded
+curl -s http://localhost:4000 | grep -i "pwa\|install"
+
+# Verify manifest.json accessibility
+curl -I http://localhost:4000/manifest.json
+
+# Check browser console for PWA errors
+# Look for service worker registration messages
+```
+
+**Auto-Declaration Not Working:**
+```bash
+# Check if auto-declaration service started
+pm2 logs matkaking-backend | grep -i "auto_declaration"
+
+# Verify MongoDB connection
+pm2 logs matkaking-backend | grep -i "mongodb\|connected"
+
+# Test manual generation
+curl -X POST http://localhost:4000/api/v1/admin/auto-results/trigger \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+**UI Overlap Issues:**
+```bash
+# Clear browser cache and hard refresh
+# Check for CSS conflicts in browser developer tools
+# Verify all static assets are serving correctly
+
+# Rebuild if styling issues persist
+npm run build
+pm2 restart matkaking-backend
+```
 
 ### Deployment Process
 

@@ -1747,8 +1747,14 @@ body {
 .market-management-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  grid-template-rows: auto auto;
   gap: 16px;
   padding: 16px 18px;
+}
+
+/* Auto-declaration panel spans both columns */
+.market-management-grid .auto-declaration-panel {
+  grid-column: 1 / -1;
 }
 
 .market-admin-panel {
@@ -1756,6 +1762,7 @@ body {
   border-radius: 10px;
   background: var(--admin-soft);
   padding: 14px;
+  overflow: hidden;
 }
 
 .market-section-title {
