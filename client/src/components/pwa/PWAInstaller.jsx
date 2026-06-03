@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // Simple PWA Install Button that always shows for testing
 export function PWAFloatingButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showButton, setShowButton] = useState(false);
+  const [showButton, setShowButton] = useState(true); // Always show for now
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
@@ -38,17 +38,9 @@ export function PWAFloatingButton() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
 
-    // Show button after 3 seconds for testing (remove in production)
-    const timer = setTimeout(() => {
-      if (!isInstalled && !showButton) {
-        setShowButton(true);
-      }
-    }, 3000);
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
-      clearTimeout(timer);
     };
   }, []);
 
@@ -74,21 +66,23 @@ export function PWAFloatingButton() {
     }
   };
 
-  // Don't show if already installed
-  if (isInstalled) {
-    return null;
-  }
+  // Don't show if already installed - but for testing, let's always show
+  // if (isInstalled) {
+  //   return null;
+  // }
 
-  // Always show the button for now (you can add conditions later)
+  // Always show the button for testing
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50" style={{ zIndex: 9999 }}>
       <button
         onClick={handleInstall}
         className="group relative w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
         title="Install MATKAKING App"
         style={{
           background: 'linear-gradient(135deg, #1e40af 0%, #7c3aed 100%)',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1)'
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1)',
+          zIndex: 9999,
+          position: 'fixed'
         }}
       >
         {/* Matka Play Style Icon */}

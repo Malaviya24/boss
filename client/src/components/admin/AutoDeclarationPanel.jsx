@@ -266,6 +266,8 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
           border-radius: 12px;
           padding: 20px;
           margin-top: 16px;
+          position: relative;
+          z-index: 1;
         }
 
         .auto-declaration-header {
@@ -424,6 +426,7 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
 
         .auto-status-icon {
           font-size: 16px;
+          flex-shrink: 0;
         }
 
         .auto-override-panel {
