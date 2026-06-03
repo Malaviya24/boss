@@ -1,6 +1,6 @@
 import { MatkaAdminAuditLogModel } from '../../models/matka-admin-audit-log-model.js';
 
-export function createMatkaAuditService({ enabled }) {
+export function createMatkaAuditService({ enabled } = {}) {
   async function log({
     adminUser,
     action,
