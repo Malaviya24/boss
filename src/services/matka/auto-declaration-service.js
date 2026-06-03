@@ -36,18 +36,38 @@ export function createAutoDeclarationService({ timezone = 'Asia/Kolkata' } = {})
     return current >= oneMinuteBefore && current < result;
   }
 
-  // Parse time string in 24-hour HH:MM format (as stored by the schema, e.g. "10:00", "14:30")
+  // Get precise IST Context for the current exact moment
+  function getIstContext(dateObj = new Date()) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric', month: 'numeric', day: 'numeric'
+    });
+    const parts = formatter.formatToParts(dateObj);
+    const istYear = parseInt(parts.find(p => p.type === 'year').value, 10);
+    const istMonth = parseInt(parts.find(p => p.type === 'month').value, 10);
+    const istDay = parseInt(parts.find(p => p.type === 'day').value, 10);
+    
+    return {
+      year: istYear,
+      month: istMonth,
+      day: istDay,
+      dateString: `${istYear}-${String(istMonth).padStart(2, '0')}-${String(istDay).padStart(2, '0')}`
+    };
+  }
+
+  // Parse time string (e.g. "14:30") into a Date object representing that exact time TODAY in IST
   function parseTimeToToday(timeStr) {
     const [hours, minutes] = String(timeStr ?? '').split(':').map(Number);
-
     if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
       return null;
     }
 
-    const resultTime = new Date();
-    resultTime.setHours(hours, minutes, 0, 0);
+    const { year, month, day } = getIstContext(new Date());
 
-    return resultTime;
+    // Create a UTC date representing that exact IST time
+    // IST is UTC+5:30. So we subtract 5 hours and 30 minutes from the local IST hours/minutes.
+    // Date.UTC safely handles negative roll-overs (e.g., if it rolls back to previous day in UTC).
+    return new Date(Date.UTC(year, month - 1, day, hours - 5, minutes - 30, 0, 0));
   }
 
   // Check and auto-declare results for all markets
@@ -55,7 +75,7 @@ export function createAutoDeclarationService({ timezone = 'Asia/Kolkata' } = {})
     try {
       const markets = await MatkaMarketModel.find({ isActive: true });
       const now = new Date();
-      const todayStr = now.toISOString().split('T')[0];
+      const { dateString: todayStr } = getIstContext(now);
 
       for (const market of markets) {
         // Check open time
