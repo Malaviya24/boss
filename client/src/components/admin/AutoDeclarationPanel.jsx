@@ -223,7 +223,17 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
   const [showOverride, setShowOverride] = useState(false);
   const [overrideForm, setOverrideForm] = useState({ session: 'open', panel: '' });
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = (() => {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric', month: 'numeric', day: 'numeric'
+    });
+    const parts = formatter.formatToParts(new Date());
+    const y = parts.find(p => p.type === 'year').value;
+    const m = parts.find(p => p.type === 'month').value.padStart(2, '0');
+    const d = parts.find(p => p.type === 'day').value.padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  })();
 
   const fetchAutoResults = async () => {
     setLoading(true);
