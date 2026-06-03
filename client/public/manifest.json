@@ -12,27 +12,21 @@
   "lang": "en-IN",
   "icons": [
     {
-      "src": "pwa-icon-192.png",
+      "src": "logo.jpeg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable any"
     },
     {
-      "src": "pwa-icon-512.png", 
+      "src": "logo.jpeg", 
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable any"
     },
     {
-      "src": "pwa-icon-192.png",
-      "sizes": "192x192", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "pwa-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png", 
+      "src": "favicon.ico",
+      "sizes": "64x64", 
+      "type": "image/x-icon",
       "purpose": "any"
     }
   ],
@@ -41,12 +35,12 @@
       "name": "Live Results",
       "short_name": "Live",
       "description": "View live Matka results",
-      "url": "/live",
+      "url": "/",
       "icons": [
         {
-          "src": "pwa-icon-192.png",
+          "src": "logo.jpeg",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/jpeg"
         }
       ]
     },
@@ -57,9 +51,9 @@
       "url": "/admin-x-secure-portal",
       "icons": [
         {
-          "src": "pwa-icon-192.png", 
+          "src": "logo.jpeg", 
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/jpeg"
         }
       ]
     }
