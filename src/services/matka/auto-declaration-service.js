@@ -6,7 +6,7 @@ import { createMatkaAuditService } from './matka-audit-service.js';
 const logger = createLogger('auto-declaration');
 
 export function createAutoDeclarationService({ timezone = 'Asia/Kolkata' } = {}) {
-  const auditService = createMatkaAuditService();
+  const auditService = createMatkaAuditService({ enabled: true });
   let intervalId = null;
 
   // Generate random 3-digit panel number
