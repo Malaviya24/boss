@@ -42,6 +42,7 @@ import {
   createV1LiveMarketBySlugController,
   createV1LiveMarketsController,
 } from '../../controllers/v1-live-markets-controller.js';
+import { createAutoDeclarationController } from '../../controllers/auto-declaration-controller.js';
 
 export function createV1MatkaRoutes({
   matkaService,
@@ -56,6 +57,7 @@ export function createV1MatkaRoutes({
 
   const ensureMatkaEnabled = createMatkaEnabledGuard(matkaService);
   const requireAdminAuth = createMatkaAdminAuthMiddleware(matkaAuthService);
+  const autoDeclarationController = createAutoDeclarationController();
 
   router.get('/live/markets', ensureMatkaEnabled, createV1LiveMarketsController(matkaService));
   router.get(
@@ -199,6 +201,39 @@ export function createV1MatkaRoutes({
     requireAdminAuth,
     validateQuery(matkaAuditQuerySchema),
     createV1AdminAuditLogsController(auditService),
+  );
+
+  // Auto-declaration routes
+  router.get(
+    '/admin/auto-results',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    autoDeclarationController.getAutoResults,
+  );
+
+  router.post(
+    '/admin/auto-results/override',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    autoDeclarationController.overrideAutoResult,
+  );
+
+  router.post(
+    '/admin/auto-results/trigger',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    autoDeclarationController.triggerAutoCheck,
+  );
+
+  router.get(
+    '/admin/generate-panel',
+    matkaNoIndexHeader,
+    ensureMatkaEnabled,
+    requireAdminAuth,
+    autoDeclarationController.generateRandomPanel,
   );
 
   return router;

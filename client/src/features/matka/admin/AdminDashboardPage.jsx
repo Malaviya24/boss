@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMatkaRealtime } from '../../../hooks/matka/useMatkaRealtime.js';
+import { AutoDeclarationPanel } from '../../../components/admin/AutoDeclarationPanel.jsx';
 import {
   addManualMarketChartRow,
   createAdminMarket,
@@ -738,6 +739,13 @@ function AdminMarketRow({
           </p>
         </section>
       </div>
+
+      <AutoDeclarationPanel 
+        marketId={market.id}
+        marketName={market.name}
+        openTime={market.openTime}
+        closeTime={market.closeTime}
+      />
 
       <section className="market-admin-panel market-chart-tools">
         <div className="market-section-title">

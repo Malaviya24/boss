@@ -27,6 +27,7 @@ import { createMarketContentAdminService } from './services/market-content/marke
 import { createMatkaAuthService } from './services/matka/matka-auth-service.js';
 import { createMatkaAuditService } from './services/matka/matka-audit-service.js';
 import { createMatkaService } from './services/matka/matka-service.js';
+import { createAutoDeclarationService } from './services/matka/auto-declaration-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -202,6 +203,9 @@ export async function bootstrapApp() {
   const matkaAuditService = createMatkaAuditService({
     enabled: mongoState.enabled,
   });
+  const autoDeclarationService = createAutoDeclarationService({
+    timezone: env.matkaTimezone,
+  });
 
   if (env.marketContentSource === 'legacy') {
     const marketPagesRouter = createMarketPagesRouter({
@@ -340,6 +344,12 @@ export async function bootstrapApp() {
     });
   });
 
+  // Start auto-declaration service if MongoDB is enabled
+  if (mongoState.enabled && matkaService.enabled) {
+    autoDeclarationService.start();
+    logger.info('auto_declaration_service_started');
+  }
+
   // Periodic chart sync: check every 30 seconds for results that have passed their
   // closeRevealAt time but haven't been synced to chart data yet.
   const chartSyncInterval = setInterval(async () => {
@@ -397,6 +407,7 @@ export async function bootstrapApp() {
   async function shutdown(signal) {
     logger.info('server_shutdown_started', { signal });
     clearInterval(chartSyncInterval);
+    autoDeclarationService.stop();
     await queueService.close().catch(() => undefined);
     await store.close().catch(() => undefined);
     await disconnectMongo({ logger }).catch(() => undefined);

@@ -7,6 +7,8 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
+import { PWAFloatingButton } from './components/pwa/PWAInstaller.jsx';
+import { registerServiceWorker, setupOfflineHandling } from './utils/pwa.js';
 
 const HomePage = lazy(() => import('./features/homepage/HomePage.jsx'));
 const MarketPage = lazy(() => import('./features/market/MarketPage.jsx'));
@@ -164,9 +166,18 @@ function NavigationInterceptor() {
 }
 
 export default function App() {
+  useEffect(() => {
+    // Register service worker for PWA functionality
+    registerServiceWorker();
+    
+    // Setup offline/online handling
+    setupOfflineHandling();
+  }, []);
+
   return (
     <BrowserRouter>
       <NavigationInterceptor />
+      <PWAFloatingButton />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
