@@ -738,14 +738,21 @@ function AdminMarketRow({
             Today: {market.todayResult?.displayResult || market.todayResult?.openPanel || 'Result Coming'}
           </p>
         </section>
-      </div>
 
-      <AutoDeclarationPanel 
-        marketId={market.id}
-        marketName={market.name}
-        openTime={market.openTime}
-        closeTime={market.closeTime}
-      />
+        {/* Auto Declaration Panel */}
+        <section className="market-admin-panel auto-declaration-panel">
+          <div className="market-section-title">
+            <h4>Auto Declaration System</h4>
+            <span>Automatic result generation 1 minute before time</span>
+          </div>
+          <AutoDeclarationPanel 
+            marketId={market.id}
+            marketName={market.name}
+            openTime={market.openTime}
+            closeTime={market.closeTime}
+          />
+        </section>
+      </div>
 
       <section className="market-admin-panel market-chart-tools">
         <div className="market-section-title">

@@ -1,5 +1,196 @@
 import { useState, useEffect } from 'react';
 
+// Simple PWA Install Button that always shows for testing
+export function PWAFloatingButton() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showButton, setShowButton] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    // Check if already installed
+    const checkInstalled = () => {
+      const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+      const isWebkitStandalone = window.navigator.standalone === true;
+      return isStandalone || isWebkitStandalone;
+    };
+
+    if (checkInstalled()) {
+      setIsInstalled(true);
+      return;
+    }
+
+    // Listen for install prompt
+    const handleBeforeInstallPrompt = (event) => {
+      console.log('PWA: Install prompt available');
+      event.preventDefault();
+      setDeferredPrompt(event);
+      setShowButton(true);
+    };
+
+    // Listen for app installed
+    const handleAppInstalled = () => {
+      console.log('PWA: App installed');
+      setShowButton(false);
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // Show button after 3 seconds for testing (remove in production)
+    const timer = setTimeout(() => {
+      if (!isInstalled && !showButton) {
+        setShowButton(true);
+      }
+    }, 3000);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) {
+      // Fallback - show manual instructions
+      alert('To install this app:\n\n' +
+            'Chrome: Menu (⋮) → "Install app" or "Add to Home screen"\n' +
+            'Safari: Share button → "Add to Home Screen"\n' +
+            'Edge: Menu (⋯) → "Apps" → "Install this site as an app"');
+      return;
+    }
+
+    try {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      console.log('PWA Install choice:', choiceResult.outcome);
+      
+      setDeferredPrompt(null);
+      setShowButton(false);
+    } catch (error) {
+      console.error('PWA Install error:', error);
+    }
+  };
+
+  // Don't show if already installed
+  if (isInstalled) {
+    return null;
+  }
+
+  // Always show the button for now (you can add conditions later)
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <button
+        onClick={handleInstall}
+        className="group relative w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
+        title="Install MATKAKING App"
+        style={{
+          background: 'linear-gradient(135deg, #1e40af 0%, #7c3aed 100%)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1)'
+        }}
+      >
+        {/* Matka Play Style Icon */}
+        <div className="relative">
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+            <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded flex items-center justify-center">
+              <svg
+                 className="w-4 h-4 text-white"
+                 fill="currentColor"
+                 viewBox="0 0 24 24"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+          </div>
+          
+          {/* Pulsing indicator */}
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping" />
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full" />
+        </div>
+        
+        {/* Tooltip */}
+        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+          Install Matka App
+          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
+        </div>
+      </button>
+    </div>
+  );
+}
+
+// Alternative text-based button (use if icon doesn't work)
+export function PWATextButton() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      setDeferredPrompt(null);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      <button
+        onClick={handleInstall}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 text-sm font-medium"
+      >
+        📱 Install App
+      </button>
+    </div>
+  );
+}
+
+// Hook to detect PWA installation status
+export function usePWA() {
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  
+  useEffect(() => {
+    // Check if running in standalone mode
+    const checkStandalone = () => {
+      const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+      const webkitStandalone = window.navigator.standalone === true;
+      
+      setIsStandalone(standalone || webkitStandalone);
+    };
+    
+    // Check if app appears to be installed
+    const checkInstalled = () => {
+      const installed = 'serviceWorker' in navigator && 
+                       window.matchMedia('(display-mode: standalone)').matches;
+      setIsInstalled(installed);
+    };
+    
+    checkStandalone();
+    checkInstalled();
+    
+    // Listen for display mode changes
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    mediaQuery.addEventListener('change', checkStandalone);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', checkStandalone);
+    };
+  }, []);
+  
+  return { isInstalled, isStandalone };
+}
+
+// Alternative simple button for testing
 export function PWAInstaller() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -123,115 +314,5 @@ export function PWAInstaller() {
         </div>
       </div>
     </div>
-  );
-}
-
-// Hook to detect PWA installation status
-export function usePWA() {
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-  
-  useEffect(() => {
-    // Check if running in standalone mode
-    const checkStandalone = () => {
-      const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-      const webkitStandalone = window.navigator.standalone === true;
-      
-      setIsStandalone(standalone || webkitStandalone);
-    };
-    
-    // Check if app appears to be installed
-    const checkInstalled = () => {
-      const installed = 'serviceWorker' in navigator && 
-                       window.matchMedia('(display-mode: standalone)').matches;
-      setIsInstalled(installed);
-    };
-    
-    checkStandalone();
-    checkInstalled();
-    
-    // Listen for display mode changes
-    const mediaQuery = window.matchMedia('(display-mode: standalone)');
-    mediaQuery.addEventListener('change', checkStandalone);
-    
-    return () => {
-      mediaQuery.removeEventListener('change', checkStandalone);
-    };
-  }, []);
-  
-  return { isInstalled, isStandalone };
-}
-
-// Round floating action button for PWA install
-export function PWAFloatingButton() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showButton, setShowButton] = useState(false);
-  const { isInstalled, isStandalone } = usePWA();
-
-  useEffect(() => {
-    if (isInstalled || isStandalone) {
-      return;
-    }
-
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      setDeferredPrompt(event);
-      setShowButton(true);
-    };
-
-    const handleAppInstalled = () => {
-      setShowButton(false);
-      setDeferredPrompt(null);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, [isInstalled, isStandalone]);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
-    
-    console.log('PWA Install choice:', choiceResult.outcome);
-    
-    setDeferredPrompt(null);
-    setShowButton(false);
-  };
-
-  if (!showButton) {
-    return null;
-  }
-
-  return (
-    <button
-      onClick={handleInstall}
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center group"
-      title="Install MATKAKING App"
-    >
-      <div className="relative">
-        <svg 
-          className="w-7 h-7 group-hover:animate-pulse" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLineJoin="round" 
-            strokeWidth={2} 
-            d="M12 4v16m8-8H4" 
-          />
-        </svg>
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full" />
-      </div>
-    </button>
   );
 }
