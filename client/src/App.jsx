@@ -177,8 +177,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <NavigationInterceptor />
-      <PWAFloatingButton />
       <Suspense fallback={<RouteFallback />}>
+        <PWAFloatingButton />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/live" element={<Navigate to="/" replace />} />

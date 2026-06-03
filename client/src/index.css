@@ -375,8 +375,7 @@ body {
   text-transform: uppercase;
 }
 
-.market-page .mp-btn,
-.clone-app .mp-btn {
+.mp-btn {
   position: fixed;
   left: 10px;
   bottom: 8px;

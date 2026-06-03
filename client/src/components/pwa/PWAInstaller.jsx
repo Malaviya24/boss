@@ -5,6 +5,21 @@ export function PWAFloatingButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showButton, setShowButton] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isAppLoading, setIsAppLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if the website is still showing the loading screen
+    const checkLoading = () => {
+      setIsAppLoading(!!document.querySelector('.clone-loading'));
+    };
+    checkLoading(); // Initial check
+    
+    // Listen for DOM changes to detect when the loading screen is removed
+    const observer = new MutationObserver(checkLoading);
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (
@@ -56,32 +71,20 @@ export function PWAFloatingButton() {
     }
   };
 
-  if (!showButton) return null;
+  if (isAppLoading || !showButton) return null;
 
   return (
     <>
       <button
         onClick={handleInstallClick}
         title="Download App"
+        className="mp-btn"
         style={{
-          position: 'fixed',
-          left: '10px',
           bottom: '48px', /* Stacks exactly above the old Matka Play button which is at bottom: 8px */
-          zIndex: 10,
-          background: '#0054c7',
-          color: '#fff',
-          padding: '8px 12px',
-          textDecoration: 'none',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          border: '1px solid #fff',
-          borderRadius: '5px',
-          fontSize: '15px',
-          cursor: 'pointer',
-          boxShadow: 'none',
+          cursor: 'pointer'
         }}
       >
-        Download
+        <i>Download</i>
       </button>
 
       {/* ── Custom Themed Popup Modal ── */}
