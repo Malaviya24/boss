@@ -105,6 +105,12 @@ export function getCurrentDateKey(timeZone) {
   return `${now.year}-${String(now.month).padStart(2, '0')}-${String(now.day).padStart(2, '0')}`;
 }
 
+export function getTomorrowDateKey(timeZone) {
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const parts = getDateTimeParts(tomorrow, timeZone);
+  return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}`;
+}
+
 export function getScheduledDateForToday(time24 = '', timeZone) {
   const match = String(time24).match(TWENTY_FOUR_HOUR_TIME_PATTERN);
   if (!match) {
