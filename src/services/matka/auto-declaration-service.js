@@ -2,6 +2,7 @@ import { createLogger } from '../../utils/logger.js';
 import { MatkaMarketModel } from '../../models/matka-market-model.js';
 import { MatkaMarketResultModel } from '../../models/matka-market-result-model.js';
 import { createMatkaAuditService } from './matka-audit-service.js';
+import { getScheduledDateForToday } from './matka-time-service.js';
 
 const logger = createLogger('auto-declaration');
 
@@ -57,17 +58,11 @@ export function createAutoDeclarationService({ timezone = 'Asia/Kolkata' } = {})
 
   // Parse time string (e.g. "14:30") into a Date object representing that exact time TODAY in IST
   function parseTimeToToday(timeStr) {
-    const [hours, minutes] = String(timeStr ?? '').split(':').map(Number);
-    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
+    try {
+      return getScheduledDateForToday(timeStr, 'Asia/Kolkata');
+    } catch (err) {
       return null;
     }
-
-    const { year, month, day } = getIstContext(new Date());
-
-    // Create a UTC date representing that exact IST time
-    // IST is UTC+5:30. So we subtract 5 hours and 30 minutes from the local IST hours/minutes.
-    // Date.UTC safely handles negative roll-overs (e.g., if it rolls back to previous day in UTC).
-    return new Date(Date.UTC(year, month - 1, day, hours - 5, minutes - 30, 0, 0));
   }
 
   // Check and auto-declare results for all markets
