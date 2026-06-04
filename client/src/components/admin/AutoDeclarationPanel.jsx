@@ -240,7 +240,7 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
     try {
       const response = await fetch(`/api/v1/admin/auto-results?marketId=${marketId}&date=${todayStr}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('matkaking_admin_token')}`,
           'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
         },
       });
@@ -263,7 +263,7 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('matkaking_admin_token')}`,
           'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
         },
         body: JSON.stringify({
@@ -293,7 +293,7 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
     try {
       const response = await fetch('/api/v1/admin/generate-panel', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('matkaking_admin_token')}`,
           'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
         },
       });
@@ -311,7 +311,7 @@ export function AutoDeclarationPanel({ marketId, marketName, openTime, closeTime
       const response = await fetch('/api/v1/admin/auto-results/trigger', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('matka_admin_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('matkaking_admin_token')}`,
           'X-CSRF-Token': import.meta.env.VITE_CSRF_TOKEN || '',
         },
       });
