@@ -51,25 +51,26 @@ export function PWAFloatingButton() {
     };
   }, []);
 
-  const handleInstallClick = () => {
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      // Browser supports PWA install — trigger native prompt directly
+      try {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('PWA Install choice:', outcome);
+        setDeferredPrompt(null);
+        if (outcome === 'accepted') {
+          setShowButton(false);
+        }
+      } catch (err) {
+        console.error('PWA Install error:', err);
+      }
+      return;
+    }
+    // Fallback: show manual instructions modal
     setShowModal(true);
   };
 
-  const handleDirectInstall = async () => {
-    if (!deferredPrompt) return;
-    try {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('PWA Install choice:', outcome);
-      setDeferredPrompt(null);
-      setShowModal(false);
-      if (outcome === 'accepted') {
-        setShowButton(false);
-      }
-    } catch (err) {
-      console.error('PWA Install error:', err);
-    }
-  };
 
   if (isAppLoading || !showButton) return null;
 
@@ -135,33 +136,10 @@ export function PWAFloatingButton() {
               textShadow: '1px 1px 2px #fff',
               boxShadow: '0 0 10px rgba(0,0,0,0.2) inset'
             }}>
-              {deferredPrompt
-                ? "Get the best experience! Direct install the MATKAKING app to your home screen for ultra-fast access."
-                : "To install this app manually:\n\nChrome: Menu (⋮) → 'Add to Home screen'\nSafari: Share button → 'Add to Home Screen'\nEdge: Menu (⋯) → 'Apps' → 'Install app'"}
+              {"To install this app manually:\n\nChrome: Menu (⋮) → 'Add to Home screen'\nSafari: Share button → 'Add to Home Screen'\nEdge: Menu (⋯) → 'Apps' → 'Install app'"}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-              {deferredPrompt && (
-                <button
-                  onClick={handleDirectInstall}
-                  style={{
-                    background: 'linear-gradient(45deg, navy, #005780)',
-                    color: '#fff',
-                    border: '2px solid #fff',
-                    padding: '8px 18px',
-                    borderRadius: '5px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                    transition: 'transform 0.1s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  Direct Install
-                </button>
-              )}
               <button
                 onClick={() => setShowModal(false)}
                 style={{
